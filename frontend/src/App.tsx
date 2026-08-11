@@ -14,6 +14,9 @@ const TEMPLATES: Record<string, { label: string; price: number }> = {
 	cv02: { label: "CV Corporate Standard", price: 20000 },
 	cv03: { label: "CV Modern Executive", price: 30000 },
 	cv04: { label: "CV Neo Creative", price: 35000 },
+	cv05: { label: "CV Lux Monochrome", price: 25000 },
+	cv06: { label: "CV Dev Minimal", price: 30000 },
+	cv07: { label: "CV Classic Fresh", price: 20000 },
 };
 
 const rupiah = (n: number) => `Rp ${n.toLocaleString("id-ID")}`;

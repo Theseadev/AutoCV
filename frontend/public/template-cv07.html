@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV — {{ personalInfo.namaLengkap }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+
+    <!-- KERTAS A4 -->
+    <main class="max-w-4xl mx-auto bg-white shadow-lg flex flex-col md:flex-row min-h-screen">
+
+        <!-- ================= KOLOM KIRI (35%) ================= -->
+        <aside class="w-full md:w-[35%] bg-[#EAE2D6] p-8">
+
+            <!-- Foto Profil -->
+            <img
+                src="{{ personalInfo.foto }}"
+                alt="Foto {{ personalInfo.namaLengkap }}"
+                class="w-40 h-40 rounded-full object-cover mx-auto mb-6 border-4 border-white shadow-md"
+                onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 160 160&quot;><rect width=&quot;160&quot; height=&quot;160&quot; fill=&quot;%23D8CBB8&quot;/><circle cx=&quot;80&quot; cy=&quot;62&quot; r=&quot;26&quot; fill=&quot;%23664229&quot;/><path d=&quot;M80 96c-28 0-46 16-50 40h100c-4-24-22-40-50-40z&quot; fill=&quot;%23664229&quot;/></svg>'"
+            />
+
+            <!-- Kontak -->
+            <h3 class="font-bold text-[#664229] text-xl mb-4 mt-6">Kontak</h3>
+            <ul class="space-y-3 mb-2">
+                <li class="flex items-center gap-3 text-sm text-gray-800">
+                    <svg class="w-4 h-4 text-[#664229] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h2.5a1 1 0 01.95.68l1.2 3.6a1 1 0 01-.5 1.2L7.6 9.6a12.5 12.5 0 006 6l1.12-1.55a1 1 0 011.2-.5l3.6 1.2a1 1 0 01.68.95V19a2 2 0 01-2 2H17A14 14 0 013 5z"/>
+                    </svg>
+                    <span>{{ personalInfo.noHp }}</span>
+                </li>
+                <li class="flex items-center gap-3 text-sm text-gray-800">
+                    <svg class="w-4 h-4 text-[#664229] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.9 5.3a2 2 0 002.2 0L21 8M5 5h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/>
+                    </svg>
+                    <span class="break-all">{{ personalInfo.email }}</span>
+                </li>
+                <li class="flex items-center gap-3 text-sm text-gray-800">
+                    <svg class="w-4 h-4 text-[#664229] shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.7 9.4a5.7 5.7 0 11-11.4 0 5.7 5.7 0 0111.4 0zM12 9.4a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM8.5 14.5L5 21M15.5 14.5L19 21"/>
+                    </svg>
+                    <span>{{ personalInfo.alamat }}</span>
+                </li>
+            </ul>
+
+            <!-- Pendidikan -->
+            <h3 class="font-bold text-[#664229] text-xl mb-4 mt-6">Pendidikan</h3>
+            {{#each pendidikans}}
+            <div class="mb-4">
+                <p class="font-bold text-[#664229] text-sm">{{ institusi }}</p>
+                <p class="text-sm text-gray-800">{{ jurusan }}</p>
+                <p class="text-xs text-gray-600">{{ tahun }}</p>
+            </div>
+            {{/each}}
+
+            <!-- Kemampuan -->
+            <h3 class="font-bold text-[#664229] text-xl mb-4 mt-6">Kemampuan</h3>
+            <ul class="list-disc pl-5 space-y-2">
+                {{#each kemampuans}}
+                <li class="text-sm text-gray-800">
+                    <strong class="text-[#664229]">{{ judul }}</strong> — {{ deskripsi }}
+                </li>
+                {{/each}}
+            </ul>
+
+            <!-- Penghargaan -->
+            <h3 class="font-bold text-[#664229] text-xl mb-4 mt-6">Penghargaan</h3>
+            <ul class="list-disc pl-5 space-y-2">
+                {{#each penghargaans}}
+                <li class="text-sm text-gray-800">
+                    <strong class="text-[#664229]">{{ judul }}</strong> — {{ tahun }}
+                </li>
+                {{/each}}
+            </ul>
+
+            <!-- Hobi -->
+            <h3 class="font-bold text-[#664229] text-xl mb-4 mt-6">Hobi</h3>
+            <p class="text-sm text-gray-800">{{ personalInfo.hobi }}</p>
+        </aside>
+
+        <!-- ================= KOLOM KANAN (65%) ================= -->
+        <section class="w-full md:w-[65%] bg-white p-8 md:p-12">
+
+            <!-- Header Nama & Profesi -->
+            <h1 class="font-extrabold text-5xl text-[#664229] capitalize leading-tight mb-2">
+                {{ personalInfo.namaLengkap }}
+            </h1>
+            <h2 class="text-2xl text-gray-700 tracking-[0.2em] uppercase mb-8">
+                {{ personalInfo.profesi }}
+            </h2>
+
+            <!-- Tentang Saya -->
+            <h3 class="font-bold text-2xl text-[#664229] mb-4 mt-8">Tentang Saya</h3>
+            <p class="text-justify text-gray-700 text-sm md:text-base leading-relaxed">
+                {{ summary }}
+            </p>
+
+            <!-- Pengalaman Kerja -->
+            <h3 class="font-bold text-2xl text-[#664229] mb-4 mt-8">Pengalaman Kerja</h3>
+            {{#each pengalamans}}
+            <div class="mb-6">
+                <h4 class="font-bold text-[#664229]">{{ perusahaan }}</h4>
+                <p class="text-sm text-gray-600 mb-2">{{ posisi }} · {{ tanggal }}</p>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    {{#each deskripsis}}
+                    <li>{{ this }}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{/each}}
+
+            <!-- Pengalaman Organisasi -->
+            <h3 class="font-bold text-2xl text-[#664229] mb-4 mt-8">Pengalaman Organisasi</h3>
+            {{#each organisasis}}
+            <div class="mb-6">
+                <h4 class="font-bold text-[#664229]">{{ instansi }}</h4>
+                <p class="text-sm text-gray-600 mb-2">{{ posisi }} · {{ tanggal }}</p>
+                <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                    {{#each deskripsis}}
+                    <li>{{ this }}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            {{/each}}
+        </section>
+    </main>
+
+</body>
+</html>

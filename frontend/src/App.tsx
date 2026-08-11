@@ -21,13 +21,35 @@ const TEMPLATES: Record<string, { label: string; price: number }> = {
 
 const rupiah = (n: number) => `Rp ${n.toLocaleString("id-ID")}`;
 
+// Draft otomatis: refresh / keluar browser tidak menghilangkan isian
+const DRAFT_KEY = "autocv_draft_v1";
+const loadDraft = () => {
+	try {
+		const raw = localStorage.getItem(DRAFT_KEY);
+		return raw ? (JSON.parse(raw) as { cv?: CvData; skillsText?: string; template?: string }) : null;
+	} catch {
+		return null;
+	}
+};
+const draft = loadDraft();
+
 export default function App() {
 	const [view, setView] = useState<View>("store");
-	const [template, setTemplate] = useState("cv01");
-	const [cv, setCv] = useState<CvData>(storeCv);
-	const [skillsText, setSkillsText] = useState(storeSkillsText);
+	const [template, setTemplate] = useState(
+		draft?.template && TEMPLATES[draft.template] ? draft.template : "cv01",
+	);
+	const [cv, setCv] = useState<CvData>({ ...storeCv, ...(draft?.cv ?? {}) });
+	const [skillsText, setSkillsText] = useState(draft?.skillsText ?? storeSkillsText);
 	// Nomor WA admin dari backend (.env) — ganti tanpa rebuild frontend
 	const [waAdmin, setWaAdmin] = useState("628000000000");
+
+	useEffect(() => {
+		try {
+			localStorage.setItem(DRAFT_KEY, JSON.stringify({ cv, skillsText, template }));
+		} catch {
+			// kuota penuh (foto besar) — abaikan, draft hanya bonus
+		}
+	}, [cv, skillsText, template]);
 
 	useEffect(() => {
 		getConfig()

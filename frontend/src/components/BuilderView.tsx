@@ -51,6 +51,13 @@ export default function BuilderView({
 	// Skala preview kertas A4 agar pas muat di area preview (tanpa scroll)
 	const areaRef = useRef<HTMLDivElement>(null);
 	const [scale, setScale] = useState(0.6);
+	// null = auto-fit; angka = zoom manual (klik % untuk kembali ke auto-fit)
+	const [userScale, setUserScale] = useState<number | null>(null);
+	const renderScale = userScale ?? scale;
+	const zoom = (dir: 1 | -1) =>
+		setUserScale((s) =>
+			Math.min(1.5, Math.max(0.4, Math.round(((s ?? scale) * (dir > 0 ? 1.2 : 1 / 1.2)) * 100) / 100)),
+		);
 	useEffect(() => {
 		const update = () => {
 			const area = areaRef.current;
@@ -82,7 +89,7 @@ export default function BuilderView({
 	) =>
 		setCv((prev) => ({
 			...prev,
-			experiences: prev.experiences.map((e, i) =>
+			experiences: (prev.experiences || []).map((e, i) =>
 				i === index ? { ...e, ...patch } : e,
 			),
 		}));
@@ -91,14 +98,14 @@ export default function BuilderView({
 		setCv((prev) => ({
 			...prev,
 			experiences: [
-				...prev.experiences,
+				...(prev.experiences || []),
 				{ id: Date.now(), company: "", role: "", period: "", desc: "" },
 			],
 		}));
 	const removeExp = (index: number) =>
 		setCv((prev) => ({
 			...prev,
-			experiences: prev.experiences.filter((_, i) => i !== index),
+			experiences: (prev.experiences || []).filter((_, i) => i !== index),
 		}));
 
 	const addList = (
@@ -169,7 +176,7 @@ export default function BuilderView({
 			}
 		} catch (e) {
 			console.error("Gemini API Error:", e);
-			alert("Terjadi kesalahan saat menghubungi Gemini AI API.");
+			alert(e instanceof Error ? e.message : "Terjadi kesalahan saat menghubungi Gemini AI API.");
 		} finally {
 			setIsGenerating(false);
 		}
@@ -188,7 +195,7 @@ export default function BuilderView({
 			if (text) updateExp(index, { desc: text.trim() });
 		} catch (e) {
 			console.error("Gemini Exp Enhance Error:", e);
-			alert("Gagal memoles deskripsi dengan AI.");
+			alert(e instanceof Error ? e.message : "Gagal memoles deskripsi dengan AI.");
 		} finally {
 			setEnhancingIdx(null);
 		}
@@ -205,7 +212,7 @@ export default function BuilderView({
 			if (text) setSkillsText(text.trim());
 		} catch (e) {
 			console.error("Gemini Skills Suggestion Error:", e);
-			alert("Gagal mendapatkan rekomendasi skill.");
+			alert(e instanceof Error ? e.message : "Gagal mendapatkan rekomendasi skill.");
 		} finally {
 			setIsSuggestingSkills(false);
 		}
@@ -218,6 +225,14 @@ export default function BuilderView({
 
 	const sections = TEMPLATE_SECTIONS[template] ?? TEMPLATE_SECTIONS.cv01;
 	const has = (sec: CvSection) => sections.includes(sec);
+	const [activeSection, setActiveSection] = useState<string | null>("informasi");
+	useEffect(() => {
+		if (
+			(activeSection === "foto" && !has("foto")) ||
+			(activeSection === "pendidikan" && !has("pendidikan"))
+		)
+			setActiveSection("informasi");
+	}, [template]);
 	return (
 		<div className="h-[calc(100dvh-64px)] flex flex-col lg:flex-row overflow-hidden">
 			{/* Tab bar khusus HP: Edit / Preview */}
@@ -226,22 +241,16 @@ export default function BuilderView({
 					<button
 						type="button"
 						onClick={() => setMtab("edit")}
-						className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors ${
-							mtab === "edit"
-								? "bg-white text-gray-900 shadow-sm"
-								: "text-gray-500"
-						}`}
+						aria-pressed={mtab === "edit"}
+						className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors ${mtab === "edit" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"}`}
 					>
 						<i className="fa-solid fa-pen mr-1.5 text-xs"></i> Edit
 					</button>
 					<button
 						type="button"
 						onClick={() => setMtab("preview")}
-						className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors ${
-							mtab === "preview"
-								? "bg-white text-gray-900 shadow-sm"
-								: "text-gray-500"
-						}`}
+						aria-pressed={mtab === "preview"}
+						className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors ${mtab === "preview" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"}`}
 					>
 						<i className="fa-solid fa-eye mr-1.5 text-xs"></i> Preview
 					</button>
@@ -250,7 +259,7 @@ export default function BuilderView({
 
 			{/* LEFT PANEL: FORM EDITOR */}
 			<div
-				className={`flex flex-1 min-h-0 w-full lg:w-1/2 lg:flex bg-gray-50 border-r border-gray-200 overflow-y-auto editor-scroll p-4 sm:p-6 lg:p-8 pb-32 ${
+				className={`flex flex-col flex-1 min-h-0 h-full w-full lg:w-1/2 lg:flex bg-gray-50 border-r border-gray-200 overflow-y-auto editor-scroll p-4 sm:p-6 lg:p-8 pb-32 ${
 					mtab === "preview" ? "hidden" : ""
 				}`}
 			>
@@ -258,6 +267,7 @@ export default function BuilderView({
 					<button
 						type="button"
 						onClick={onBack}
+						aria-label="Kembali ke daftar template"
 						className="text-gray-500 hover:text-gray-900 mr-4 p-2 -ml-2"
 					>
 						<i className="fa-solid fa-arrow-left"></i>
@@ -270,9 +280,27 @@ export default function BuilderView({
 					</div>
 				</div>
 
+
 				<div className="space-y-6">
-					{/* Informasi Pribadi */}
-					<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+					<div className="space-y-3">
+						<button
+							type="button"
+							onClick={() => setActiveSection((cur) => (cur === "informasi" ? null : "informasi"))}
+							aria-expanded={activeSection === "informasi"}
+							className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
+						>
+							<span className="flex items-center gap-3">
+								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+									<i className="fa-solid fa-user text-[11px]"></i>
+								</span>
+								<span className="text-base font-bold text-gray-900">Informasi Pribadi</span>
+							</span>
+							<i className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "informasi" ? "rotate-180" : ""}`}></i>
+						</button>
+						<div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "informasi" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+							<div className="overflow-hidden">
+								<div className="space-y-3 pt-1">
+					<div id="sec-informasi" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
 						<div className="flex items-center gap-3 mb-5">
 							<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
 								1
@@ -359,122 +387,8 @@ export default function BuilderView({
 							</div>
 						</div>
 					</div>
-					{has("foto") && (
-						<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
-							<div className="flex items-center gap-3 mb-5">
-								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-									<i className="fa-solid fa-camera text-[11px]"></i>
-								</span>
-								<h3 className="text-base font-bold text-gray-900">Foto Profil</h3>
-							</div>
-							<div className="flex items-center gap-4">
-								<div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 border border-gray-200 shrink-0 flex items-center justify-center">
-									{cv.foto ? (
-										<img src={cv.foto} alt="Foto profil" className="w-full h-full object-cover" />
-									) : (
-										<i className="fa-solid fa-user text-gray-300 text-3xl"></i>
-									)}
-								</div>
-								<div>
-									<label className="block text-xs font-medium text-gray-700 cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg inline-block transition-colors">
-										<i className="fa-solid fa-upload mr-1.5"></i>Upload Foto
-										<input type="file" accept="image/*" className="hidden" onChange={onFotoFile} />
-									</label>
-									{cv.foto && (
-										<button type="button" onClick={() => set({ foto: "" })} className="block text-xs text-red-500 hover:text-red-700 font-medium mt-2">
-											<i className="fa-solid fa-trash mr-1"></i>Hapus Foto
-										</button>
-									)}
-								</div>
-							</div>
-						</div>
-					)}
-
-					{has("pendidikan") && (
-						<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
-							<div className="flex items-center justify-between mb-5">
-								<div className="flex items-center gap-3">
-									<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-										<i className="fa-solid fa-graduation-cap text-[11px]"></i>
-									</span>
-									<h3 className="text-base font-bold text-gray-900">Pendidikan</h3>
-								</div>
-								<button type="button" onClick={() => addList("pendidikans", { institusi: "", jurusan: "", tahun: "" })} className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]">
-									<i className="fa-solid fa-plus mr-1"></i> Tambah
-								</button>
-							</div>
-							{(cv.pendidikans || []).map((it, i) => (
-								<div key={it.id ?? i} className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative">
-									<button type="button" onClick={() => removeList("pendidikans", i)} className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2">
-										<i className="fa-solid fa-trash text-xs"></i>
-									</button>
-									<div className="grid grid-cols-2 gap-3">
-										<div className="col-span-2">
-											<label className="block text-xs font-medium text-gray-500 mb-1">Institusi</label>
-											<input value={it.institusi} onChange={(e) => updateList("pendidikans", i, { institusi: e.target.value })} placeholder="Nama Sekolah / Universitas" className={`text-sm text-gray-700 ${inputSmCls}`} />
-										</div>
-										<div className="">
-											<label className="block text-xs font-medium text-gray-500 mb-1">Jurusan</label>
-											<input value={it.jurusan} onChange={(e) => updateList("pendidikans", i, { jurusan: e.target.value })} placeholder="Cth: S1 Manajemen" className={`text-sm text-gray-700 ${inputSmCls}`} />
-										</div>
-										<div className="">
-											<label className="block text-xs font-medium text-gray-500 mb-1">Tahun</label>
-											<input value={it.tahun} onChange={(e) => updateList("pendidikans", i, { tahun: e.target.value })} placeholder="Cth: 2019 - 2023" className={`text-xs text-gray-600 ${inputSmCls}`} />
-										</div>
-									</div>
-								</div>
-							))}
-						</div>
-					)}
-
-					{has("penghargaan") && (
-						<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
-							<div className="flex items-center justify-between mb-5">
-								<div className="flex items-center gap-3">
-									<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-										<i className="fa-solid fa-trophy text-[11px]"></i>
-									</span>
-									<h3 className="text-base font-bold text-gray-900">Penghargaan</h3>
-								</div>
-								<button type="button" onClick={() => addList("penghargaans", { judul: "", tahun: "" })} className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]">
-									<i className="fa-solid fa-plus mr-1"></i> Tambah
-								</button>
-							</div>
-							{(cv.penghargaans || []).map((it, i) => (
-								<div key={it.id ?? i} className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative">
-									<button type="button" onClick={() => removeList("penghargaans", i)} className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2">
-										<i className="fa-solid fa-trash text-xs"></i>
-									</button>
-									<div className="grid grid-cols-2 gap-3">
-										<div className="">
-											<label className="block text-xs font-medium text-gray-500 mb-1">Judul Penghargaan</label>
-											<input value={it.judul} onChange={(e) => updateList("penghargaans", i, { judul: e.target.value })} placeholder="Cth: Juara 1 Debat" className={`text-sm text-gray-700 ${inputSmCls}`} />
-										</div>
-										<div className="">
-											<label className="block text-xs font-medium text-gray-500 mb-1">Tahun</label>
-											<input value={it.tahun} onChange={(e) => updateList("penghargaans", i, { tahun: e.target.value })} placeholder="Cth: 2022" className={`text-xs text-gray-600 ${inputSmCls}`} />
-										</div>
-									</div>
-								</div>
-							))}
-						</div>
-					)}
-
-					{has("hobi") && (
-						<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
-							<div className="flex items-center gap-3 mb-4">
-								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-									<i className="fa-solid fa-heart text-[11px]"></i>
-								</span>
-								<h3 className="text-base font-bold text-gray-900">Hobi</h3>
-							</div>
-							<input value={cv.hobi ?? ""} onChange={(e) => set({ hobi: e.target.value })} placeholder="Cth: Membaca, Menulis, Fotografi" className={`text-sm text-gray-700 ${inputSmCls}`} />
-						</div>
-					)}
-
-					{/* Gemini AI Profil Writer */}
 					{has("tentang") && (
-					<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 border-l-4 border-l-indigo-500 shadow-sm">
+					<div id="sec-ai" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 border-l-4 border-l-indigo-500 shadow-sm">
 						<div className="flex items-center justify-between mb-1">
 							<div className="flex items-center gap-3">
 								<span className="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
@@ -587,10 +501,190 @@ export default function BuilderView({
 						</div>
 					</div>
 					)}
+						{has("hobi") && (
+						<div id="sec-hobi" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+							<div className="flex items-center gap-3 mb-4">
+								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+									<i className="fa-solid fa-heart text-[11px]"></i>
+								</span>
+								<h3 className="text-base font-bold text-gray-900">Hobi</h3>
+							</div>
+							<input value={cv.hobi ?? ""} onChange={(e) => set({ hobi: e.target.value })} placeholder="Cth: Membaca, Menulis, Fotografi" className={`text-sm text-gray-700 ${inputSmCls}`} />
+						</div>
+						)}
+								</div>
+							</div>
+						</div>
+					</div>
 
-					{/* Pengalaman Kerja */}
+					{has("foto") && (
+					<div className="space-y-3">
+						<button
+							type="button"
+							onClick={() => setActiveSection((cur) => (cur === "foto" ? null : "foto"))}
+							aria-expanded={activeSection === "foto"}
+							className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
+						>
+							<span className="flex items-center gap-3">
+								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+									<i className="fa-solid fa-camera text-[11px]"></i>
+								</span>
+								<span className="text-base font-bold text-gray-900">Foto Profil</span>
+							</span>
+							<i className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "foto" ? "rotate-180" : ""}`}></i>
+						</button>
+						<div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "foto" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+							<div className="overflow-hidden">
+								<div className="space-y-3 pt-1">
+						<div id="sec-foto" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+							<div className="flex items-center gap-3 mb-5">
+								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+									<i className="fa-solid fa-camera text-[11px]"></i>
+								</span>
+								<h3 className="text-base font-bold text-gray-900">Foto Profil</h3>
+							</div>
+							<div className="flex items-center gap-4">
+								<div className="w-20 h-20 rounded-full overflow-hidden bg-gray-100 border border-gray-200 shrink-0 flex items-center justify-center">
+									{cv.foto ? (
+										<img src={cv.foto} alt="Foto profil" className="w-full h-full object-cover" />
+									) : (
+										<i className="fa-solid fa-user text-gray-300 text-3xl"></i>
+									)}
+								</div>
+								<div>
+									<label className="block text-xs font-medium text-gray-700 cursor-pointer bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg inline-block transition-colors">
+										<i className="fa-solid fa-upload mr-1.5"></i>Upload Foto
+										<input type="file" accept="image/*" className="hidden" onChange={onFotoFile} />
+									</label>
+									{cv.foto && (
+										<button type="button" onClick={() => set({ foto: "" })} className="block text-xs text-red-500 hover:text-red-700 font-medium mt-2">
+											<i className="fa-solid fa-trash mr-1"></i>Hapus Foto
+										</button>
+									)}
+								</div>
+							</div>
+						</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					)}
+
+					{has("pendidikan") && (
+					<div className="space-y-3">
+						<button
+							type="button"
+							onClick={() => setActiveSection((cur) => (cur === "pendidikan" ? null : "pendidikan"))}
+							aria-expanded={activeSection === "pendidikan"}
+							className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
+						>
+							<span className="flex items-center gap-3">
+								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+									<i className="fa-solid fa-graduation-cap text-[11px]"></i>
+								</span>
+								<span className="text-base font-bold text-gray-900">Pendidikan</span>
+							</span>
+							<i className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "pendidikan" ? "rotate-180" : ""}`}></i>
+						</button>
+						<div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "pendidikan" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+							<div className="overflow-hidden">
+								<div className="space-y-3 pt-1">
+						<div id="sec-lulusan" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+							<div className="flex items-center justify-between mb-5">
+								<div className="flex items-center gap-3">
+									<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+										<i className="fa-solid fa-graduation-cap text-[11px]"></i>
+									</span>
+									<h3 className="text-base font-bold text-gray-900">Pendidikan</h3>
+								</div>
+								<button type="button" onClick={() => addList("pendidikans", { institusi: "", jurusan: "", tahun: "", kegiatan: "" })} className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]">
+									<i className="fa-solid fa-plus mr-1"></i> Tambah
+								</button>
+							</div>
+							{(cv.pendidikans || []).map((it, i) => (
+								<div key={it.id ?? i} className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative">
+									<button type="button" onClick={() => removeList("pendidikans", i)} className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2">
+										<i className="fa-solid fa-trash text-xs"></i>
+									</button>
+									<div className="grid grid-cols-2 gap-3">
+										<div className="col-span-2">
+											<label htmlFor={`pendidikans-institusi-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Institusi</label>
+											<input id={`pendidikans-institusi-${i}`} value={it.institusi} onChange={(e) => updateList("pendidikans", i, { institusi: e.target.value })} placeholder="Nama Sekolah / Universitas" className={`text-sm text-gray-700 ${inputSmCls}`} />
+										</div>
+										<div className="">
+											<label htmlFor={`pendidikans-jurusan-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Jurusan</label>
+											<input id={`pendidikans-jurusan-${i}`} value={it.jurusan} onChange={(e) => updateList("pendidikans", i, { jurusan: e.target.value })} placeholder="Cth: S1 Manajemen" className={`text-sm text-gray-700 ${inputSmCls}`} />
+										</div>
+										<div className="">
+											<label htmlFor={`pendidikans-tahun-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Tahun</label>
+											<input id={`pendidikans-tahun-${i}`} value={it.tahun} onChange={(e) => updateList("pendidikans", i, { tahun: e.target.value })} placeholder="Cth: 2019 - 2023" className={`text-xs text-gray-600 ${inputSmCls}`} />
+										</div>
+										<div className="col-span-2">
+											<label htmlFor={`pendidikans-kegiatan-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Kegiatan <span className="text-gray-400 font-normal">(opsional)</span></label>
+											<textarea id={`pendidikans-kegiatan-${i}`} value={it.kegiatan ?? ""} onChange={(e) => updateList("pendidikans", i, { kegiatan: e.target.value })} placeholder="Cth: Anggota Himpunan Mahasiswa, Panitia Dies Natalis" rows={2} className={`text-xs text-gray-600 resize-none ${inputSmCls}`} />
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+						{has("penghargaan") && (
+						<div id="sec-penghargaan" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+							<div className="flex items-center justify-between mb-5">
+								<div className="flex items-center gap-3">
+									<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+										<i className="fa-solid fa-trophy text-[11px]"></i>
+									</span>
+									<h3 className="text-base font-bold text-gray-900">Penghargaan</h3>
+								</div>
+								<button type="button" onClick={() => addList("penghargaans", { judul: "", tahun: "" })} className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]">
+									<i className="fa-solid fa-plus mr-1"></i> Tambah
+								</button>
+							</div>
+							{(cv.penghargaans || []).map((it, i) => (
+								<div key={it.id ?? i} className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative">
+									<button type="button" onClick={() => removeList("penghargaans", i)} className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2">
+										<i className="fa-solid fa-trash text-xs"></i>
+									</button>
+									<div className="grid grid-cols-2 gap-3">
+										<div className="">
+											<label htmlFor={`pendidikans-judul-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Judul Penghargaan</label>
+											<input id={`pendidikans-judul-${i}`} value={it.judul} onChange={(e) => updateList("penghargaans", i, { judul: e.target.value })} placeholder="Cth: Juara 1 Debat" className={`text-sm text-gray-700 ${inputSmCls}`} />
+										</div>
+										<div className="">
+											<label htmlFor={`pendidikans-tahun-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Tahun</label>
+											<input id={`pendidikans-tahun-${i}`} value={it.tahun} onChange={(e) => updateList("penghargaans", i, { tahun: e.target.value })} placeholder="Cth: 2022" className={`text-xs text-gray-600 ${inputSmCls}`} />
+										</div>
+									</div>
+								</div>
+							))}
+						</div>
+						)}
+								</div>
+							</div>
+						</div>
+					</div>
+					)}
+
+					<div className="space-y-3">
+						<button
+							type="button"
+							onClick={() => setActiveSection((cur) => (cur === "pengalaman" ? null : "pengalaman"))}
+							aria-expanded={activeSection === "pengalaman"}
+							className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
+						>
+							<span className="flex items-center gap-3">
+								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+									<i className="fa-solid fa-briefcase text-[11px]"></i>
+								</span>
+								<span className="text-base font-bold text-gray-900">Pengalaman</span>
+							</span>
+							<i className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "pengalaman" ? "rotate-180" : ""}`}></i>
+						</button>
+						<div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "pengalaman" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+							<div className="overflow-hidden">
+								<div className="space-y-3 pt-1">
 					{has("pengalaman") && (
-					<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+					<div id="sec-pengalaman" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
 						<div className="flex items-center justify-between mb-5">
 							<div className="flex items-center gap-3">
 								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
@@ -609,7 +703,7 @@ export default function BuilderView({
 							</button>
 						</div>
 
-						{cv.experiences.map((exp, index) => (
+						{(cv.experiences || []).map((exp, index) => (
 							<div
 								key={exp.id ?? index}
 								className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative"
@@ -713,8 +807,8 @@ export default function BuilderView({
 						))}
 					</div>
 					)}
-					{has("organisasi") && (
-						<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+						{has("organisasi") && (
+						<div id="sec-organisasi" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
 								<div className="flex items-center justify-between mb-5">
 								<div className="flex items-center gap-3">
 									<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
@@ -733,30 +827,51 @@ export default function BuilderView({
 										</button>
 										<div className="grid grid-cols-2 gap-3">
 											<div className="col-span-2">
-												<label className="block text-xs font-medium text-gray-500 mb-1">Instansi</label>
-												<input value={it.instansi} onChange={(e) => updateList("organisasis", i, { instansi: e.target.value })} placeholder="Nama Organisasi / Komunitas" className={`text-sm text-gray-700 ${inputSmCls}`} />
+												<label htmlFor={`pendidikans-instansi-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Instansi</label>
+												<input id={`pendidikans-instansi-${i}`} value={it.instansi} onChange={(e) => updateList("organisasis", i, { instansi: e.target.value })} placeholder="Nama Organisasi / Komunitas" className={`text-sm text-gray-700 ${inputSmCls}`} />
 											</div>
 											<div className="">
-												<label className="block text-xs font-medium text-gray-500 mb-1">Posisi</label>
-												<input value={it.posisi} onChange={(e) => updateList("organisasis", i, { posisi: e.target.value })} placeholder="Cth: Ketua Divisi" className={`text-sm text-gray-700 ${inputSmCls}`} />
+												<label htmlFor={`pendidikans-posisi-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Posisi</label>
+												<input id={`pendidikans-posisi-${i}`} value={it.posisi} onChange={(e) => updateList("organisasis", i, { posisi: e.target.value })} placeholder="Cth: Ketua Divisi" className={`text-sm text-gray-700 ${inputSmCls}`} />
 											</div>
 											<div className="">
-												<label className="block text-xs font-medium text-gray-500 mb-1">Periode</label>
-												<input value={it.tanggal} onChange={(e) => updateList("organisasis", i, { tanggal: e.target.value })} placeholder="Cth: 2021 - 2022" className={`text-xs text-gray-600 ${inputSmCls}`} />
+												<label htmlFor={`pendidikans-tanggal-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Periode</label>
+												<input id={`pendidikans-tanggal-${i}`} value={it.tanggal} onChange={(e) => updateList("organisasis", i, { tanggal: e.target.value })} placeholder="Cth: 2021 - 2022" className={`text-xs text-gray-600 ${inputSmCls}`} />
 											</div>
 											<div className="col-span-2">
-												<label className="block text-xs font-medium text-gray-500 mb-1">Deskripsi / Pencapaian</label>
-												<textarea value={it.deskripsi} onChange={(e) => updateList("organisasis", i, { deskripsi: e.target.value })} rows={3} placeholder="Tuliskan tugas atau pencapaian, satu baris per poin" className="w-full text-sm border border-gray-200 rounded-md p-2 focus:border-primary focus:ring-0 leading-relaxed" />
+												<label htmlFor={`pendidikans-deskripsi-${i}`} className="block text-xs font-medium text-gray-500 mb-1">Deskripsi / Pencapaian</label>
+												<textarea id={`pendidikans-deskripsi-${i}`} value={it.deskripsi} onChange={(e) => updateList("organisasis", i, { deskripsi: e.target.value })} rows={3} placeholder="Tuliskan tugas atau pencapaian, satu baris per poin" className="w-full text-sm border border-gray-200 rounded-md p-2 focus:border-primary focus:ring-0 leading-relaxed" />
 											</div>
 										</div>
 									</div>
 								))}
 						</div>
-					)}
+						)}
+								</div>
+							</div>
+						</div>
+					</div>
 
-					{/* Skills */}
+					<div className="space-y-3">
+						<button
+							type="button"
+							onClick={() => setActiveSection((cur) => (cur === "kemampuan" ? null : "kemampuan"))}
+							aria-expanded={activeSection === "kemampuan"}
+							className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
+						>
+							<span className="flex items-center gap-3">
+								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+									<i className="fa-solid fa-bolt text-[11px]"></i>
+								</span>
+								<span className="text-base font-bold text-gray-900">Kemampuan</span>
+							</span>
+							<i className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "kemampuan" ? "rotate-180" : ""}`}></i>
+						</button>
+						<div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "kemampuan" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+							<div className="overflow-hidden">
+								<div className="space-y-3 pt-1">
 					{has("kemampuan") && (
-					<div className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+					<div id="sec-skills" className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
 						<div className="flex items-center justify-between mb-3">
 							<div className="flex items-center gap-3">
 								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
@@ -793,6 +908,11 @@ export default function BuilderView({
 						/>
 					</div>
 					)}
+								</div>
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 
@@ -810,6 +930,36 @@ export default function BuilderView({
 						</p>
 						<p className="text-xs text-gray-500 truncate">{templateLabel}</p>
 					</div>
+					<fieldset
+						aria-label="Perbesar atau perkecil pratinjau"
+						className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-1 shrink-0 border-0 m-0 min-w-0"
+					>
+						<button
+							type="button"
+							onClick={() => zoom(-1)}
+							aria-label="Perkecil pratinjau"
+							className="w-8 h-8 rounded-md text-gray-600 hover:bg-white hover:text-gray-900 flex items-center justify-center transition-colors"
+						>
+							<i className="fa-solid fa-minus text-xs"></i>
+						</button>
+						<button
+							type="button"
+							onClick={() => setUserScale(null)}
+							title="Klik untuk sesuaikan otomatis"
+							aria-label={`Perbesaran saat ini ${Math.round(renderScale * 100)} persen. Klik untuk sesuaikan otomatis`}
+							className="h-8 px-2 rounded-md text-xs font-bold tabular-nums text-gray-700 hover:bg-white transition-colors"
+						>
+							{Math.round(renderScale * 100)}%
+						</button>
+						<button
+							type="button"
+							onClick={() => zoom(1)}
+							aria-label="Perbesar pratinjau"
+							className="w-8 h-8 rounded-md text-gray-600 hover:bg-white hover:text-gray-900 flex items-center justify-center transition-colors"
+						>
+							<i className="fa-solid fa-plus text-xs"></i>
+						</button>
+					</fieldset>
 					<button
 						type="button"
 						onClick={onCheckout}
@@ -821,25 +971,27 @@ export default function BuilderView({
 					</button>
 				</div>
 
-				<div
+				<section
 					ref={areaRef}
-					className="flex-1 min-h-0 overflow-hidden p-6 lg:p-8 flex items-center justify-center"
+					aria-label="Pratinjau CV"
+					className="flex-1 min-h-0 overflow-auto p-6 lg:p-8 flex"
 				>
 					<div
+						className="m-auto"
 						style={{
-							width: 794 * scale,
-							height: 1123 * scale,
+							width: 794 * renderScale,
+							height: 1123 * renderScale,
 							position: "relative",
 						}}
 					>
 						<CvPaper
 							cv={cv}
 							skills={parsedSkills}
-							scale={scale}
+							scale={renderScale}
 							template={template}
 						/>
 					</div>
-				</div>
+				</section>
 			</div>
 		</div>
 	);
@@ -898,65 +1050,64 @@ export function CvPaper({
 
 function EditorialLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 	return (
-		<div className="h-full bg-white">
-			{/* Masthead cokelat gaya majalah */}
-			<div className="bg-[#4E342E] text-[#F5EFE6] px-14 py-10">
-				<div className="flex justify-between gap-8">
-					<div>
-						<h1 className="font-heading font-bold text-[40px] leading-[1.1]">
-							{cv.name || "Nama Lengkap"}
-						</h1>
-						<p className="text-[12px] tracking-[0.25em] uppercase text-[#C9A227] font-semibold mt-2">
-							{cv.title || "Profesi"}
-						</p>
-					</div>
-					<div className="text-right text-[11px] leading-[1.9] text-[#D8CDBE]">
-						<p>
-							<i className="fa-solid fa-phone w-3 text-[#C9A227] mr-2"></i>
-							{cv.phone || "-"}
-						</p>
-						<p>
-							<i className="fa-solid fa-envelope w-3 text-[#C9A227] mr-2"></i>
-							{cv.email || "-"}
-						</p>
-						<p>
-							<i className="fa-solid fa-location-dot w-3 text-[#C9A227] mr-2"></i>
-							{cv.address || "-"}
-						</p>
-					</div>
+		<div className="h-full bg-[#FDFBF7]">
+			{/* Masthead kertas hangat: nama serif + garis emas, kontak inline */}
+			<div className="px-14 pt-12 pb-6 border-b-2 border-[#C9A227]">
+				<h1 className="font-heading font-bold text-[38px] leading-[1.1] text-[#211A17]">
+					{cv.name || "Nama Lengkap"}
+				</h1>
+				<p className="text-[11px] tracking-[0.3em] uppercase text-[#8A6D3B] font-semibold mt-2">
+					{cv.title || "Profesi"}
+				</p>
+				<div className="flex gap-6 mt-5 text-[11px] text-[#4A403A]">
+					<span>
+						<i className="fa-solid fa-phone w-3 text-[#C9A227] mr-1.5"></i>
+						{cv.phone || "-"}
+					</span>
+					<span>
+						<i className="fa-solid fa-envelope w-3 text-[#C9A227] mr-1.5"></i>
+						{cv.email || "-"}
+					</span>
+					<span>
+						<i className="fa-solid fa-location-dot w-3 text-[#C9A227] mr-1.5"></i>
+						{cv.address || "-"}
+					</span>
 				</div>
 			</div>
-			<div className="h-1 bg-[#C9A227]"></div>
-			<div className="flex px-14 py-9 gap-9">
-				<div className="w-[44%] pr-8 border-r border-[#E8E0D3]">
+			<div className="flex px-14 py-9 gap-10">
+				<div className="w-[42%]">
 					<EdSection label="Tentang Saya">
 						<p className="text-[12px] text-[#4A403A] leading-relaxed text-justify whitespace-pre-line">
 							{cv.about || "Tulis ringkasan tentang diri Anda."}
 						</p>
 					</EdSection>
-					<EdSection label="Kemampuan">
-						{skills.map((s, i) => (
-							<div key={s.title} className="mb-2.5">
-								<p className="text-[11.5px] font-semibold text-[#3B2F2A] mb-1.5">
-									{s.title}
-								</p>
-								<div className="flex gap-1">
-									{Array.from({ length: 5 }, (_, d) => (
-										<span
-											key={`dot-${d}`}
-											className={`w-[7px] h-[7px] rounded-full ${
-												d < 3 + (i % 3) ? "bg-[#C9A227]" : "bg-[#E5DDCE]"
-											}`}
-										></span>
-									))}
+					<EdSection label="Riwayat Pendidikan">
+						{(cv.pendidikans || []).map((pd, index) => (
+							<div
+								key={pd.id ?? index}
+								className="mb-3.5 pb-3 border-b border-dashed border-[#E8E0D3] last:border-0 last:pb-0"
+							>
+								<div className="flex justify-between items-baseline">
+									<h4 className="font-bold text-[12.5px] text-[#211A17]">
+										{pd.institusi || "-"}
+									</h4>
+									<span className="text-[10px] text-[#A79A8A] tracking-wide">
+										{pd.tahun}
+									</span>
 								</div>
+								<p className="text-[11px] font-semibold text-[#C9A227] mt-0.5">
+									{pd.jurusan || "-"}
+								</p>
+								{pd.kegiatan && (
+									<p className="text-[11px] text-[#4A403A] mt-1">{pd.kegiatan}</p>
+								)}
 							</div>
 						))}
 					</EdSection>
 				</div>
 				<div className="flex-1">
 					<EdSection label="Pengalaman Kerja">
-						{cv.experiences.map((exp, index) => (
+						{(cv.experiences || []).map((exp, index) => (
 							<div
 								key={exp.id ?? index}
 								className="mb-4 pb-3.5 border-b border-dashed border-[#E8E0D3]"
@@ -976,6 +1127,18 @@ function EditorialLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) 
 									{exp.desc}
 								</p>
 							</div>
+						))}
+					</EdSection>
+					<EdSection label="Kemampuan">
+						{skills.map((s) => (
+							<p
+								key={s.title}
+								className="text-[11.5px] text-[#4A403A] leading-relaxed mb-2.5"
+							>
+								<span className="font-semibold text-[#211A17]">{s.title}</span>
+								<span className="text-[#C9A227]"> — </span>
+								{s.desc}
+							</p>
 						))}
 					</EdSection>
 				</div>
@@ -1031,11 +1194,31 @@ function CorporateLayout({
 				{cv.about || "Tulis ringkasan tentang diri Anda."}
 			</p>
 
+			<h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">
+				Riwayat Pendidikan
+			</h3>
+			<div className="space-y-4 mb-8">
+				{(cv.pendidikans || []).map((pd, index) => (
+					<div key={pd.id ?? index} className="flex justify-between items-baseline">
+						<div>
+							<h4 className="font-bold text-gray-900">
+								{pd.institusi || "-"}
+							</h4>
+							<p className="text-sm text-gray-600">{pd.jurusan || "-"}</p>
+							{pd.kegiatan && <p className="text-xs text-gray-500 mt-1">{pd.kegiatan}</p>}
+						</div>
+						<span className="text-xs text-gray-500 font-medium">
+							{pd.tahun}
+						</span>
+					</div>
+				))}
+			</div>
+
 			<h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-4">
 				Pengalaman Kerja
 			</h3>
 			<div className="space-y-5 mb-8">
-				{cv.experiences.map((exp, index) => (
+				{(cv.experiences || []).map((exp, index) => (
 					<div key={exp.id ?? index}>
 						<div className="flex justify-between items-baseline mb-1">
 							<h4 className="font-bold text-gray-900">
@@ -1099,16 +1282,6 @@ function ModernLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 							<span>{cv.address || "-"}</span>
 						</li>
 					</ul>
-					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">
-						Kemampuan
-					</h3>
-					<ul className="text-sm space-y-2 list-disc pl-4">
-						{skills.map((s) => (
-							<li key={s.title}>
-								<strong>{s.title}:</strong> {s.desc}
-							</li>
-						))}
-					</ul>
 				</div>
 				<div className="w-3/5 p-8">
 					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-3">
@@ -1118,10 +1291,27 @@ function ModernLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						{cv.about || "Tulis ringkasan tentang diri Anda."}
 					</p>
 					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">
+						Riwayat Pendidikan
+					</h3>
+					<div className="space-y-4 mb-8">
+						{(cv.pendidikans || []).map((pd, index) => (
+							<div key={pd.id ?? index} className="flex justify-between items-baseline">
+								<div>
+									<h4 className="font-bold text-gray-900">
+										{pd.institusi || "-"}
+									</h4>
+									<p className="text-sm text-gray-600">{pd.jurusan || "-"}</p>
+									{pd.kegiatan && <p className="text-xs text-gray-500 mt-1">{pd.kegiatan}</p>}
+								</div>
+								<span className="text-xs text-gray-500">{pd.tahun}</span>
+							</div>
+						))}
+					</div>
+					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">
 						Pengalaman Kerja
 					</h3>
 					<div className="space-y-5">
-						{cv.experiences.map((exp, index) => (
+						{(cv.experiences || []).map((exp, index) => (
 							<div key={exp.id ?? index}>
 								<div className="flex justify-between items-baseline mb-1">
 									<h4 className="font-bold text-gray-900">
@@ -1140,6 +1330,16 @@ function ModernLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 							</div>
 						))}
 					</div>
+					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mt-8 mb-4">
+						Kemampuan
+					</h3>
+					<ul className="text-sm space-y-2 list-disc pl-4">
+						{skills.map((s) => (
+							<li key={s.title}>
+								<strong>{s.title}:</strong> {s.desc}
+							</li>
+						))}
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -1147,7 +1347,6 @@ function ModernLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 }
 
 function GeometricLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
-	const barW = [85, 70, 60, 45];
 	return (
 		<div className="h-full bg-white">
 			{/* Header navy + pita diagonal */}
@@ -1186,31 +1385,41 @@ function GeometricLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) 
 			<div className="flex px-14 py-8 gap-9">
 				<div className="w-[36%]">
 					<h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-900 mb-3.5">
-						Kemampuan
+						Tentang Saya
 					</h3>
-					{skills.map((s, i) => {
-						const w = barW[i % 4];
-						return (
-							<div key={s.title} className="mb-3">
-								<div className="flex justify-between text-[11px] font-semibold text-slate-700 mb-1">
-									<span>{s.title}</span>
-									<span className="text-slate-400">{w}%</span>
-								</div>
-								<div className="h-1.5 bg-slate-200 rounded-full overflow-hidden">
-									<div
-										className="h-full rounded-full bg-gradient-to-r from-indigo-600 to-purple-600"
-										style={{ width: `${w}%` }}
-									></div>
-								</div>
+					<p className="text-[11.5px] text-slate-600 leading-relaxed text-justify mb-5 whitespace-pre-line">
+						{cv.about || "Tulis ringkasan tentang diri Anda."}
+					</p>
+					<h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-900 mb-3.5">
+						Riwayat Pendidikan
+					</h3>
+					{(cv.pendidikans || []).map((pd, index) => (
+						<div key={pd.id ?? index} className="flex gap-3.5 mb-3.5">
+							<div className="w-7 h-7 rounded-md bg-indigo-600 text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+								{String(index + 1).padStart(2, "0")}
 							</div>
-						);
-					})}
+							<div className="flex-1 border-b border-slate-100 pb-3.5">
+								<div className="flex justify-between items-baseline">
+									<h4 className="font-bold text-[13px] text-slate-900">
+										{pd.institusi || "-"}
+									</h4>
+									<span className="text-[10px] text-slate-400">{pd.tahun}</span>
+								</div>
+								<p className="text-[11px] font-semibold text-indigo-600 mt-0.5">
+									{pd.jurusan || "-"}
+								</p>
+								{pd.kegiatan && (
+									<p className="text-[11px] text-slate-500 mt-1">{pd.kegiatan}</p>
+								)}
+							</div>
+						</div>
+					))}
 				</div>
 				<div className="flex-1">
 					<h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-900 mb-3.5">
 						Pengalaman Kerja
 					</h3>
-					{cv.experiences.map((exp, index) => (
+					{(cv.experiences || []).map((exp, index) => (
 						<div key={exp.id ?? index} className="flex gap-3.5 mb-3.5">
 							<div className="w-7 h-7 rounded-full bg-slate-900 text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
 								{String(index + 1).padStart(2, "0")}
@@ -1229,6 +1438,21 @@ function GeometricLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) 
 									{exp.desc}
 								</p>
 							</div>
+						</div>
+					))}
+					<h3 className="text-[11px] font-bold uppercase tracking-widest text-slate-900 mb-3.5 mt-5">
+						Kemampuan
+					</h3>
+					{skills.map((s, i) => (
+						<div key={s.title} className="flex gap-2.5 mb-3 text-[11.5px] text-slate-700">
+							<span className="text-indigo-500 font-mono font-bold shrink-0">
+								{String(i + 1).padStart(2, "0")}
+							</span>
+							<p className="leading-relaxed">
+								<span className="font-semibold text-slate-900">{s.title}</span>
+								<span className="text-slate-400"> — </span>
+								{s.desc}
+							</p>
 						</div>
 					))}
 				</div>
@@ -1257,22 +1481,33 @@ function LuxLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 			</p>
 			<div className="flex px-14 pt-7 gap-9">
 				<div className="w-[40%] pr-7 border-r border-gray-200">
-					<LuxSection>Profil</LuxSection>
+					<LuxSection>Tentang Saya</LuxSection>
 					<p className="text-[12px] text-gray-700 leading-relaxed text-justify whitespace-pre-line font-sans">
 						{cv.about || "Tulis ringkasan tentang diri Anda."}
 					</p>
-					<LuxSection>Kemampuan</LuxSection>
-					{skills.map((s) => (
-						<div key={s.title} className="text-[12px] text-gray-700 mb-2 font-sans">
-							<strong>{s.title}</strong>
-							<span className="text-gray-400"> — </span>
-							{s.desc}
-						</div>
-					))}
 				</div>
 				<div className="flex-1">
+					<LuxSection>Riwayat Pendidikan</LuxSection>
+					{(cv.pendidikans || []).map((pd, index) => (
+						<div key={pd.id ?? index} className="mb-4 pb-3.5 border-b border-gray-100">
+							<div className="flex justify-between items-baseline">
+								<h4 className="text-[13.5px] font-bold" style={serif}>
+									{pd.institusi || "-"}
+								</h4>
+								<span className="text-[9.5px] tracking-[0.2em] uppercase text-gray-400 font-sans">
+									{pd.tahun}
+								</span>
+							</div>
+							<p className="text-[11px] italic text-gray-500 mt-0.5 font-sans">
+								{pd.jurusan || "-"}
+							</p>
+							{pd.kegiatan && (
+								<p className="text-[10.5px] text-gray-400 mt-1 font-sans">{pd.kegiatan}</p>
+							)}
+						</div>
+					))}
 					<LuxSection>Pengalaman Kerja</LuxSection>
-					{cv.experiences.map((exp, index) => (
+					{(cv.experiences || []).map((exp, index) => (
 						<div key={exp.id ?? index} className="mb-4 pb-3.5 border-b border-gray-100">
 							<div className="flex justify-between items-baseline">
 								<h4 className="text-[13.5px] font-bold" style={serif}>
@@ -1288,6 +1523,14 @@ function LuxLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 							<p className="text-[11.5px] text-gray-600 leading-relaxed whitespace-pre-line font-sans">
 								{exp.desc}
 							</p>
+						</div>
+					))}
+					<LuxSection>Kemampuan</LuxSection>
+					{skills.map((s) => (
+						<div key={s.title} className="text-[12px] text-gray-700 mb-2 font-sans">
+							<strong>{s.title}</strong>
+							<span className="text-gray-400"> — </span>
+							{s.desc}
 						</div>
 					))}
 				</div>
@@ -1326,8 +1569,33 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 				<p className="text-[10.5px] text-gray-400 mt-2.5" style={mono}>
 					{cv.phone || "-"} / {cv.email || "-"} / {cv.address || "-"}
 				</p>
+				<DevTag>tentang</DevTag>
+				<p className="text-[11.5px] text-gray-600 leading-relaxed whitespace-pre-line">
+					{cv.about || "Tulis ringkasan tentang diri Anda."}
+				</p>
+				<DevTag>pendidikan</DevTag>
+				{(cv.pendidikans || []).map((pd, index) => (
+					<div key={pd.id ?? index} className="border border-gray-200 rounded-lg px-4 py-3 mb-3">
+						<div className="flex justify-between items-baseline">
+							<h4 className="font-bold text-[13px] text-gray-900">
+								{pd.institusi || "-"}
+							</h4>
+							<span className="text-[10px] text-gray-400" style={mono}>
+								{pd.tahun}
+							</span>
+						</div>
+						<p className="text-[11px] text-indigo-600 mt-0.5 font-medium" style={mono}>
+							{pd.jurusan || "-"}
+						</p>
+						{pd.kegiatan && (
+							<p className="text-[11px] text-gray-500 mt-1" style={mono}>
+								{pd.kegiatan}
+							</p>
+						)}
+					</div>
+				))}
 				<DevTag>pengalaman</DevTag>
-				{cv.experiences.map((exp, index) => (
+				{(cv.experiences || []).map((exp, index) => (
 					<div
 						key={exp.id ?? index}
 						className="border border-gray-200 rounded-lg px-4 py-3 mb-3"
@@ -1407,29 +1675,6 @@ function CreamLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						<span>{cv.address || "-"}</span>
 					</li>
 				</ul>
-				{pendidikans.length > 0 && (
-					<>
-						<h3 className="font-bold text-[#664229] text-xl mb-4 mt-6">Pendidikan</h3>
-						{pendidikans.map((pd) => (
-							<div key={pd.id} className="mb-3">
-								<p className="font-bold text-[#664229] text-sm">
-									{pd.institusi || "-"}
-								</p>
-								<p className="text-sm text-gray-800">{pd.jurusan || "-"}</p>
-								<p className="text-xs text-gray-600">{pd.tahun}</p>
-							</div>
-						))}
-					</>
-				)}
-				<h3 className="font-bold text-[#664229] text-xl mb-4 mt-6">Kemampuan</h3>
-				<ul className="list-disc pl-5 space-y-2">
-					{skills.map((skill) => (
-						<li key={skill.title} className="text-sm text-gray-800">
-							<strong className="text-[#664229]">{skill.title}</strong> —{" "}
-							{skill.desc}
-						</li>
-					))}
-				</ul>
 				{penghargaans.length > 0 && (
 					<>
 						<h3 className="font-bold text-[#664229] text-xl mb-4 mt-6">Penghargaan</h3>
@@ -1461,8 +1706,29 @@ function CreamLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 				<p className="text-justify text-gray-700 text-sm leading-relaxed whitespace-pre-line">
 					{cv.about || "Tulis ringkasan tentang diri Anda."}
 				</p>
+				{pendidikans.length > 0 && (
+					<>
+						<h3 className="font-bold text-2xl text-[#664229] mb-4 mt-8">
+							Riwayat Pendidikan
+						</h3>
+						{pendidikans.map((pd) => (
+							<div key={pd.id} className="mb-5">
+								<h4 className="font-bold text-[#664229]">
+									{pd.institusi || "-"}
+								</h4>
+								<p className="text-sm text-gray-600">
+									{pd.jurusan || "-"}
+									{pd.tahun ? ` · ${pd.tahun}` : ""}
+								</p>
+								{pd.kegiatan && (
+									<p className="text-xs text-gray-500 mt-1">{pd.kegiatan}</p>
+								)}
+							</div>
+						))}
+					</>
+				)}
 				<h3 className="font-bold text-2xl text-[#664229] mb-4 mt-8">Pengalaman Kerja</h3>
-				{cv.experiences.map((exp, index) => (
+				{(cv.experiences || []).map((exp, index) => (
 					<div key={exp.id ?? index} className="mb-6">
 						<h4 className="font-bold text-[#664229]">
 							{exp.company || "Nama Perusahaan"}
@@ -1506,6 +1772,15 @@ function CreamLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						))}
 					</>
 				)}
+				<h3 className="font-bold text-2xl text-[#664229] mb-4 mt-8">Kemampuan</h3>
+				<ul className="list-disc pl-5 space-y-2">
+					{skills.map((skill) => (
+						<li key={skill.title} className="text-sm text-gray-800">
+							<strong className="text-[#664229]">{skill.title}</strong> —{" "}
+							{skill.desc}
+						</li>
+					))}
+				</ul>
 			</section>
 		</div>
 	);

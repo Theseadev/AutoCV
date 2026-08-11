@@ -9,13 +9,13 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_FILE = join(__dirname, "../data/orders.json");
 const FRONTEND_DIST = join(__dirname, "../../frontend/dist");
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
+const MODEL = process.env.GEMINI_MODEL || "gemini-3-flash-preview";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "";
 const WA_ADMIN = process.env.WA_ADMIN || "628000000000";
 
 if (!process.env.GEMINI_API_KEY)
 	console.warn(
-		"⚠ GEMINI_API_KEY kosong — fitur AI tidak berfungsi. Isi di backend/.env",
+		"⚠ GEMINI_API_KEY kosong — pakai generator offline. Isi di backend/.env untuk AI asli.",
 	);
 if (!ADMIN_PASSWORD)
 	console.warn(
@@ -68,15 +68,60 @@ app.post("/api/login", (req, res) => {
 	res.status(401).json({ error: "Password salah" });
 });
 
+// --- Generator offline (fallback saat GEMINI_API_KEY kosong) ------------------
+// Menyusun hasil deterministik lokal supaya fitur tetap jalan tanpa key.
+// Begitu key diisi, /api/generate otomatis memakai Gemini asli.
+const offlineGenerate = (systemPrompt: string, userQuery: string): string => {
+	const lines = (k: string) => (userQuery.split("\n").find((l) => l.startsWith(k)) ?? "")
+		.replace(k, "")
+		.trim();
+	if (/format setiap baris/i.test(systemPrompt)) {
+		// Skill Suggester
+		const title = lines("Target Profesi:") || "Staff Profesional";
+		return [
+			`Microsoft Office: Mahir untuk kebutuhan ${title}`,
+			"Komunikasi: Kerja sama tim yang baik",
+			"Manajemen Waktu: Prioritas tugas tepat sasaran",
+			"Adaptif: Cepat mempelajari hal baru",
+		].join("\n");
+	}
+	if (/kata kunci/i.test(userQuery)) {
+		// Profil (Tentang Saya)
+		const name = lines("Nama:") || "Kandidat";
+		const title = lines("Profesi/Target Role:") || "profesional";
+		const keyword = lines("Kata kunci/Latar belakang:") || "berpengalaman";
+		return `Saya adalah ${name}, seorang ${title} dengan latar belakang ${keyword}. Berorientasi pada hasil, teliti, dan mampu bekerja sama dalam tim. Siap berkontribusi serta berkembang bersama perusahaan.`;
+	}
+	// Experience Enhancer: pertahankan isi, jadikan poin
+	const descLines = userQuery.split("\n");
+	const di = descLines.findIndex((l) => l.startsWith("Deskripsi Asli/Draft:"));
+	const desc =
+		di >= 0
+			? descLines
+					.slice(di)
+					.map((l) => l.replace(/^Deskripsi Asli\/Draft:\s*/, ""))
+					.join("\n")
+			: "Menjalankan tugas operasional harian dengan baik";
+	return desc
+		.split("\n")
+		.map((l) => (l.trim() ? `• ${l.trim().replace(/^[•\-\d.]\s*/, "")}` : ""))
+		.filter(Boolean)
+		.join("\n");
+};
+
 // --- Proxy ke Gemini (API key hanya di server) ------------------------------
 app.post("/api/generate", rateLimit(15, 60_000), async (req, res) => {
-	const apiKey = process.env.GEMINI_API_KEY;
-	if (!apiKey) {
-		return res
-			.status(500)
-			.json({ error: "GEMINI_API_KEY belum diatur di backend/.env" });
-	}
 	const { systemPrompt, userQuery, jsonSchema } = req.body ?? {};
+
+	// Tanpa API key: pakai generator offline agar fitur tetap berfungsi
+	if (!process.env.GEMINI_API_KEY) {
+		return res.json({
+			candidates: [
+				{ content: { parts: [{ text: offlineGenerate(systemPrompt ?? "", userQuery ?? "") }] } },
+			],
+		});
+	}
+	const apiKey = process.env.GEMINI_API_KEY;
 
 	const payload: Record<string, unknown> = {
 		contents: [{ parts: [{ text: userQuery }] }],

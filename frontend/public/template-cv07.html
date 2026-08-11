@@ -52,6 +52,9 @@
                 <p class="font-bold text-[#664229] text-sm">{{ institusi }}</p>
                 <p class="text-sm text-gray-800">{{ jurusan }}</p>
                 <p class="text-xs text-gray-600">{{ tahun }}</p>
+                {{#if kegiatan}}
+                <p class="text-xs text-gray-600 mt-1">{{ kegiatan }}</p>
+                {{/if}}
             </div>
             {{/each}}
 

@@ -43,6 +43,7 @@ export interface Education {
 	institusi: string;
 	jurusan: string;
 	tahun: string;
+	kegiatan?: string;
 }
 
 export interface Achievement {
@@ -72,12 +73,12 @@ export type CvSection =
 	| "organisasi";
 
 export const TEMPLATE_SECTIONS: Record<string, CvSection[]> = {
-	cv01: ["kontak", "kemampuan", "tentang", "pengalaman"],
-	cv02: ["kontak", "kemampuan", "tentang", "pengalaman"],
-	cv03: ["kontak", "kemampuan", "tentang", "pengalaman"],
-	cv04: ["kontak", "kemampuan", "pengalaman"],
-	cv05: ["kontak", "kemampuan", "tentang", "pengalaman"],
-	cv06: ["kontak", "kemampuan", "pengalaman"],
+	cv01: ["kontak", "kemampuan", "tentang", "pengalaman", "pendidikan"],
+	cv02: ["kontak", "kemampuan", "tentang", "pengalaman", "pendidikan"],
+	cv03: ["kontak", "kemampuan", "tentang", "pengalaman", "pendidikan"],
+	cv04: ["kontak", "kemampuan", "pengalaman", "tentang", "pendidikan"],
+	cv05: ["kontak", "kemampuan", "tentang", "pengalaman", "pendidikan"],
+	cv06: ["kontak", "kemampuan", "pengalaman", "tentang", "pendidikan"],
 	cv07: [
 		"foto",
 		"kontak",
@@ -220,6 +221,26 @@ export const buildCvHtml = (
 	const skillLis = skills
 		.map((s) => `<li><strong>${esc(s.title)}:</strong> ${esc(s.desc)}</li>`)
 		.join("");
+	const pendidikanLis2 = (cvData.pendidikans || [])
+		.map(
+			(pd) => `
+                    <div class="flex justify-between items-baseline">
+                        <div><h4 class="font-bold text-gray-900">${esc(pd.institusi) || "-"}</h4><p class="text-sm text-gray-600">${esc(pd.jurusan) || "-"}</p></div>
+                        <span class="text-xs text-gray-500 font-medium">${esc(pd.tahun)}</span>
+                    </div>
+                    ${pd.kegiatan ? `<p class="text-xs text-gray-500 mt-1">${esc(pd.kegiatan)}</p>` : ""}`,
+		)
+		.join("");
+	const pendidikanLis3 = (cvData.pendidikans || [])
+		.map(
+			(pd) => `
+                    <div class="flex justify-between items-baseline">
+                        <div><h4 class="font-bold text-gray-900">${esc(pd.institusi) || "-"}</h4><p class="text-sm text-gray-600">${esc(pd.jurusan) || "-"}</p></div>
+                        <span class="text-xs text-gray-500">${esc(pd.tahun)}</span>
+                    </div>
+                    ${pd.kegiatan ? `<p class="text-xs text-gray-500 mt-1">${esc(pd.kegiatan)}</p>` : ""}`,
+		)
+		.join("");
 	const name = esc(cvData.name) || "Nama Lengkap";
 	const title = esc(cvData.title) || "Profesi";
 	const about = esc(cvData.about);
@@ -238,8 +259,10 @@ export const buildCvHtml = (
                     <i class="fa-solid fa-envelope mr-1 w-4"></i>${email || "-"} &nbsp;|&nbsp;
                     <i class="fa-solid fa-location-dot mr-1 w-4"></i>${address || "-"}
                 </p>
-                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Profil</h3>
+                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Tentang Saya</h3>
                 <p class="text-sm text-gray-700 leading-relaxed text-justify mb-8 whitespace-pre-line">${about}</p>
+                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Riwayat Pendidikan</h3>
+                <div class="space-y-4 mb-8">${pendidikanLis2}</div>
                 <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-4">Pengalaman Kerja</h3>
                 <div class="space-y-5 mb-8">${exps}</div>
                 <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Kemampuan</h3>
@@ -263,14 +286,16 @@ export const buildCvHtml = (
                         <li class="flex items-start"><i class="fa-solid fa-envelope mt-1 w-5 text-indigo-600"></i><span style="word-break:break-all;">${email || "-"}</span></li>
                         <li class="flex items-start"><i class="fa-solid fa-location-dot mt-1 w-5 text-indigo-600"></i><span>${address || "-"}</span></li>
                     </ul>
-                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Kemampuan</h3>
-                    <ul class="text-sm space-y-2 list-disc pl-4">${skillLis}</ul>
                 </div>
                 <div class="w-3/5 p-8">
                     <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-3">Tentang Saya</h3>
                     <p class="text-sm text-gray-700 leading-relaxed text-justify mb-8 whitespace-pre-line">${about}</p>
+                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Riwayat Pendidikan</h3>
+                    <div class="space-y-4 mb-8">${pendidikanLis3}</div>
                     <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Pengalaman Kerja</h3>
                     <div class="space-y-5">${exps}</div>
+                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mt-8 mb-4">Kemampuan</h3>
+                    <ul class="text-sm space-y-2 list-disc pl-4">${skillLis}</ul>
                 </div>
             </div>
         </div>`;
@@ -278,16 +303,27 @@ export const buildCvHtml = (
 
 	if (template === "cv04") {
 		// Geometric Neo: header navy + pita diagonal, tile kontak, progress bar skill, timeline bernomor
-		const barW = [85, 70, 60, 45];
-		const skillBars = skills
+		const skillGeo = skills
 			.map(
 				(s, i) => `
-                    <div style="margin-bottom:12px;">
-                        <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:#1E293B;margin-bottom:5px;">
-                            <span>${esc(s.title)}</span><span style="color:#94A3B8;">${barW[i % 4]}%</span>
-                        </div>
-                        <div style="background:#E2E8F0;height:6px;border-radius:3px;">
-                            <div style="width:${barW[i % 4]}%;height:6px;border-radius:3px;background:linear-gradient(90deg,#4F46E5,#7C3AED);"></div>
+                    <div style="display:flex;gap:10px;margin-bottom:12px;font-size:11.5px;color:#475569;line-height:1.6;">
+                        <span style="color:#4F46E5;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;flex-shrink:0;">${String(i + 1).padStart(2, "0")}</span>
+                        <div><span style="font-weight:600;color:#0F172A;">${esc(s.title)}</span><span style="color:#94A3B8;"> — </span>${esc(s.desc)}</div>
+                    </div>`,
+			)
+			.join("");
+		const pendidikanLis4 = (cvData.pendidikans || [])
+			.map(
+				(pd, i) => `
+                    <div style="display:flex;gap:14px;margin-bottom:12px;">
+                        <div style="width:26px;height:26px;border-radius:6px;background:#4F46E5;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${String(i + 1).padStart(2, "0")}</div>
+                        <div style="flex:1;border-bottom:1px solid #EEF2FF;padding-bottom:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                                <span style="font-weight:700;font-size:12.5px;color:#0F172A;">${esc(pd.institusi) || "-"}</span>
+                                <span style="font-size:10px;color:#94A3B8;">${esc(pd.tahun)}</span>
+                            </div>
+                            <div style="font-size:11px;font-weight:600;color:#4F46E5;margin-top:2px;">${esc(pd.jurusan) || "-"}</div>
+                            ${pd.kegiatan ? `<div style="font-size:11px;color:#64748B;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
                         </div>
                     </div>`,
 			)
@@ -331,12 +367,16 @@ export const buildCvHtml = (
             </div>
             <div style="display:flex;padding:32px 56px;gap:36px;">
                 <div style="width:36%;">
-                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin-bottom:14px;">Kemampuan</div>
-                    ${skillBars}
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin-bottom:10px;">Tentang Saya</div>
+                    <p style="font-size:11.5px;color:#475569;line-height:1.6;text-align:justify;margin-bottom:16px;white-space:pre-line;">${about}</p>
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin-bottom:14px;">Riwayat Pendidikan</div>
+                    ${pendidikanLis4}
                 </div>
                 <div style="flex:1;">
                     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin-bottom:14px;">Pengalaman Kerja</div>
                     ${expNum}
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin:18px 0 14px;">Kemampuan</div>
+                    ${skillGeo}
                 </div>
             </div>
         </div>`;
@@ -348,6 +388,19 @@ export const buildCvHtml = (
 			.map(
 				(s) =>
 					`<div style="font-size:12px;color:#374151;margin-bottom:8px;"><strong>${esc(s.title)}</strong><span style="color:#9CA3AF;"> — </span>${esc(s.desc)}</div>`,
+			)
+			.join("");
+		const pendidikanLux = (cvData.pendidikans || [])
+			.map(
+				(pd) => `
+                    <div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #F3F4F6;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:13.5px;color:#111827;">${esc(pd.institusi) || "-"}</span>
+                            <span style="font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;font-family:Inter,sans-serif;">${esc(pd.tahun)}</span>
+                        </div>
+                        <div style="font-size:11px;font-style:italic;color:#6B7280;margin-top:3px;font-family:Inter,sans-serif;">${esc(pd.jurusan) || "-"}</div>
+                        ${pd.kegiatan ? `<div style="font-size:10.5px;color:#9CA3AF;margin-top:3px;font-family:Inter,sans-serif;">${esc(pd.kegiatan)}</div>` : ""}
+                    </div>`,
 			)
 			.join("");
 		const expLux = (cvData.experiences || [])
@@ -373,17 +426,20 @@ export const buildCvHtml = (
             <div style="text-align:center;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;font-family:Inter,sans-serif;padding-top:12px;">${phone || "-"} &nbsp;·&nbsp; ${email || "-"} &nbsp;·&nbsp; ${address || "-"}</div>
             <div style="display:flex;padding:28px 60px 40px;gap:36px;">
                 <div style="width:40%;padding-right:28px;border-right:1px solid #E5E7EB;">
-                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Profil</div>
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Tentang Saya</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     <div style="font-size:12px;color:#374151;line-height:1.7;text-align:justify;white-space:pre-line;font-family:Inter,sans-serif;">${about}</div>
+                </div>
+                <div style="flex:1;">
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Riwayat Pendidikan</div>
+                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
+                    ${pendidikanLux}
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Pengalaman Kerja</div>
+                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
+                    ${expLux}
                     <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Kemampuan</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     ${skillLux}
-                </div>
-                <div style="flex:1;">
-                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Pengalaman Kerja</div>
-                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
-                    ${expLux}
                 </div>
             </div>
         </div>`;
@@ -396,6 +452,19 @@ export const buildCvHtml = (
 			.map(
 				(s) =>
 					`<span style="display:inline-block;border:1px solid #C7D2FE;background:#EEF2FF;color:#4338CA;border-radius:999px;padding:4px 10px;font-size:10.5px;font-family:${MONO};margin:0 6px 6px 0;">${esc(s.title)}: ${esc(s.desc)}</span>`,
+			)
+			.join("");
+		const pendidikanDev = (cvData.pendidikans || [])
+			.map(
+				(pd) => `
+                    <div style="border:1px solid #E5E7EB;border-radius:8px;padding:12px 14px;margin-bottom:12px;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <span style="font-weight:700;font-size:13px;color:#111827;">${esc(pd.institusi) || "-"}</span>
+                            <span style="font-size:10px;color:#9CA3AF;font-family:${MONO};">${esc(pd.tahun)}</span>
+                        </div>
+                        <div style="font-size:11px;color:#4F46E5;margin-top:2px;font-family:${MONO};">${esc(pd.jurusan) || "-"}</div>
+                        ${pd.kegiatan ? `<div style="font-size:11px;color:#6B7280;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
+                    </div>`,
 			)
 			.join("");
 		const expCards = (cvData.experiences || [])
@@ -420,6 +489,10 @@ export const buildCvHtml = (
                     <div style="font-family:Poppins,sans-serif;font-size:32px;font-weight:700;color:#111827;margin-top:4px;">${name}</div>
                     <div style="font-size:12px;color:#4F46E5;font-weight:500;margin-top:2px;font-family:${MONO};">&gt; ${title}</div>
                     <div style="font-size:10.5px;color:#9CA3AF;margin-top:10px;font-family:${MONO};">${phone || "-"} / ${email || "-"} / ${address || "-"}</div>
+                    <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// tentang</div>
+                    <p style="font-size:11.5px;color:#4B5563;line-height:1.65;white-space:pre-line;">${about}</p>
+                    <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// pendidikan</div>
+                    ${pendidikanDev}
                     <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// pengalaman</div>
                     ${expCards}
                     <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// kemampuan</div>
@@ -444,6 +517,7 @@ export const buildCvHtml = (
                         <div style="font-weight:700;color:#664229;font-size:12px;">${esc(pd.institusi) || "-"}</div>
                         <div style="font-size:12px;color:#1F2937;">${esc(pd.jurusan) || "-"}</div>
                         <div style="font-size:11px;color:#6B7280;">${esc(pd.tahun)}</div>
+                        ${pd.kegiatan ? `<div style="font-size:11px;color:#6B7280;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
                     </div>`,
 			)
 			.join("");
@@ -474,8 +548,6 @@ export const buildCvHtml = (
 		const asideBlock7 = (label: string, inner: string) => `
                     <div style="font-weight:700;color:#664229;font-size:18px;margin:24px 0 12px;">${label}</div>
                     ${inner}`;
-		const pendidikanBlock7 =
-			(cvData.pendidikans || []).length > 0 ? asideBlock7("Pendidikan", pendidikanLis7) : "";
 		const penghargaanBlock7 =
 			(cvData.penghargaans || []).length > 0
 				? asideBlock7("Penghargaan", `<ul style="list-style:disc;padding-left:18px;margin:0;">${penghargaanLis7}</ul>`)
@@ -513,9 +585,6 @@ export const buildCvHtml = (
                         <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-envelope" style="width:14px;color:#664229;"></i>${email || "-"}</li>
                         <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-location-dot" style="width:14px;color:#664229;"></i>${address || "-"}</li>
                     </ul>
-                    ${pendidikanBlock7}
-                    <div style="font-weight:700;color:#664229;font-size:18px;margin:24px 0 12px;">Kemampuan</div>
-                    <ul style="list-style:disc;padding-left:18px;margin:0;">${skillLis7}</ul>
                     ${penghargaanBlock7}
                     ${hobiBlock7}
                 </aside>
@@ -524,28 +593,36 @@ export const buildCvHtml = (
                     <h2 style="font-size:22px;color:#374151;letter-spacing:4px;text-transform:uppercase;margin:0 0 28px;">${title}</h2>
                     <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Tentang Saya</h3>
                     <p style="text-align:justify;color:#374151;font-size:13px;line-height:1.7;white-space:pre-line;">${about}</p>
+                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Riwayat Pendidikan</h3>
+                    ${pendidikanLis7}
                     <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Pengalaman Kerja</h3>
                     ${expLis7}
                     ${organisasiBlock7}
+                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Kemampuan</h3>
+                    <ul style="list-style:disc;padding-left:18px;margin:0;">${skillLis7}</ul>
                 </section>
             </div>
         </div>`;
 	}
 
 
-	// cv01 Editorial: masthead cokelat gaya majalah + aksen emas
-	const dots = (n: number) =>
-		Array.from(
-			{ length: 5 },
-			(_, i) =>
-				`<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${i < n ? "#C9A227" : "#E5DDCE"};margin-right:4px;"></span>`,
-		).join("");
-	const skillDots = skills
+	// cv01 Editorial: kertas hangat + garis emas, kemampuan berupa penjelasan
+	const skillEd = skills
 		.map(
-			(s, i) => `
-                    <div style="margin-bottom:10px;">
-                        <div style="font-size:11.5px;font-weight:600;color:#3B2F2A;margin-bottom:5px;">${esc(s.title)}</div>
-                        <div>${dots(3 + (i % 3))}</div>
+			(s) =>
+				`<div style="font-size:11.5px;color:#4A403A;line-height:1.65;margin-bottom:10px;"><span style="font-weight:600;color:#211A17;">${esc(s.title)}</span><span style="color:#C9A227;"> — </span>${esc(s.desc)}</div>`,
+		)
+		.join("");
+	const pendidikanEd = (cvData.pendidikans || [])
+		.map(
+			(pd) => `
+                    <div style="margin-bottom:12px;border-bottom:1px dashed #E8E0D3;padding-bottom:10px;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <span style="font-weight:700;font-size:12.5px;color:#211A17;">${esc(pd.institusi) || "-"}</span>
+                            <span style="font-size:10px;color:#A79A8A;letter-spacing:1px;">${esc(pd.tahun)}</span>
+                        </div>
+                        <div style="font-size:11px;color:#C9A227;font-weight:600;margin-top:2px;">${esc(pd.jurusan) || "-"}</div>
+                        ${pd.kegiatan ? `<div style="font-size:11px;color:#4A403A;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
                     </div>`,
 		)
 		.join("");
@@ -569,28 +646,24 @@ export const buildCvHtml = (
                         ${inner}
                     </div>`;
 	return `
-        <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;">
-            <div style="background:#4E342E;padding:40px 56px 34px;color:#F5EFE6;">
-                <div style="display:flex;justify-content:space-between;gap:32px;">
-                    <div>
-                        <div style="font-family:Poppins,sans-serif;font-size:40px;font-weight:700;line-height:1.1;">${name}</div>
-                        <div style="font-size:12px;letter-spacing:4px;text-transform:uppercase;color:#C9A227;font-weight:600;margin-top:8px;">${title}</div>
-                    </div>
-                    <div style="text-align:right;font-size:11px;line-height:1.9;color:#D8CDBE;">
-                        <div><i class="fa-solid fa-phone" style="color:#C9A227;margin-right:8px;width:12px;"></i>${phone || "-"}</div>
-                        <div><i class="fa-solid fa-envelope" style="color:#C9A227;margin-right:8px;width:12px;"></i>${email || "-"}</div>
-                        <div><i class="fa-solid fa-location-dot" style="color:#C9A227;margin-right:8px;width:12px;"></i>${address || "-"}</div>
-                    </div>
+        <div class="cv-paper" style="width:794px;height:1123px;background:#FDFBF7;overflow:hidden;">
+            <div style="padding:48px 56px 22px;border-bottom:2px solid #C9A227;">
+                <div style="font-family:Poppins,sans-serif;font-size:38px;font-weight:700;line-height:1.1;color:#211A17;">${name}</div>
+                <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8A6D3B;font-weight:600;margin-top:8px;">${title}</div>
+                <div style="display:flex;gap:24px;margin-top:20px;font-size:11px;color:#4A403A;">
+                    <div><i class="fa-solid fa-phone" style="color:#C9A227;margin-right:6px;width:12px;"></i>${phone || "-"}</div>
+                    <div><i class="fa-solid fa-envelope" style="color:#C9A227;margin-right:6px;width:12px;"></i>${email || "-"}</div>
+                    <div><i class="fa-solid fa-location-dot" style="color:#C9A227;margin-right:6px;width:12px;"></i>${address || "-"}</div>
                 </div>
             </div>
-            <div style="height:4px;background:#C9A227;"></div>
-            <div style="display:flex;padding:36px 56px;gap:36px;">
-                <div style="width:44%;padding-right:32px;border-right:1px solid #E8E0D3;">
+            <div style="display:flex;padding:36px 56px;gap:40px;">
+                <div style="width:42%;">
                     ${edSection("Tentang Saya", `<div style="font-size:12px;color:#4A403A;line-height:1.7;text-align:justify;white-space:pre-line;">${about}</div>`)}
-                    ${edSection("Kemampuan", skillDots)}
+                    ${edSection("Riwayat Pendidikan", pendidikanEd)}
                 </div>
                 <div style="flex:1;">
                     ${edSection("Pengalaman Kerja", expEd)}
+                    ${edSection("Kemampuan", skillEd)}
                 </div>
             </div>
         </div>`;

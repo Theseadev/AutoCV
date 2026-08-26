@@ -1855,9 +1855,10 @@ function CorporateLayout({
 }
 
 function ModernLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
+	const themeColor = cv.themeColor || "#111827";
 	return (
 		<div className="h-full flex flex-col">
-			<div className="bg-gray-900 px-12 py-10 flex justify-between items-center gap-8">
+			<div className="px-12 py-10 flex justify-between items-center gap-8 transition-colors duration-300" style={{ backgroundColor: themeColor }}>
 				<div className="flex-1">
 					<h1 className="text-4xl font-bold text-white mb-1">
 						{cv.name || "Nama Lengkap"}
@@ -2011,12 +2012,13 @@ function GeometricLayout({
 	cv: CvData;
 	skills: ParsedSkill[];
 }) {
+	const themeColor = cv.themeColor || "#4F46E5";
 	return (
 		<div className="h-full bg-white">
 			{/* Header navy + pita diagonal */}
 			<div className="relative bg-[#0F172A] text-white px-14 py-9 overflow-hidden">
-				<div className="absolute top-0 -right-14 w-52 h-full bg-[#4F46E5] -skew-x-[18deg]"></div>
-				<div className="absolute top-6 right-40 w-4 h-4 rounded-full bg-[#7C3AED]"></div>
+				<div className="absolute top-0 -right-14 w-52 h-full -skew-x-[18deg]" style={{ backgroundColor: themeColor }}></div>
+				<div className="absolute top-6 right-40 w-4 h-4 rounded-full bg-white/20"></div>
 				<div className="absolute bottom-5 right-64 w-2.5 h-2.5 rounded-sm bg-white/40"></div>
 				<div className="relative">
 					<h1 className="font-heading font-bold text-[36px] leading-[1.15]">
@@ -2030,7 +2032,7 @@ function GeometricLayout({
 			{/* Tile kontak */}
 			<div className="bg-indigo-50 px-14 py-3 flex gap-7 text-[11.5px] text-indigo-900 font-medium">
 				<span className="flex items-center gap-2.5 max-w-[240px]">
-					<span className="w-7 h-7 rounded-lg bg-white shadow-sm flex items-center justify-center shrink-0 text-[12px] text-indigo-600">
+					<span className="w-7 h-7 rounded-lg bg-white shadow-sm flex items-center justify-center shrink-0 text-[12px]" style={{ color: themeColor }}>
 						<i className="fa-solid fa-phone"></i>
 					</span>
 					<span className="truncate">{cv.phone || "-"}</span>
@@ -2611,18 +2613,18 @@ function CreamLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 // cv08 Peacock: banner cokelat tua + foto profil melingkar, sidebar cokelat muda
 function PeacockLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 	const pendidikans = cv.pendidikans || [];
-	const themeColor = cv.themeColor || "#A67B5B";
+	const themeColor = cv.themeColor || "#4A3326";
 	const banner = (label: string) => (
 		<div className="flex items-center gap-2.5 mb-3.5">
-			<h3 className="text-[14px] font-bold text-[#4A3326] uppercase tracking-[0.1em]">
+			<h3 className="text-[14px] font-bold uppercase tracking-[0.1em]" style={{ color: themeColor }}>
 				{label}
 			</h3>
-			<div className="flex-1 h-px opacity-40" style={{ backgroundColor: themeColor }}></div>
+			<div className="flex-1 h-px opacity-30" style={{ backgroundColor: themeColor }}></div>
 		</div>
 	);
 
 	const sideBanner = (label: string) => (
-		<h3 className="text-[13px] font-bold text-[#4A3326] uppercase tracking-[0.1em] mb-3 border-b border-[#4A3326]/15 pb-1.5">
+		<h3 className="text-[13px] font-bold uppercase tracking-[0.1em] mb-3 pb-1.5 border-b" style={{ color: themeColor, borderColor: `${themeColor}30` }}>
 			{label}
 		</h3>
 	);
@@ -2630,19 +2632,19 @@ function PeacockLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 	return (
 		<div className="h-full flex flex-col bg-white font-['Inter',sans-serif]">
 			{/* Header */}
-			<header className="relative z-10 bg-[#4A3326] px-12 py-10 flex items-center gap-8">
+			<header className="relative z-10 px-12 py-10 flex items-center gap-8 transition-colors duration-300" style={{ backgroundColor: themeColor }}>
 				{cv.photo && (
 					<img
 						src={cv.photo}
 						alt="Profile"
-						className={`w-[110px] h-[110px] object-cover border-[3px] border-[#F8F4ED] shadow-lg shrink-0 ${cv.photoShape === 'square' ? 'rounded-md' : cv.photoShape === 'rounded' ? 'rounded-xl' : 'rounded-full'}`}
+						className={`w-[110px] h-[110px] object-cover border-[3px] border-white/80 shadow-lg shrink-0 ${cv.photoShape === 'square' ? 'rounded-md' : cv.photoShape === 'rounded' ? 'rounded-xl' : 'rounded-full'}`}
 					/>
 				)}
 				<div className="flex-1">
 					<h1 className="text-white font-extrabold text-[36px] leading-tight tracking-tight">
 						{cv.name || "Nama Lengkap"}
 					</h1>
-					<p className="text-[#F8F4ED] text-[14px] tracking-[0.2em] uppercase mt-2 font-medium">
+					<p className="text-white/80 text-[14px] tracking-[0.2em] uppercase mt-2 font-medium">
 						{cv.title || "Profesi"}
 					</p>
 				</div>
@@ -2687,10 +2689,10 @@ function PeacockLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						{pendidikans.map((pd) => (
 							<div key={pd.id} className="mb-3.5">
 								<div className="flex justify-between items-baseline">
-									<h4 className="font-bold text-[12.5px] text-[#4A3326]">
+									<h4 className="font-bold text-[12.5px]" style={{ color: themeColor }}>
 										{pd.institusi || "-"}
 									</h4>
-									<span className="text-[10px] text-[#A67B5B] font-semibold">{pd.tahun}</span>
+									<span className="text-[10px] font-semibold" style={{ color: themeColor }}>{pd.tahun}</span>
 								</div>
 								<p className="text-[11.5px] text-gray-600 font-medium mt-0.5">
 									{pd.jurusan || "-"}
@@ -2723,10 +2725,10 @@ function PeacockLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						{(cv.experiences || []).map((exp, index) => (
 							<div key={exp.id ?? index} className="mb-5">
 								<div className="flex justify-between items-baseline">
-									<h4 className="font-bold text-[14px] text-[#4A3326]">
+									<h4 className="font-bold text-[14px]" style={{ color: themeColor }}>
 										{exp.company || "Nama Perusahaan"}
 									</h4>
-									<span className="text-[10.5px] text-[#A67B5B] font-semibold tracking-wide">{exp.period}</span>
+									<span className="text-[10.5px] font-semibold tracking-wide" style={{ color: themeColor }}>{exp.period}</span>
 								</div>
 								<p className="text-xs text-gray-600 font-medium my-1">
 									{exp.role || "Jabatan"}
@@ -2749,10 +2751,10 @@ function PeacockLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 							{(cv.organisasis || []).map((org, index) => (
 								<div key={org.id ?? index} className="mb-4">
 									<div className="flex justify-between items-baseline">
-										<h4 className="font-bold text-[13.5px] text-[#4A3326]">
+										<h4 className="font-bold text-[13.5px]" style={{ color: themeColor }}>
 											{org.instansi || "Nama Instansi"}
 										</h4>
-										<span className="text-[10.5px] text-[#A67B5B] font-semibold">
+										<span className="text-[10.5px] font-semibold" style={{ color: themeColor }}>
 											{org.tanggal}
 										</span>
 									</div>
@@ -2778,7 +2780,7 @@ function PeacockLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 							<ul className="list-disc list-inside space-y-1">
 								{(cv.penghargaans || []).map((a) => (
 									<li key={a.id} className="text-[11.5px] text-gray-800">
-										<strong className="text-[#4A3326]">{a.judul}</strong>
+										<strong style={{ color: themeColor }}>{a.judul}</strong>
 										{a.tahun && <span className="text-[10.5px] text-gray-500 ml-1">({a.tahun})</span>}
 									</li>
 								))}

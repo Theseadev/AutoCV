@@ -360,9 +360,10 @@ export const buildCvHtml = (
 	}
 
 	if (template === "cv03") {
+		const t03 = cvData.themeColor || "#111827";
 		return `
         <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;display:flex;flex-direction:column;">
-            <div style="background-color:#111827;padding:40px 48px;display:flex;justify-content:space-between;align-items:center;gap:32px;">
+            <div style="background-color:${t03};padding:40px 48px;display:flex;justify-content:space-between;align-items:center;gap:32px;">
                 <div style="flex:1;">
                     <h1 class="text-4xl font-bold text-white mb-1">${name}</h1>
                     <h2 class="text-xl font-light text-gray-300 tracking-wide">${title}</h2>
@@ -766,11 +767,11 @@ export const buildCvHtml = (
         </div>`;
 	}
 
-	// cv08 Peacock: banner cokelat tua + foto profil, sidebar cokelat muda
+	// cv08 Peacock: banner dinamis mengikuti tema warna, sidebar krem
 	if (template === "cv08") {
-		const BR = "#4A3326"; // Dark Elegant Brown
+		const BR = cvData.themeColor || "#4A3326"; // Dynamic Main Brand Color
 		const SK = "#F8F4ED"; // Warm Cream
-		const ACCENT = cvData.themeColor || "#A67B5B"; // Warm Gold/Brown Accent
+		const ACCENT = cvData.themeColor || "#A67B5B";
 		
 		const skillLis8 = skills
 			.map(

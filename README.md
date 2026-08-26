@@ -1,56 +1,83 @@
-# AIGen CV — Pro Resume Builder
+# AutoCV - Frontend Only (Supabase + Vercel)
 
-Website builder CV dengan AI (Gemini), live preview A4, ATS auditor, checkout WhatsApp, dan panel admin.
-Stack: **React + TypeScript (TSX) + Vite** di frontend, **Node.js + Express + TypeScript** di backend.
+## Arsitektur
+- **Frontend**: React + Vite → Deploy ke Vercel (gratis)
+- **Database & Auth**: Supabase Free Tier (500MB DB, 2GB bandwidth, Edge Functions)
+- **AI Proxy**: Supabase Edge Functions (Gemini API key aman di server)
+- **Admin Panel**: Stateless token via Edge Function
 
-## Cara menjalankan (dev)
+## Setup Supabase (Sekali Saja)
 
-1. **Isi API key Gemini** — edit `backend/.env` (salin dari `.env.example`), isi `GEMINI_API_KEY` dari https://aistudio.google.com/apikey
-2. **Jalankan backend** (terminal 1):
-   ```
-   cd backend && npm install && npm run dev
-   ```
-3. **Jalankan frontend** (terminal 2):
-   ```
-   cd frontend && npm install && npm run dev
-   ```
-4. Buka http://localhost:5173 — Vite mem-proxy `/api` ke backend :3001
-5. **Atur password & nomor WA admin** — di `backend/.env`: `ADMIN_PASSWORD` (password panel admin, tersimpan hanya di server) dan `WA_ADMIN` (nomor WhatsApp tujuan checkout, tanpa +).
+1. Buat project di [supabase.com](https://supabase.com) (Free tier)
+2. Buka **SQL Editor** → Jalankan isi `supabase/migrations/20241201_initial_schema.sql`
+3. Buka **Project Settings > API** → Copy `Project URL` dan `anon public key`
+4. Buka **Project Settings > Edge Functions** → Set secrets:
+   - `GEMINI_API_KEY` = API key dari [Google AI Studio](https://aistudio.google.com/apikey)
+   - `GEMINI_MODEL` = `gemini-2.0-flash` (opsional)
+   - `ADMIN_PASSWORD` = password panel admin (hash SHA-256 dipakai untuk token)
+   - `SUPABASE_SERVICE_ROLE_KEY` = `service_role` key dari Settings > API (untuk admin-orders)
+5. (Opsional) Update `wa_admin` di tabel `config` via Table Editor
 
-## Struktur
+## Development Lokal
 
-```
-backend/
-  src/server.ts      — API: proxy Gemini (/api/generate) + simpan/ambil order (/api/orders)
-  data/orders.json   — database order (dibuat otomatis)
-  .env               — GEMINI_API_KEY, GEMINI_MODEL, PORT (jangan di-commit)
-frontend/
-  src/App.tsx        — navbar + routing view + state global (cv)
-  src/components/    — StoreView, BuilderView (editor + preview A4), AtsView, AdminView
-  src/api.ts         — panggilan API (Gemini proxy, orders, login admin, config)
-  src/cv.ts          — tipe data, parse skills, builder HTML kertas CV (untuk PDF)
-  src/pdf.ts         — export PDF bersih via html2pdf.js (CDN)
+```bash
+cd frontend
+cp .env.example .env
+# Isi VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY dari Supabase project Anda
+npm install
+npm run dev
 ```
 
-## Production (opsional)
+Atau pakai Supabase CLI untuk full local dev:
+```bash
+npx supabase start
+npx supabase functions serve --env-file=.env.local
+# VITE_SUPABASE_URL=http://localhost:54321
+# VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+## Deploy ke Vercel
+
+1. Push repo ke GitHub
+2. Import project di Vercel → Framework: Vite
+3. Environment Variables:
+   - `VITE_SUPABASE_URL` = URL project Supabase
+   - `VITE_SUPABASE_ANON_KEY` = anon key Supabase
+4. Deploy → Done! Domain custom gratis di Vercel.
+
+## Struktur Edge Functions
 
 ```
-cd frontend && npm run build   # → frontend/dist
-cd backend && npm run build && npm start   # Express melayani dist + API di :3001
+supabase/functions/
+├── gemini-proxy/    # Proxy ke Gemini API (API key aman)
+├── admin-login/     # Verifikasi password admin → return token
+└── admin-orders/    # Ambil orders (butuh token admin + service role)
 ```
 
-## Fitur
+Deploy functions:
+```bash
+npx supabase functions deploy gemini-proxy
+npx supabase functions deploy admin-login
+npx supabase functions deploy admin-orders
+```
 
-- **Toko Template** — 2 produk, klik "Pakai Template" masuk ke builder
-- **CV Builder** — form + live preview A4 ber-watermark (auto-scale pas layar); AI: generate profil, poles deskripsi, rekomendasi skill
-- **Checkout WA** — order tersimpan ke `backend/data/orders.json`, pembeli diarahkan ke WhatsApp admin
-- **AI ATS Auditor** — skor kelayakan vs deskripsi lowongan, kata kunci kurang, saran perbaikan, ringkasan teroptimasi (bisa diterapkan ke CV)
-- **Panel Admin** — daftar order dari backend; "Unduh PDF Asli" merender CV tanpa watermark via html2pdf.js
+## Catatan Penting
 
-## Catatan
+- **Tidak ada backend server** — semua API lewat Supabase
+- **Gemini API key tidak pernah bocor ke browser** — hanya di Edge Function secrets
+- **Admin panel** pakai token stateless (hash password). Ganti password = semua token hangus.
+- **Rate limit** — Supabase Edge Functions punya limit gratis 500k invocations/bulan
+- **File upload (foto CV)** — masih pakai base64 di localStorage. Kalau butuh persistent, tambah Supabase Storage.
 
-- Model Gemini dikonfigurasi di `backend/.env` (`GEMINI_MODEL=gemini-2.0-flash`).
-- Panel admin dilindungi `ADMIN_PASSWORD` di `backend/.env`; `GET /api/orders` butuh token dari `POST /api/login`.
-- `/api/generate` di-rate-limit (15 permintaan/menit per IP) untuk melindungi kuota Gemini.
-- Nomor WA admin dibaca dari `backend/.env` (`WA_ADMIN`) via `GET /api/config` — ganti tanpa rebuild frontend.
-- Harga checkout di tombol builder hardcoded Rp 25.000; sesuaikan di `BuilderView.tsx` jika mau dinamis per template.
+## Migrasi dari Backend Lama
+
+Yang dihapus:
+- `backend/` folder (Express server, JSON file storage)
+- Vite proxy config (`/api` → localhost:3001)
+- In-memory rate limit, file-based orders
+
+Yang baru:
+- Supabase client di `src/lib/supabase.ts`
+- API calls di `src/api.ts` → Supabase + Edge Functions
+- SQL schema di `supabase/migrations/`
+- Edge Functions di `supabase/functions/`

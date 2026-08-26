@@ -1,113 +1,126 @@
-import { useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
 import { parseSkills, storeCv, storeSkillsText } from "../cv";
-
 import { CvPaper } from "./BuilderView";
 
 interface Props {
-	onPick: (template: string) => void;
+	onPick: (template: string, color?: string) => void;
 }
 
-const TEMPLATES = [
+interface TemplateItem {
+	id: string;
+	name: string;
+	photo: boolean;
+	columns: 1 | 2;
+	style: "Traditional" | "Creative" | "Contemporary";
+	recommended?: boolean;
+	palettes: string[];
+}
+
+const TEMPLATES: TemplateItem[] = [
 	{
-		id: "cv01",
-
-		name: "Creative Pro 01",
-
-		category: "Kreatif · Editorial",
-
-		price: "Rp 25.000",
-
-		desc: "Masthead cokelat gaya majalah dengan aksen emas dan skill dots. Untuk yang mau tampil beda tapi tetap rapi.",
-	},
-
-	{
-		id: "cv02",
-
-		name: "Corporate Standard",
-
-		category: "Formal · ATS Friendly",
-
-		price: "Rp 20.000",
-
-		desc: "Satu kolom, fokus ke kata kunci. Format paling aman untuk menembus seleksi HRD BUMN & korporat.",
-	},
-
-	{
-		id: "cv03",
-
-		name: "Modern Executive",
-
-		category: "Modern · Eksekutif",
-
-		price: "Rp 30.000",
-
-		desc: "Header gelap dan dua kolom rapi. Untuk profesional, manajer, dan posisi senior.",
-	},
-
-	{
-		id: "cv04",
-
-		name: "Neo Creative",
-
-		category: "Kreatif · Geometris",
-
-		price: "Rp 35.000",
-
-		desc: "Header navy dengan pita diagonal, tile kontak, timeline bernomor, dan progress bar skill.",
+		id: "cv01_photo",
+		name: "Creative Pro 01 (With Photo)",
+		photo: true,
+		columns: 2,
+		style: "Creative",
+		recommended: true,
+		palettes: ["#689F38", "#00ACC1", "#1E88E5", "#1565C0", "#2E7D32"],
 	},
 	{
-		id: "cv05",
-
-		name: "Lux Monochrome",
-
-		category: "Elegant · Monokrom",
-
-		price: "Rp 25.000",
-
-		desc: "Tipografi serif mewah dengan palet hitam-putih dan garis ganda. Untuk profesional senior dan konsultan.",
-	},
-
-	{
-		id: "cv06",
-
-		name: "Dev Minimal",
-
-		category: "Tech · Developer",
-
-		price: "Rp 30.000",
-
-		desc: "Gaya developer: rail indigo, aksen monospace, chip skill. Cocok untuk IT, programmer, dan data analyst.",
+		id: "cv04_photo",
+		name: "Neo Creative (With Photo)",
+		photo: true,
+		columns: 2,
+		style: "Creative",
+		recommended: true,
+		palettes: ["#212121", "#00897B", "#1565C0", "#4F46E5", "#D84315"],
 	},
 	{
-
-		id: "cv07",
-
-		name: "Classic Fresh",
-
-		category: "Klasik · Fresh Graduate",
-
-		price: "Rp 20.000",
-
-		desc: "Sidebar krem hangat dengan aksen cokelat. Dirancang khusus untuk fresh graduate dan lulusan baru.",
+		id: "cv02_photo",
+		name: "Corporate Standard (With Photo)",
+		photo: true,
+		columns: 1,
+		style: "Traditional",
+		recommended: true,
+		palettes: ["#374151", "#2E7D32", "#0284C7", "#7E22CE", "#C2410C"],
+	},
+	{
+		id: "cv08_photo",
+		name: "Peacock Brown (With Photo)",
+		photo: true,
+		columns: 2,
+		style: "Contemporary",
+		recommended: true,
+		palettes: ["#A67B5B", "#5D4037", "#00897B", "#1E88E5", "#D84315"],
+	},
+	{
+		id: "cv01_no",
+		name: "Creative Pro 01 (No Photo)",
+		photo: false,
+		columns: 2,
+		style: "Creative",
+		recommended: false,
+		palettes: ["#689F38", "#00ACC1", "#1E88E5", "#1565C0", "#2E7D32"],
+	},
+	{
+		id: "cv02_no",
+		name: "Corporate Standard (No Photo)",
+		photo: false,
+		columns: 1,
+		style: "Traditional",
+		recommended: false,
+		palettes: ["#374151", "#2E7D32", "#0284C7", "#7E22CE", "#C2410C"],
+	},
+	{
+		id: "cv05_photo",
+		name: "Lux Monochrome (With Photo)",
+		photo: true,
+		columns: 1,
+		style: "Traditional",
+		recommended: false,
+		palettes: ["#111827", "#4B5563", "#047857", "#1D4ED8", "#991B1B"],
+	},
+	{
+		id: "cv06_photo",
+		name: "Dev Minimal (With Photo)",
+		photo: true,
+		columns: 1,
+		style: "Contemporary",
+		recommended: false,
+		palettes: ["#4F46E5", "#0891B2", "#059669", "#D97706", "#DC2626"],
+	},
+	{
+		id: "cv04_no",
+		name: "Neo Creative (No Photo)",
+		photo: false,
+		columns: 2,
+		style: "Creative",
+		recommended: false,
+		palettes: ["#212121", "#00897B", "#1565C0", "#4F46E5", "#D84315"],
+	},
+	{
+		id: "cv08_no",
+		name: "Peacock Brown (No Photo)",
+		photo: false,
+		columns: 2,
+		style: "Contemporary",
+		recommended: false,
+		palettes: ["#A67B5B", "#5D4037", "#00897B", "#1E88E5", "#D84315"],
 	},
 ];
 
 const scrollToTemplates = () =>
 	document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" });
 
-// Tumpukan CV interaktif: klik lembar belakang untuk membawanya ke depan
-
-const HERO_TEMPLATES = ["cv01", "cv07", "cv06", "cv03", "cv04"];
-
-// Sudut lembar berdasarkan jarak dari depan (0 = lembar paling depan)
-
+// Tumpukan CV interaktif untuk Hero Section
+const HERO_TEMPLATES = ["cv01_photo", "cv04_photo", "cv08_photo", "cv02_photo", "cv05_photo"];
 const FAN_ANGLES = [0, 17, -17, 24, -24];
 
 function TemplateStack() {
 	const [order, setOrder] = useState(HERO_TEMPLATES);
 	const bringToFront = (id: string) =>
 		setOrder((o) => [...o.filter((x) => x !== id), id]);
+
 	return (
 		<div className="relative w-[520px] h-[360px] select-none">
 			{order.map((t, i) => {
@@ -119,7 +132,9 @@ function TemplateStack() {
 						type="button"
 						aria-label={`Lihat preview template ${t}`}
 						onClick={() => bringToFront(t)}
-						className={`absolute left-1/2 bottom-0 w-[238px] aspect-[1/1.414] rounded-lg overflow-hidden ring-1 ring-black/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${front ? "shadow-xl" : "shadow-md hover:shadow-lg"}`}
+						className={`absolute left-1/2 bottom-0 w-[238px] aspect-[1/1.414] rounded-lg overflow-hidden ring-1 ring-black/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${
+							front ? "shadow-xl" : "shadow-md hover:shadow-lg"
+						}`}
 						style={{
 							transformOrigin: "50% 100%",
 							transform: `translateX(-50%) rotate(${FAN_ANGLES[dist]}deg)`,
@@ -141,10 +156,7 @@ function TemplateStack() {
 	);
 }
 
-// Latar hero: dot grid + outline lembar CV tersebar (kesan "meja penuh dokumen"),
-
-// bukan blob gradient khas AI slop.
-
+// Latar hero: grid kertas grafik indigo yang elegan
 function HeroBackground() {
 	return (
 		<div
@@ -153,237 +165,138 @@ function HeroBackground() {
 		>
 			<svg
 				role="img"
-				aria-label="Latar dekoratif: tumpukan lembar CV dan pola titik halus"
+				aria-label="Latar dekoratif: grid kertas grafik"
 				className="h-full w-full"
 				viewBox="0 0 1440 900"
 				preserveAspectRatio="xMidYMid slice"
 			>
 				<defs>
 					<pattern
-						id="hero-dots"
-						width="26"
-						height="26"
+						id="hero-grid"
+						width="44"
+						height="44"
 						patternUnits="userSpaceOnUse"
 					>
-						<circle cx="1.5" cy="1.5" r="1.5" fill="#4F46E5" opacity="0.07" />
+						<path
+							d="M44 0H0V44"
+							fill="none"
+							stroke="#4F46E5"
+							strokeWidth="1"
+							opacity="0.16"
+						/>
 					</pattern>
+					<radialGradient id="hero-mask" cx="50%" cy="44%" r="72%">
+						<stop offset="0" stopColor="#FFFFFF" stopOpacity="0.92" />
+						<stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+					</radialGradient>
 				</defs>
-
-				<rect width="1440" height="900" fill="url(#hero-dots)" />
-
-				{/* Outline lembar CV tersebar */}
-
-				<g fill="none" stroke="#9CA3AF" strokeLinecap="round">
-					{/* Lembar besar di belakang kartu preview */}
-
-					<g transform="rotate(-5 1100 360)" opacity="0.5">
-						<rect
-							x="1030"
-							y="180"
-							width="150"
-							height="205"
-							rx="4"
-							strokeWidth="1.2"
-						/>
-
-						<g strokeWidth="0.8" opacity="0.55">
-							<path d="M1050 206h112M1050 224h84M1050 242h112M1050 260h60M1050 284h112M1050 302h96M1050 320h112" />
-						</g>
-					</g>
-
-					{/* Lembar kecil dengan sudut terlipat */}
-
-					<g transform="rotate(9 235 285)" opacity="0.4">
-						<path d="M180 220h80l30 30v100h-110z" strokeWidth="1.2" />
-
-						<path d="M260 220v30h30" strokeWidth="0.9" opacity="0.6" />
-
-						<path d="M195 252h70M195 268h46" strokeWidth="0.8" opacity="0.5" />
-					</g>
-
-					{/* Lembar kanan bawah */}
-
-					<g transform="rotate(-7 1275 630)" opacity="0.35">
-						<rect
-							x="1210"
-							y="540"
-							width="130"
-							height="180"
-							rx="4"
-							strokeWidth="1.2"
-						/>
-
-						<g strokeWidth="0.8" opacity="0.55">
-							<path d="M1230 566h92M1230 584h70M1230 602h92M1230 626h92M1230 644h78M1230 662h92" />
-						</g>
-					</g>
-
-					{/* Lembar kiri bawah */}
-
-					<g transform="rotate(6 290 705)" opacity="0.3">
-						<rect
-							x="220"
-							y="610"
-							width="140"
-							height="190"
-							rx="4"
-							strokeWidth="1.2"
-						/>
-
-						<g strokeWidth="0.8" opacity="0.55">
-							<path d="M240 636h100M240 654h76M240 672h100M240 696h100M240 714h84M240 732h100" />
-						</g>
-					</g>
-				</g>
-
-				{/* Tanda teknis kecil: crosshair & kotak (kesan presisi) */}
-
-				<g stroke="#4F46E5" strokeWidth="1.1" opacity="0.22">
-					<g>
-						<path d="M96 196v12M90 202h12" />
-
-						<circle cx="108" cy="202" r="3.5" fill="none" />
-					</g>
-
-					<g>
-						<path d="M1338 130v12M1332 136h12" />
-
-						<circle cx="1350" cy="136" r="3.5" fill="none" />
-					</g>
-
-					<g>
-						<path d="M150 470v10M145 475h10" />
-					</g>
-
-					<g>
-						<rect x="700" y="56" width="10" height="10" rx="1.5" />
-
-						<rect x="720" y="52" width="18" height="18" rx="2" opacity="0.6" />
-					</g>
-
-					<g>
-						<circle
-							cx="1260"
-							cy="300"
-							r="5"
-							fill="#4F46E5"
-							opacity="0.35"
-							stroke="none"
-						/>
-
-						<circle cx="1260" cy="300" r="11" strokeWidth="0.8" opacity="0.5" />
-					</g>
-				</g>
+				<rect width="1440" height="900" fill="url(#hero-grid)" />
+				<rect width="1440" height="900" fill="url(#hero-mask)" />
 			</svg>
 		</div>
 	);
 }
 
-// Ilustrasi "Empat desain, empat karakter" — empat lembar mini fanned, warna khas tiap template
-function TemplateFan() {
-	const sheets = [
-		{ n: "01", band: "#4E342E", rule: "#C9A227", badge: "#C9A227", rot: -6 },
-		{ n: "02", band: "#E5E7EB", rule: "#111827", badge: "#111827", rot: -3 },
-		{ n: "03", band: "#111827", rule: "#4F46E5", badge: "#4F46E5", rot: 0 },
-		{ n: "04", band: "#0F172A", rule: "#4F46E5", badge: "#4F46E5", rot: 3 },
-		{ n: "05", band: "#D4D4D8", rule: "#111827", badge: "#111827", rot: 6 },
-	];
-	return (
-		<svg
-			role="img"
-			aria-label="Tujuh kartu template dengan warna khas masing-masing"
-			viewBox="0 0 635 235"
-			className="w-full max-w-[635px] mx-auto lg:mx-0 select-none"
-		>
-			<defs>
-				<linearGradient id="neo-grad" x1="0" y1="0" x2="1" y2="1">
-					<stop offset="0" stopColor="#4F46E5" />
-					<stop offset="1" stopColor="#7C3AED" />
-				</linearGradient>
-			</defs>
-			{sheets.map((s, i) => {
-				const x = 40 + i * 112;
-				const y = 55;
-				return (
-					<g key={s.n} transform={`rotate(${s.rot} ${x + 52} ${y + 145})`}>
-						<rect
-							x={x + 3}
-							y={y + 6}
-							width="105"
-							height="145"
-							rx="3"
-							fill="#111827"
-							opacity="0.08"
-						/>
-						<rect
-							x={x}
-							y={y}
-							width="105"
-							height="145"
-							rx="3"
-							fill="#FFFFFF"
-							stroke="#E5E7EB"
-						/>
-						<path
-							d={`M${x} ${y + 3} Q${x} ${y} ${x + 3} ${y} H${x + 102} Q${x + 105} ${y} ${x + 105} ${y + 3} V${y + 30} H${x} Z`}
-							fill={s.band}
-						/>
-						<rect x={x} y={y + 30} width="105" height="2" fill={s.rule} />
-						<rect
-							x={x + 12}
-							y={y + 42}
-							width="52"
-							height="5"
-							rx="2.5"
-							fill="#9CA3AF"
-						/>
-						<g fill="#E5E7EB">
-							<rect x={x + 12} y={y + 56} width="81" height="5" rx="2.5" />
-							<rect x={x + 12} y={y + 68} width="67" height="5" rx="2.5" />
-							<rect x={x + 12} y={y + 80} width="50" height="5" rx="2.5" />
-							<rect x={x + 12} y={y + 94} width="72" height="5" rx="2.5" />
-							<rect x={x + 12} y={y + 106} width="60" height="5" rx="2.5" />
-						</g>
-						<circle cx={x + 88} cy={y + 128} r="11" fill={s.badge} />
-						<text
-							x={x + 88}
-							y={y + 132}
-							textAnchor="middle"
-							fontFamily="Poppins, sans-serif"
-							fontWeight="700"
-							fontSize="11"
-							fill="#FFFFFF"
-						>
-							{s.n}
-						</text>
-					</g>
-				);
-			})}
-		</svg>
-	);
-}
+// Preview kartu yang responsif & mengisi container A4 tanpa border ganda
+function ResponsiveCvPreview({ template, color }: { template: string; color?: string }) {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [scale, setScale] = useState(0.35);
 
-// Crop bagian atas kertas A4 asli sebagai gambar produk — preview sungguhan, bukan placeholder
+	useEffect(() => {
+		if (!containerRef.current) return;
+		const updateScale = () => {
+			if (containerRef.current) {
+				const width = containerRef.current.clientWidth;
+				if (width > 0) {
+					setScale(width / 794);
+				}
+			}
+		};
+		updateScale();
+		const ro = new ResizeObserver(updateScale);
+		ro.observe(containerRef.current);
+		return () => ro.disconnect();
+	}, []);
 
-function TemplatePreview({ template }: { template: string }) {
+	const cardCv = color ? { ...storeCv, themeColor: color } : storeCv;
+
 	return (
-		<div className="w-[238px] aspect-[1/1.414] overflow-hidden rounded-lg shadow-sm group-hover:shadow-xl group-hover:scale-[1.02] transition duration-500 pointer-events-none select-none">
-			<CvPaper
-				cv={storeCv}
-				skills={parseSkills(storeSkillsText)}
-				scale={0.3}
-				template={template}
-				watermark={false}
-			/>
+		<div ref={containerRef} className="w-full h-full relative overflow-hidden pointer-events-none select-none bg-white">
+			<div style={{ transform: `scale(${scale})`, transformOrigin: "top left", width: "794px", height: "1123px" }}>
+				<CvPaper
+					cv={cardCv}
+					skills={parseSkills(storeSkillsText)}
+					scale={1}
+					template={template}
+					watermark={false}
+				/>
+			</div>
 		</div>
 	);
 }
 
 export default function StoreView({ onPick }: Props) {
-	return (
-		<div className="animate-fade-in">
-			{/* HERO */}
+	// State warna yang dipilih untuk setiap template
+	const [selectedColors, setSelectedColors] = useState<Record<string, string>>({
+		cv01_photo: "#689F38",
+		cv04_photo: "#212121",
+		cv02_photo: "#374151",
+		cv08_photo: "#A67B5B",
+	});
 
+	// Filter state
+	const [filters, setFilters] = useState({
+		withPhoto: false,
+		withoutPhoto: false,
+		col1: false,
+		col2: false,
+		traditional: false,
+		creative: false,
+		contemporary: false,
+	});
+
+	const handleClearFilters = () => {
+		setFilters({
+			withPhoto: false,
+			withoutPhoto: false,
+			col1: false,
+			col2: false,
+			traditional: false,
+			creative: false,
+			contemporary: false,
+		});
+	};
+
+	// Filter logic
+	const filteredTemplates = TEMPLATES.filter((t) => {
+		// Headshot filter
+		const photoFilterActive = filters.withPhoto || filters.withoutPhoto;
+		if (photoFilterActive) {
+			if (filters.withPhoto && !t.photo) return false;
+			if (filters.withoutPhoto && t.photo) return false;
+		}
+
+		// Columns filter
+		const colFilterActive = filters.col1 || filters.col2;
+		if (colFilterActive) {
+			if (filters.col1 && t.columns !== 1) return false;
+			if (filters.col2 && t.columns !== 2) return false;
+		}
+
+		// Style filter
+		const styleFilterActive = filters.traditional || filters.creative || filters.contemporary;
+		if (styleFilterActive) {
+			if (filters.traditional && t.style !== "Traditional") return false;
+			if (filters.creative && t.style !== "Creative") return false;
+			if (filters.contemporary && t.style !== "Contemporary") return false;
+		}
+
+		return true;
+	});
+
+	return (
+		<div className="animate-fade-in bg-white">
+			{/* HERO SECTION */}
 			<section className="relative bg-white border-b border-gray-200 overflow-hidden">
 				<HeroBackground />
 
@@ -415,15 +328,15 @@ export default function StoreView({ onPick }: Props) {
 							<button
 								type="button"
 								onClick={scrollToTemplates}
-								className="bg-primary hover:bg-indigo-700 text-white px-7 py-3 rounded-xl font-semibold shadow-sm hover:shadow-md transition-all duration-300 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
+								className="bg-primary hover:bg-indigo-700 text-white px-7 py-3 rounded-xl font-semibold shadow-sm hover:shadow-md transition-all duration-300 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer"
 							>
 								Pilih Template
 							</button>
 
 							<button
 								type="button"
-								onClick={() => onPick("cv01")}
-								className="text-gray-700 hover:text-gray-900 font-semibold px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors active:scale-[0.96]"
+								onClick={() => onPick("cv01_photo")}
+								className="text-gray-700 hover:text-gray-900 font-semibold px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors active:scale-[0.96] cursor-pointer"
 							>
 								Langsung coba builder →
 							</button>
@@ -446,76 +359,204 @@ export default function StoreView({ onPick }: Props) {
 				</div>
 			</section>
 
-			{/* TEMPLATE LIST */}
-
+			{/* SHOW TEMPLATES SECTION (Sesuai Referensi Gambar) */}
 			<section
 				id="templates"
-				className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 scroll-mt-24"
+				className="max-w-[1400px] mx-auto px-6 sm:px-8 py-16 scroll-mt-16"
 			>
-				<div className="mb-12 grid lg:grid-cols-2 gap-10 items-center animate-fade-up">
-					<div>
-						<p className="text-sm font-semibold text-primary uppercase tracking-widest mb-2">
-							Template
-						</p>
-
-						<h2 className="text-3xl sm:text-4xl font-heading font-bold text-gray-900">
-							Tujuh desain, tujuh karakter.
-						</h2>
-
-						<p className="text-gray-600 mt-3 max-w-xl">
-							Semua template bisa diedit bebas di builder \x97 ganti warna,
-							tulis ulang, tambah pengalaman sesukamu.
-						</p>
-					</div>
-
-					<TemplateFan />
+				{/* Header referensi: "You can always change your template later." */}
+				<div className="pb-12 text-center">
+					<h2 className="text-xl sm:text-2xl font-normal text-slate-700 tracking-tight font-sans">
+						You can always change your template later.
+					</h2>
 				</div>
 
-				<div className="bg-white border border-gray-200 rounded-2xl overflow-hidden divide-y divide-gray-200 shadow-sm">
-					{TEMPLATES.map((t, i) => (
-						<div
-							key={t.id}
-							className="flex flex-col sm:flex-row group transition-colors hover:bg-gray-50/70 animate-fade-up"
-							style={{ animationDelay: `${i * 70}ms` }}
-						>
-							<div className="sm:w-72 shrink-0 bg-gray-50 sm:border-r border-gray-200 p-5 flex justify-center transition-colors group-hover:bg-gray-100/70">
-								<TemplatePreview template={t.id} />
+				<div className="flex flex-col md:flex-row gap-12 items-start">
+					{/* Left Sidebar Filters */}
+					<aside className="w-full md:w-56 shrink-0">
+						<div className="flex items-center justify-between mb-8">
+							<h3 className="text-2xl font-bold text-gray-900 tracking-tight">Filters</h3>
+							<button
+								type="button"
+								onClick={handleClearFilters}
+								className="text-[13px] font-medium text-sky-600 hover:text-sky-800 hover:underline cursor-pointer"
+							>
+								Clear Filters
+							</button>
+						</div>
+
+						<div className="space-y-8">
+							{/* Headshot */}
+							<div>
+								<h4 className="text-base font-bold text-gray-900 mb-3.5">Headshot</h4>
+								<div className="space-y-2.5">
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.withPhoto}
+											onChange={(e) => setFilters((f) => ({ ...f, withPhoto: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">With photo</span>
+									</label>
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.withoutPhoto}
+											onChange={(e) => setFilters((f) => ({ ...f, withoutPhoto: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">Without photo</span>
+									</label>
+								</div>
 							</div>
 
-							<div className="flex-1 p-6 sm:p-8 flex flex-col justify-center">
-								<div className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
-									{t.category}
+							{/* Columns */}
+							<div>
+								<h4 className="text-base font-bold text-gray-900 mb-3.5">Columns</h4>
+								<div className="space-y-2.5">
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.col1}
+											onChange={(e) => setFilters((f) => ({ ...f, col1: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">1 Column</span>
+									</label>
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.col2}
+											onChange={(e) => setFilters((f) => ({ ...f, col2: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">2 Columns</span>
+									</label>
 								</div>
+							</div>
 
-								<h3 className="text-2xl font-heading font-bold text-gray-900 mt-1 mb-2">
-									{t.name}
-								</h3>
-
-								<p className="text-gray-600 text-sm max-w-lg mb-6">{t.desc}</p>
-
-								<div className="flex items-center justify-between gap-4">
-									<span className="text-2xl font-bold text-gray-900 tabular-nums">
-										{t.price}
-									</span>
-
-									<button
-										type="button"
-										onClick={() => onPick(t.id)}
-										className="group/btn bg-gray-900 hover:bg-primary text-white px-6 py-2.5 rounded-lg font-semibold transition-colors active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
-									>
-										Pakai Template
-										<i className="fa-solid fa-arrow-right ml-2 text-sm inline-block transition-transform group-hover/btn:translate-x-0.5"></i>
-									</button>
+							{/* Style */}
+							<div>
+								<h4 className="text-base font-bold text-gray-900 mb-3.5">Style</h4>
+								<div className="space-y-2.5">
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.traditional}
+											onChange={(e) => setFilters((f) => ({ ...f, traditional: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">Traditional</span>
+									</label>
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.creative}
+											onChange={(e) => setFilters((f) => ({ ...f, creative: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">Creative</span>
+									</label>
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.contemporary}
+											onChange={(e) => setFilters((f) => ({ ...f, contemporary: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">Contemporary</span>
+									</label>
 								</div>
 							</div>
 						</div>
-					))}
+					</aside>
+
+					{/* Right Templates Grid */}
+					<main className="flex-1 w-full">
+						{filteredTemplates.length === 0 ? (
+							<div className="bg-gray-50 border border-gray-200 rounded-xl p-12 text-center">
+								<p className="text-gray-500 text-base mb-3">Tidak ada template yang cocok dengan filter yang dipilih.</p>
+								<button
+									type="button"
+									onClick={handleClearFilters}
+									className="text-sm font-semibold text-blue-600 hover:underline cursor-pointer"
+								>
+									Reset Semua Filter
+								</button>
+							</div>
+						) : (
+							<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+								{filteredTemplates.map((t) => {
+									const activeColor = selectedColors[t.id] || t.palettes[0];
+									return (
+										<div key={t.id} className="flex flex-col items-center">
+											{/* A4 Resume Card */}
+											<div
+												onClick={() => onPick(t.id, selectedColors[t.id])}
+												className="w-full aspect-[1/1.414] bg-white border border-gray-300 hover:border-gray-400 rounded-sm shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative cursor-pointer group overflow-hidden"
+											>
+												<ResponsiveCvPreview template={t.id} color={selectedColors[t.id]} />
+
+												{/* RECOMMENDED badge at bottom right */}
+												{t.recommended && (
+													<div className="absolute bottom-4 right-4 bg-[#ffccd2] text-[#991b1b] text-[11px] font-extrabold px-3 py-1 uppercase tracking-wider rounded shadow-sm border border-[#fda4af] pointer-events-none z-10">
+														RECOMMENDED
+													</div>
+												)}
+											</div>
+
+											{/* Color swatches directly underneath the card */}
+											<div className="w-full flex items-center justify-start gap-2.5 pt-3.5 px-1">
+												{t.palettes.map((color) => {
+													const isSelected = activeColor.toLowerCase() === color.toLowerCase();
+													return (
+														<button
+															key={color}
+															type="button"
+															onClick={(e) => {
+																e.stopPropagation();
+																setSelectedColors((prev) => ({ ...prev, [t.id]: color }));
+															}}
+															style={{ backgroundColor: color }}
+															className={`w-6 h-6 rounded-full transition-transform hover:scale-110 cursor-pointer ${
+																isSelected
+																	? "ring-2 ring-offset-2 ring-gray-400 scale-105"
+																	: "border border-black/15"
+															}`}
+															title={`Ganti warna: ${color}`}
+														/>
+													);
+												})}
+
+												{/* Rainbow/gradient circle for custom color picker */}
+												<label
+													title="Pilih warna kustom"
+													onClick={(e) => e.stopPropagation()}
+													className="w-6 h-6 rounded-full transition-transform hover:scale-110 cursor-pointer bg-[conic-gradient(at_center,_#ef4444,_#f97316,_#eab308,_#22c55e,_#06b6d4,_#3b82f6,_#a855f7,_#ef4444)] border border-black/15 relative overflow-hidden flex items-center justify-center shadow-xs"
+												>
+													<input
+														type="color"
+														value={activeColor.startsWith("#") ? activeColor : "#4F46E5"}
+														onChange={(e) => {
+															e.stopPropagation();
+															setSelectedColors((prev) => ({ ...prev, [t.id]: e.target.value }));
+														}}
+														className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
+													/>
+												</label>
+											</div>
+										</div>
+									);
+								})}
+							</div>
+						)}
+					</main>
 				</div>
 			</section>
 
-			{/* CTA */}
-
-			<section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+			{/* CTA SECTION */}
+			<section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 pt-8">
 				<div className="bg-gray-900 rounded-2xl px-8 py-14 text-center relative overflow-hidden">
 					<svg
 						role="img"
@@ -550,7 +591,7 @@ export default function StoreView({ onPick }: Props) {
 						<button
 							type="button"
 							onClick={scrollToTemplates}
-							className="bg-white hover:bg-gray-100 text-gray-900 px-7 py-3 rounded-xl font-semibold transition-colors active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+							className="bg-white hover:bg-gray-100 text-gray-900 px-7 py-3 rounded-xl font-semibold transition-colors active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 cursor-pointer"
 						>
 							Pilih Template
 						</button>
@@ -559,12 +600,10 @@ export default function StoreView({ onPick }: Props) {
 			</section>
 
 			{/* FOOTER */}
-
 			<footer className="border-t border-gray-200 py-8">
 				<div className="max-w-5xl mx-auto px-4 text-center text-sm text-gray-500">
 					© 2025 AIGen CV — Resume Builder. Dibuat dengan{" "}
-					<i className="fa-solid fa-heart text-rose-400 mx-0.5"></i> untuk
-					pencari kerja.
+					<i className="fa-solid fa-heart text-rose-400 mx-0.5"></i> untuk pencari kerja.
 				</div>
 			</footer>
 		</div>

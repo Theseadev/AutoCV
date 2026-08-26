@@ -1,74 +1,82 @@
 import type { Order } from "./cv";
-
-// Vite dev server mem-proxy /api ke backend (lihat vite.config.ts)
-const API_BASE = "/api";
+import { supabase } from "./lib/supabase";
 
 export interface GeminiResponse {
-	candidates?: Array<{
-		content?: { parts?: Array<{ text?: string }> };
-	}>;
+  candidates?: Array<{
+    content?: { parts?: Array<{ text?: string }> };
+  }>;
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-// Panggil Gemini lewat proxy backend (API key tidak bocor ke browser)
+// Panggil Gemini via Supabase Edge Function (API key aman di server)
 export async function callGeminiAPI(
-	systemPrompt: string,
-	userQuery: string,
-	jsonSchema?: object,
+  systemPrompt: string,
+  userQuery: string,
+  jsonSchema?: object,
 ): Promise<GeminiResponse> {
-	let delay = 1000;
-	for (let attempt = 0; attempt < 3; attempt++) {
-		try {
-			const response = await fetch(`${API_BASE}/generate`, {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ systemPrompt, userQuery, jsonSchema }),
-			});
-			if (!response.ok) {
-				const err: { error?: string } = await response.json().catch(() => ({}));
-				throw new Error(err.error || `HTTP error ${response.status}`);
-			}
-			return (await response.json()) as GeminiResponse; // respons Gemini apa adanya
-		} catch (err) {
-			if (attempt === 2) throw err;
-			await sleep(delay);
-			delay *= 2;
-		}
-	}
-	throw new Error("unreachable");
+  let delay = 1000;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const { data, error } = await supabase.functions.invoke("gemini-proxy", {
+        body: { systemPrompt, userQuery, jsonSchema },
+      });
+      if (error) throw new Error(error.message);
+      return data as GeminiResponse;
+    } catch (err) {
+      if (attempt === 2) throw err;
+      await sleep(delay);
+      delay *= 2;
+    }
+  }
+  throw new Error("unreachable");
 }
 
+// Ambil nomor WA admin dari config table (public read)
 export const getConfig = async (): Promise<{ waAdmin: string }> => {
-	const res = await fetch(`${API_BASE}/config`);
-	return res.json();
+  const { data, error } = await supabase
+    .from("config")
+    .select("value")
+    .eq("key", "wa_admin")
+    .single();
+  if (error || !data) return { waAdmin: "628000000000" };
+  return { waAdmin: data.value };
 };
 
+// Login admin via Edge Function (verify password hash)
 export const loginAdmin = async (
-	password: string,
+  password: string,
 ): Promise<{ token?: string; error?: string }> => {
-	const res = await fetch(`${API_BASE}/login`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ password }),
-	});
-	return res.json();
+  const { data, error } = await supabase.functions.invoke("admin-login", {
+    body: { password },
+  });
+  if (error) return { error: error.message };
+  return data as { token?: string; error?: string };
 };
 
+// Ambil orders via Edge Function (butuh token admin)
 export const getOrders = async (
-	token: string,
+  token: string,
 ): Promise<{ orders: Order[] }> => {
-	const res = await fetch(`${API_BASE}/orders`, {
-		headers: { Authorization: `Bearer ${token}` },
-	});
-	return res.json();
+  const { data, error } = await supabase.functions.invoke("admin-orders", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (error) throw new Error(error.message);
+  return data as { orders: Order[] };
 };
 
+// Simpan order publik (insert dengan RLS policy allow public insert)
 export const createOrder = async (order: Order): Promise<{ ok: boolean }> => {
-	const res = await fetch(`${API_BASE}/orders`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(order),
-	});
-	return res.json();
+  const { error } = await supabase.from("orders").insert({
+    id: order.id,
+    name: order.name,
+    template: order.template,
+    template_id: order.templateId,
+    cv_data: order.cv,
+    skills_text: order.skills,
+    status: order.status ?? "Menunggu WA",
+    created_at: new Date().toISOString(),
+  });
+  if (error) throw new Error(error.message);
+  return { ok: true };
 };

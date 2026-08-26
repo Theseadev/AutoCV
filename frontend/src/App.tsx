@@ -10,13 +10,22 @@ type View = "store" | "builder" | "ats" | "admin";
 
 // Daftar template & harga (satu sumber kebenaran untuk toko & checkout)
 const TEMPLATES: Record<string, { label: string; price: number }> = {
-	cv01: { label: "CV Kreatif 01", price: 25000 },
-	cv02: { label: "CV Corporate Standard", price: 20000 },
-	cv03: { label: "CV Modern Executive", price: 30000 },
-	cv04: { label: "CV Neo Creative", price: 35000 },
-	cv05: { label: "CV Lux Monochrome", price: 25000 },
-	cv06: { label: "CV Dev Minimal", price: 30000 },
-	cv07: { label: "CV Classic Fresh", price: 20000 },
+	cv01_photo: { label: "CV Kreatif 01 (Dengan Foto)", price: 25000 },
+	cv01_no: { label: "CV Kreatif 01 (Tanpa Foto)", price: 25000 },
+	cv02_photo: { label: "CV Corporate Standard (Dengan Foto)", price: 20000 },
+	cv02_no: { label: "CV Corporate Standard (Tanpa Foto)", price: 20000 },
+	cv03_photo: { label: "CV Modern Executive (Dengan Foto)", price: 30000 },
+	cv03_no: { label: "CV Modern Executive (Tanpa Foto)", price: 30000 },
+	cv04_photo: { label: "CV Neo Creative (Dengan Foto)", price: 35000 },
+	cv04_no: { label: "CV Neo Creative (Tanpa Foto)", price: 35000 },
+	cv05_photo: { label: "CV Lux Monochrome (Dengan Foto)", price: 25000 },
+	cv05_no: { label: "CV Lux Monochrome (Tanpa Foto)", price: 25000 },
+	cv06_photo: { label: "CV Dev Minimal (Dengan Foto)", price: 30000 },
+	cv06_no: { label: "CV Dev Minimal (Tanpa Foto)", price: 30000 },
+	cv07_photo: { label: "CV Classic Fresh (Dengan Foto)", price: 20000 },
+	cv07_no: { label: "CV Classic Fresh (Tanpa Foto)", price: 20000 },
+	cv08_photo: { label: "CV Peacock Brown (Dengan Foto)", price: 30000 },
+	cv08_no: { label: "CV Peacock Brown (Tanpa Foto)", price: 30000 },
 };
 
 const rupiah = (n: number) => `Rp ${n.toLocaleString("id-ID")}`;
@@ -36,7 +45,7 @@ const draft = loadDraft();
 export default function App() {
 	const [view, setView] = useState<View>("store");
 	const [template, setTemplate] = useState(
-		draft?.template && TEMPLATES[draft.template] ? draft.template : "cv01",
+		draft?.template && TEMPLATES[draft.template] ? draft.template : "cv01_photo",
 	);
 	const [cv, setCv] = useState<CvData>({ ...storeCv, ...(draft?.cv ?? {}) });
 	const [skillsText, setSkillsText] = useState(draft?.skillsText ?? storeSkillsText);
@@ -57,8 +66,11 @@ export default function App() {
 			.catch((e) => console.error("Gagal memuat konfigurasi:", e));
 	}, []);
 
-	const openBuilder = (t: string) => {
+	const openBuilder = (t: string, color?: string) => {
 		setTemplate(t);
+		if (color) {
+			setCv(prev => ({ ...prev, themeColor: color }));
+		}
 		setView("builder");
 	};
 

@@ -14,6 +14,9 @@ export interface CvData {
 	address: string;
 	about: string;
 	experiences: Experience[];
+	photo?: string;
+	photoShape?: "round" | "square" | "rounded";
+	themeColor?: string;
 	foto?: string;
 	pendidikans?: Education[];
 	penghargaans?: Achievement[];
@@ -36,7 +39,6 @@ export interface ParsedSkill {
 	title: string;
 	desc: string;
 }
-
 
 export interface Education {
 	id?: number;
@@ -73,22 +75,77 @@ export type CvSection =
 	| "organisasi";
 
 export const TEMPLATE_SECTIONS: Record<string, CvSection[]> = {
-	cv01: ["kontak", "kemampuan", "tentang", "pengalaman", "pendidikan"],
-	cv02: ["kontak", "kemampuan", "tentang", "pengalaman", "pendidikan"],
-	cv03: ["kontak", "kemampuan", "tentang", "pengalaman", "pendidikan"],
-	cv04: ["kontak", "kemampuan", "pengalaman", "tentang", "pendidikan"],
-	cv05: ["kontak", "kemampuan", "tentang", "pengalaman", "pendidikan"],
-	cv06: ["kontak", "kemampuan", "pengalaman", "tentang", "pendidikan"],
-	cv07: [
-		"foto",
+	cv01: [
 		"kontak",
-		"pendidikan",
-		"kemampuan",
-		"penghargaan",
-		"hobi",
 		"tentang",
+		"pendidikan",
 		"pengalaman",
 		"organisasi",
+		"kemampuan",
+		"penghargaan",
+	],
+	cv02: [
+		"kontak",
+		"tentang",
+		"pendidikan",
+		"pengalaman",
+		"organisasi",
+		"kemampuan",
+		"penghargaan",
+	],
+	cv03: [
+		"kontak",
+		"tentang",
+		"pendidikan",
+		"pengalaman",
+		"organisasi",
+		"kemampuan",
+		"penghargaan",
+	],
+	cv04: [
+		"kontak",
+		"tentang",
+		"pendidikan",
+		"pengalaman",
+		"organisasi",
+		"kemampuan",
+		"penghargaan",
+	],
+	cv05: [
+		"kontak",
+		"tentang",
+		"pendidikan",
+		"pengalaman",
+		"organisasi",
+		"kemampuan",
+		"penghargaan",
+	],
+	cv06: [
+		"kontak",
+		"tentang",
+		"pendidikan",
+		"pengalaman",
+		"organisasi",
+		"kemampuan",
+		"penghargaan",
+	],
+	cv07: [
+		"kontak",
+		"tentang",
+		"pendidikan",
+		"pengalaman",
+		"organisasi",
+		"kemampuan",
+		"penghargaan",
+	],
+	cv08: [
+		"kontak",
+		"tentang",
+		"pendidikan",
+		"pengalaman",
+		"organisasi",
+		"kemampuan",
+		"penghargaan",
 	],
 };
 export const defaultCv: CvData = {
@@ -113,70 +170,57 @@ export const defaultCv: CvData = {
 export const defaultSkillsText =
 	"Microsoft Office: Mahir mengolah data Excel & Word\nKomunikasi: Kerjasama tim & negosiasi\nProblem Solving: Cepat mencari solusi operasional";
 
-// Contoh data lengkap untuk preview template di toko (biar kelihatan "penuh")
+export const storeSkillsText =
+	"Store opening and closing: Prosedur pembukaan dan penutupan toko\nSales expertise: Negosiasi penjualan & customer service\nAccurate Money Handling: Pengelolaan kas dan transaksi keuangan\nLoss prevention: Pengawasan stok & pencegahan kerugian\nProduct promotions: Strategi display dan promosi produk unggulan";
+
+// Data referensi Rudi Santoso untuk tampilan preview etalase
 export const storeCv: CvData = {
-	name: "Budi Santoso",
-	title: "Staff Administrasi",
-	phone: "0812-3456-7890",
-	email: "budi.santoso@email.com",
-	address: "Jl. Merdeka No.10, Jakarta",
+	name: "Rudi Santoso",
+	title: "Senior Sales Manager",
+	phone: "21 2345 6789",
+	email: "rudi.santoso@gmail.com",
+	address: "Jakarta, Jakarta, 10110",
+	photo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23d1d5db'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M20 95 C20 68 32 62 50 62 C68 62 80 68 80 95 Z' fill='%23ffffff'/></svg>",
 	about:
-		"Seorang profesional muda di bidang administrasi perkantoran dengan pengalaman mengelola kearsipan digital dan koordinasi operasional. Terbiasa bekerja di bawah tenggat waktu yang ketat dan berkolaborasi dengan tim lintas divisi.",
+		"Motivated Sales Associate with 5 years of experience boosting sales and customer loyalty through individualized service. Resourceful expert at learning customer needs, directing to desirable merchandise and upselling to meet sales quotas. Committed to strengthening customer experiences with positivity and professionalism when answering requests and processing sales.",
 	experiences: [
 		{
 			id: 1,
-			company: "PT. Maju Mundur",
-			role: "Staff Administrasi",
-			period: "Jan 2023 - Sekarang",
-			desc: "• Mengelola input data lebih dari 200 dokumen transaksi harian dengan tingkat akurasi 99%.\n• Menyusun jadwal pertemuan manajerial dan menyiapkan berkas presentasi.\n• Mengoordinasikan komunikasi internal antar 5 divisi.",
+			company: "Jakarta Business Solutions, Jakarta",
+			role: "Senior Sales Manager",
+			period: "May 2016 - Current",
+			desc: "• Effectively up-sold products by introducing accessories and other add-ons, adding Rp 23,000,000 to average monthly sales.\n• Generated brand awareness and positive product impressions to increase sales 22%.\n• Used consultative sales approach to understand customer needs and recommend relevant offerings.",
 		},
 		{
 			id: 2,
-			company: "PT. Karya Bangsa",
-			role: "Admin Operasional",
-			period: "Jun 2021 - Des 2022",
-			desc: "• Mengoptimalkan sistem arsip digital sehingga waktu pencarian dokumen turun 60%.\n• Membantu penyusunan laporan bulanan untuk manajemen.",
-		},
-		{
-			id: 3,
-			company: "Toko Buku Nusantara",
-			role: "Kasir & Admin",
-			period: "Agu 2020 - Mei 2021",
-			desc: "• Melayani transaksi dan rekonsiliasi kas harian.\n• Memelihara database stok dan data pelanggan.",
+			company: "Archipelago Business Partners, Jakarta",
+			role: "Barista",
+			period: "Jan 2015 - Mar 2016",
+			desc: "• Created over 60 drinks per hour with consistently positive customer satisfaction scores.\n• Learned every menu preparation and numerous off-label drinks to meet all customer needs.\n• Upheld baked goods and extra shots with beverages, increasing store sales Rp 27,800,000 per month.",
 		},
 	],
 	pendidikans: [
 		{
 			id: 1,
-			institusi: "Universitas Indonesia",
-			jurusan: "S1 Ilmu Komunikasi",
-			tahun: "2019 - 2023",
-		},
-		{
-			id: 2,
-			institusi: "SMAN 3 Jakarta",
-			jurusan: "IPA",
-			tahun: "2016 - 2019",
+			institusi: "University of Indonesia - Surabaya, Jakarta",
+			jurusan: "B.A.: Business",
+			tahun: "June 2018",
 		},
 	],
 	penghargaans: [
-		{ id: 1, judul: "Juara 2 Lomba Debat Mahasiswa", tahun: "2022" },
-		{ id: 2, judul: "Best Speaker FGD Nasional", tahun: "2021" },
+		{ id: 1, judul: "Top Sales Performer of the Year", tahun: "2019" },
 	],
-	hobi: "Membaca, Menulis, Fotografi",
+	hobi: "Coffee Roasting, Reading, Cycling",
 	organisasis: [
 		{
 			id: 1,
-			instansi: "BEM Fakultas Ilmu Komunikasi",
-			posisi: "Kepala Divisi Humas",
-			tanggal: "2021 - 2022",
-			deskripsi: "• Mengelola media sosial dan publikasi organisasi.\n• Mengoordinasikan 10 event kampus dengan 30 anggota.",
+			instansi: "Indonesia Sales Professionals Club",
+			posisi: "Regional Coordinator",
+			tanggal: "2017 - 2019",
+			deskripsi: "Mengoordinasikan workshop teknik negosiasi dan temu komunitas ritel.",
 		},
 	],
 };
-
-export const storeSkillsText =
-	"Microsoft Office: Mahir mengolah data Excel & Word\nKomunikasi: Kerjasama tim & negosiasi\nProblem Solving: Cepat mencari solusi operasional\nManajemen Waktu: Terbiasa deadline ketat\nBahasa Inggris: Aktif (TOEIC 750)";
 
 export const esc = (s: unknown): string =>
 	String(s ?? "").replace(
@@ -200,10 +244,21 @@ export const parseSkills = (text: string): ParsedSkill[] =>
 
 // Bangun HTML kertas CV dari data (dipakai untuk PDF bersih tanpa watermark)
 export const buildCvHtml = (
-	cvData: CvData,
+	inputCvData: CvData,
 	skillsText: string,
-	template = "cv01",
+	inputTemplate = "cv01",
 ): string => {
+	const isNoPhoto = inputTemplate.endsWith("_no");
+	const template = inputTemplate.replace("_no", "").replace("_photo", "");
+	const cvData = isNoPhoto ? { ...inputCvData, photo: "" } : inputCvData;
+	
+	const getRadius = (defaultVal: string) => {
+		if (cvData.photoShape === 'round') return '50%';
+		if (cvData.photoShape === 'rounded') return '12px';
+		if (cvData.photoShape === 'square') return '4px';
+		return defaultVal;
+	};
+
 	const skills = parseSkills(skillsText);
 	const exps = (cvData.experiences || [])
 		.map(
@@ -218,6 +273,32 @@ export const buildCvHtml = (
             </div>`,
 		)
 		.join("");
+	// Organisasi pakai gaya item yang sama dengan pengalaman kerja (seragam di semua template)
+	const orgs = (cvData.organisasis || [])
+		.map(
+			(o) => `
+            <div>
+                <div class="flex justify-between items-baseline mb-1">
+                    <h4 class="font-bold text-gray-900">${esc(o.instansi) || "Nama Instansi"}</h4>
+                    <span class="text-xs text-gray-500 font-medium">${esc(o.tanggal)}</span>
+                </div>
+                <p class="text-sm italic text-gray-600 mb-1">${esc(o.posisi) || "Jabatan"}</p>
+                <div class="text-sm text-gray-700 leading-relaxed whitespace-pre-line">${esc(o.deskripsi)}</div>
+            </div>`,
+		)
+		.join("");
+	const orgBlock = (cvData.organisasis || []).length
+		? `<h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Pengalaman Organisasi</h3><div class="space-y-5 mb-8">${orgs}</div>`
+		: "";
+	const sertifLis = (cvData.penghargaans || [])
+		.map(
+			(a) =>
+				`<li><strong>${esc(a.judul)}</strong>${a.tahun ? ` — ${esc(a.tahun)}` : ""}</li>`,
+		)
+		.join("");
+	const sertifikatBlock = (cvData.penghargaans || []).length
+		? `<h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Sertifikat</h3><ul class="text-sm text-gray-700 space-y-1">${sertifLis}</ul>`
+		: "";
 	const skillLis = skills
 		.map((s) => `<li><strong>${esc(s.title)}:</strong> ${esc(s.desc)}</li>`)
 		.join("");
@@ -250,33 +331,43 @@ export const buildCvHtml = (
 
 	if (template === "cv02") {
 		return `
-        <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;">
+        <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;position:relative;">
             <div style="padding:56px 64px;height:100%;">
-                <h1 class="text-4xl font-bold text-gray-900 mb-1">${name}</h1>
-                <h2 class="text-lg text-gray-600 mb-2">${title}</h2>
-                <p class="text-xs text-gray-500 mb-8">
-                    <i class="fa-solid fa-phone mr-1 w-4"></i>${phone || "-"} &nbsp;|&nbsp;
-                    <i class="fa-solid fa-envelope mr-1 w-4"></i>${email || "-"} &nbsp;|&nbsp;
-                    <i class="fa-solid fa-location-dot mr-1 w-4"></i>${address || "-"}
-                </p>
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;">
+                    <div style="flex:1;padding-right:16px;">
+                        <h1 class="text-4xl font-bold text-gray-900 mb-1">${name}</h1>
+                        <h2 class="text-lg text-gray-600 mb-2">${title}</h2>
+                        <p class="text-xs text-gray-500">
+                            <i class="fa-solid fa-phone mr-1 w-4"></i>${phone || "-"} &nbsp;|&nbsp;
+                            <i class="fa-solid fa-envelope mr-1 w-4"></i>${email || "-"} &nbsp;|&nbsp;
+                            <i class="fa-solid fa-location-dot mr-1 w-4"></i>${address || "-"}
+                        </p>
+                    </div>
+                    ${cvData.photo ? `<img src="${cvData.photo}" style="width:110px;height:110px;border-radius:${getRadius('8px')};object-fit:cover;border:2px solid #F3F4F6;flex-shrink:0;" />` : ""}
+                </div>
                 <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Tentang Saya</h3>
                 <p class="text-sm text-gray-700 leading-relaxed text-justify mb-8 whitespace-pre-line">${about}</p>
                 <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Riwayat Pendidikan</h3>
                 <div class="space-y-4 mb-8">${pendidikanLis2}</div>
                 <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-4">Pengalaman Kerja</h3>
                 <div class="space-y-5 mb-8">${exps}</div>
+                ${orgBlock}
                 <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Kemampuan</h3>
                 <ul class="text-sm text-gray-700 space-y-1">${skillLis}</ul>
+                ${sertifikatBlock}
             </div>
         </div>`;
 	}
 
 	if (template === "cv03") {
 		return `
-        <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;">
-            <div class="bg-gray-900 px-12 py-10">
-                <h1 class="text-4xl font-bold text-white mb-1">${name}</h1>
-                <h2 class="text-xl font-light text-gray-300 tracking-wide">${title}</h2>
+        <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;display:flex;flex-direction:column;">
+            <div style="background-color:#111827;padding:40px 48px;display:flex;justify-content:space-between;align-items:center;gap:32px;">
+                <div style="flex:1;">
+                    <h1 class="text-4xl font-bold text-white mb-1">${name}</h1>
+                    <h2 class="text-xl font-light text-gray-300 tracking-wide">${title}</h2>
+                </div>
+                ${cvData.photo ? `<img src="${cvData.photo}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #374151;flex-shrink:0;" />` : ""}
             </div>
             <div class="flex">
                 <div class="w-2/5 p-8 bg-gray-50 border-r border-gray-200">
@@ -286,16 +377,18 @@ export const buildCvHtml = (
                         <li class="flex items-start"><i class="fa-solid fa-envelope mt-1 w-5 text-indigo-600"></i><span style="word-break:break-all;">${email || "-"}</span></li>
                         <li class="flex items-start"><i class="fa-solid fa-location-dot mt-1 w-5 text-indigo-600"></i><span>${address || "-"}</span></li>
                     </ul>
+                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Riwayat Pendidikan</h3>
+                    <div class="space-y-4 mb-8">${pendidikanLis3}</div>
+                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-3">Kemampuan</h3>
+                    <ul class="text-sm space-y-2 list-disc pl-4">${skillLis}</ul>
                 </div>
                 <div class="w-3/5 p-8">
                     <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-3">Tentang Saya</h3>
                     <p class="text-sm text-gray-700 leading-relaxed text-justify mb-8 whitespace-pre-line">${about}</p>
-                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Riwayat Pendidikan</h3>
-                    <div class="space-y-4 mb-8">${pendidikanLis3}</div>
                     <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Pengalaman Kerja</h3>
                     <div class="space-y-5">${exps}</div>
-                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mt-8 mb-4">Kemampuan</h3>
-                    <ul class="text-sm space-y-2 list-disc pl-4">${skillLis}</ul>
+                    ${(cvData.organisasis || []).length ? `<h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mt-8 mb-4">Pengalaman Organisasi</h3><div class="space-y-5">${orgs}</div>` : ""}
+                    ${(cvData.penghargaans || []).length ? `<h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mt-8 mb-4">Sertifikat</h3><ul class="text-sm space-y-2 list-disc pl-4">${sertifLis}</ul>` : ""}
                 </div>
             </div>
         </div>`;
@@ -303,27 +396,34 @@ export const buildCvHtml = (
 
 	if (template === "cv04") {
 		// Geometric Neo: header navy + pita diagonal, tile kontak, progress bar skill, timeline bernomor
+		const t04 = cvData.themeColor || "#4F46E5";
 		const skillGeo = skills
 			.map(
 				(s, i) => `
                     <div style="display:flex;gap:10px;margin-bottom:12px;font-size:11.5px;color:#475569;line-height:1.6;">
-                        <span style="color:#4F46E5;font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;flex-shrink:0;">${String(i + 1).padStart(2, "0")}</span>
+                        <span style="color:${t04};font-weight:700;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;flex-shrink:0;">${String(i + 1).padStart(2, "0")}</span>
                         <div><span style="font-weight:600;color:#0F172A;">${esc(s.title)}</span><span style="color:#94A3B8;"> — </span>${esc(s.desc)}</div>
                     </div>`,
 			)
 			.join("");
+		const sertifikatGeo = (cvData.penghargaans || [])
+			.map(
+				(a) =>
+					`<div style="font-size:11.5px;color:#475569;line-height:1.6;margin-bottom:10px;"><strong style="color:#0F172A;">${esc(a.judul)}</strong>${a.tahun ? `<span style="color:#94A3B8;"> — ${esc(a.tahun)}</span>` : ""}</div>`,
+			)
+			.join("");
 		const pendidikanLis4 = (cvData.pendidikans || [])
 			.map(
-				(pd, i) => `
+				(pd) => `
                     <div style="display:flex;gap:14px;margin-bottom:12px;">
-                        <div style="width:26px;height:26px;border-radius:6px;background:#4F46E5;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${String(i + 1).padStart(2, "0")}</div>
-                        <div style="flex:1;border-bottom:1px solid #EEF2FF;padding-bottom:10px;">
-                            <div style="display:flex;justify-content:space-between;align-items:baseline;">
-                                <span style="font-weight:700;font-size:12.5px;color:#0F172A;">${esc(pd.institusi) || "-"}</span>
-                                <span style="font-size:10px;color:#94A3B8;">${esc(pd.tahun)}</span>
-                            </div>
-                            <div style="font-size:11px;font-weight:600;color:#4F46E5;margin-top:2px;">${esc(pd.jurusan) || "-"}</div>
-                            ${pd.kegiatan ? `<div style="font-size:11px;color:#64748B;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
+                        <div style="width:2px;background:#EEF2FF;position:relative;top:4px;">
+                            <div style="width:6px;height:6px;border-radius:50%;background:${t04};position:absolute;left:-2px;top:0;box-shadow:0 0 0 3px white;"></div>
+                        </div>
+                        <div style="flex:1;">
+                            <div style="font-weight:700;font-size:12.5px;color:#0F172A;margin-bottom:2px;">${esc(pd.institusi) || "-"}</div>
+                            <div style="font-size:11px;font-weight:600;color:${t04};margin-bottom:4px;">${esc(pd.jurusan) || "-"}</div>
+                            <div style="font-size:10px;color:#94A3B8;letter-spacing:1px;margin-bottom:4px;">${esc(pd.tahun)}</div>
+                            ${pd.kegiatan ? `<div style="font-size:11px;color:#475569;line-height:1.6;">${esc(pd.kegiatan)}</div>` : ""}
                         </div>
                     </div>`,
 			)
@@ -338,8 +438,24 @@ export const buildCvHtml = (
                                 <span style="font-weight:700;font-size:13px;color:#0F172A;">${esc(e.company) || "Nama Perusahaan"}</span>
                                 <span style="font-size:10px;color:#94A3B8;">${esc(e.period)}</span>
                             </div>
-                            <div style="font-size:11px;font-weight:600;color:#4F46E5;margin:2px 0 4px;">${esc(e.role) || "Jabatan"}</div>
+                            <div style="font-size:11px;font-weight:600;color:${t04};margin:2px 0 4px;">${esc(e.role) || "Jabatan"}</div>
                             <div style="font-size:11.5px;color:#475569;line-height:1.6;white-space:pre-line;">${esc(e.desc)}</div>
+                        </div>
+                    </div>`,
+			)
+			.join("");
+		const orgNum = (cvData.organisasis || [])
+			.map(
+				(o, i) => `
+                    <div style="display:flex;gap:14px;margin-bottom:14px;">
+                        <div style="width:26px;height:26px;border-radius:50%;background:#0F172A;color:white;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${String(i + 1).padStart(2, "0")}</div>
+                        <div style="flex:1;border-bottom:1px solid #EEF2FF;padding-bottom:14px;">
+                            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                                <span style="font-weight:700;font-size:13px;color:#0F172A;">${esc(o.instansi) || "Nama Instansi"}</span>
+                                <span style="font-size:10px;color:#94A3B8;">${esc(o.tanggal)}</span>
+                            </div>
+                            <div style="font-size:11px;font-weight:600;color:${t04};margin:2px 0 4px;">${esc(o.posisi) || "Jabatan"}</div>
+                            <div style="font-size:11.5px;color:#475569;line-height:1.6;white-space:pre-line;">${esc(o.deskripsi)}</div>
                         </div>
                     </div>`,
 			)
@@ -347,7 +463,7 @@ export const buildCvHtml = (
 		const tile = (icon: string, val: string) => `
                     <div style="display:flex;align-items:center;gap:10px;font-size:11.5px;color:#3730A3;font-weight:500;">
                         <span style="width:28px;height:28px;border-radius:8px;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 2px rgba(15,23,42,.08);">
-                            <i class="fa-solid fa-${icon}" style="color:#4F46E5;font-size:12px;"></i>
+                            <i class="fa-solid fa-${icon}" style="color:${t04};font-size:12px;"></i>
                         </span>
                         <span style="max-width:190px;word-break:break-all;">${val || "-"}</span>
                     </div>`;
@@ -367,16 +483,18 @@ export const buildCvHtml = (
             </div>
             <div style="display:flex;padding:32px 56px;gap:36px;">
                 <div style="width:36%;">
-                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin-bottom:10px;">Tentang Saya</div>
-                    <p style="font-size:11.5px;color:#475569;line-height:1.6;text-align:justify;margin-bottom:16px;white-space:pre-line;">${about}</p>
                     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin-bottom:14px;">Riwayat Pendidikan</div>
                     ${pendidikanLis4}
-                </div>
-                <div style="flex:1;">
-                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin-bottom:14px;">Pengalaman Kerja</div>
-                    ${expNum}
                     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin:18px 0 14px;">Kemampuan</div>
                     ${skillGeo}
+                </div>
+                <div style="flex:1;">
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin-bottom:10px;">Tentang Saya</div>
+                    <p style="font-size:11.5px;color:#475569;line-height:1.6;text-align:justify;margin-bottom:16px;white-space:pre-line;">${about}</p>
+                    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin:18px 0 14px;">Pengalaman Kerja</div>
+                    ${expNum}
+                    ${(cvData.organisasis || []).length ? `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin:18px 0 14px;">Pengalaman Organisasi</div>${orgNum}` : ""}
+                    ${(cvData.penghargaans || []).length ? `<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#0F172A;margin:18px 0 14px;">Sertifikat</div>${sertifikatGeo}` : ""}
                 </div>
             </div>
         </div>`;
@@ -388,6 +506,12 @@ export const buildCvHtml = (
 			.map(
 				(s) =>
 					`<div style="font-size:12px;color:#374151;margin-bottom:8px;"><strong>${esc(s.title)}</strong><span style="color:#9CA3AF;"> — </span>${esc(s.desc)}</div>`,
+			)
+			.join("");
+		const sertifikatLux = (cvData.penghargaans || [])
+			.map(
+				(a) =>
+					`<div style="margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid #F3F4F6;font-size:12px;color:#374151;font-family:Inter,sans-serif;"><span style="font-family:'Playfair Display',serif;font-weight:700;font-size:13px;color:#111827;">${esc(a.judul)}</span>${a.tahun ? `<span style="color:#9CA3AF;"> — ${esc(a.tahun)}</span>` : ""}</div>`,
 			)
 			.join("");
 		const pendidikanLux = (cvData.pendidikans || [])
@@ -416,6 +540,19 @@ export const buildCvHtml = (
                     </div>`,
 			)
 			.join("");
+		const orgLux = (cvData.organisasis || [])
+			.map(
+				(o) => `
+                    <div style="margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #F3F4F6;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:13.5px;color:#111827;">${esc(o.instansi) || "Nama Instansi"}</span>
+                            <span style="font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;font-family:Inter,sans-serif;">${esc(o.tanggal)}</span>
+                        </div>
+                        <div style="font-size:11px;font-style:italic;color:#6B7280;margin:3px 0 6px;">${esc(o.posisi) || "Jabatan"}</div>
+                        <div style="font-size:11.5px;color:#4B5563;line-height:1.65;white-space:pre-line;font-family:Inter,sans-serif;">${esc(o.deskripsi)}</div>
+                    </div>`,
+			)
+			.join("");
 		return `
         <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;font-family:'Playfair Display',serif;">
             <div style="text-align:center;padding:44px 60px 20px;">
@@ -426,20 +563,26 @@ export const buildCvHtml = (
             <div style="text-align:center;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;font-family:Inter,sans-serif;padding-top:12px;">${phone || "-"} &nbsp;·&nbsp; ${email || "-"} &nbsp;·&nbsp; ${address || "-"}</div>
             <div style="display:flex;padding:28px 60px 40px;gap:36px;">
                 <div style="width:40%;padding-right:28px;border-right:1px solid #E5E7EB;">
-                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Tentang Saya</div>
-                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
-                    <div style="font-size:12px;color:#374151;line-height:1.7;text-align:justify;white-space:pre-line;font-family:Inter,sans-serif;">${about}</div>
-                </div>
-                <div style="flex:1;">
                     <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Riwayat Pendidikan</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     ${pendidikanLux}
-                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Pengalaman Kerja</div>
-                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
-                    ${expLux}
                     <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Kemampuan</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     ${skillLux}
+                </div>
+                <div style="flex:1;">
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Tentang Saya</div>
+                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
+                    <div style="font-size:12px;color:#374151;line-height:1.7;text-align:justify;white-space:pre-line;font-family:Inter,sans-serif;">${about}</div>
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Pengalaman Kerja</div>
+                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
+                    ${expLux}
+                    ${(cvData.organisasis || []).length ? `<div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Pengalaman Organisasi</div>
+                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
+                    ${orgLux}` : ""}
+                    ${(cvData.penghargaans || []).length ? `<div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Sertifikat</div>
+                    <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
+                    ${sertifikatLux}` : ""}
                 </div>
             </div>
         </div>`;
@@ -467,6 +610,12 @@ export const buildCvHtml = (
                     </div>`,
 			)
 			.join("");
+		const sertifikatDev = (cvData.penghargaans || [])
+			.map(
+				(a) =>
+					`<div style="border:1px solid #E5E7EB;border-radius:8px;padding:10px 14px;margin-bottom:8px;font-size:11.5px;color:#4B5563;"><strong style="color:#111827;">${esc(a.judul)}</strong>${a.tahun ? `<span style="color:#9CA3AF;"> — ${esc(a.tahun)}</span>` : ""}</div>`,
+			)
+			.join("");
 		const expCards = (cvData.experiences || [])
 			.map(
 				(e) => `
@@ -477,6 +626,19 @@ export const buildCvHtml = (
                         </div>
                         <div style="font-size:11px;color:#6B7280;margin:2px 0 5px;">${esc(e.role) || "Jabatan"}</div>
                         <div style="font-size:11.5px;color:#4B5563;line-height:1.6;white-space:pre-line;">${esc(e.desc)}</div>
+                    </div>`,
+			)
+			.join("");
+		const orgCards = (cvData.organisasis || [])
+			.map(
+				(o) => `
+                    <div style="border:1px solid #E5E7EB;border-radius:8px;padding:12px 14px;margin-bottom:12px;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <span style="font-weight:700;font-size:13px;color:#111827;">${esc(o.instansi) || "Nama Instansi"}</span>
+                            <span style="font-size:10px;color:#9CA3AF;font-family:${MONO};">${esc(o.tanggal)}</span>
+                        </div>
+                        <div style="font-size:11px;color:#6B7280;margin:2px 0 5px;">${esc(o.posisi) || "Jabatan"}</div>
+                        <div style="font-size:11.5px;color:#4B5563;line-height:1.6;white-space:pre-line;">${esc(o.deskripsi)}</div>
                     </div>`,
 			)
 			.join("");
@@ -495,8 +657,20 @@ export const buildCvHtml = (
                     ${pendidikanDev}
                     <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// pengalaman</div>
                     ${expCards}
+                    ${
+											(cvData.organisasis || []).length
+												? `<div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// organisasi</div>
+                    ${orgCards}`
+												: ""
+										}
                     <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// kemampuan</div>
                     <div>${skillChips}</div>
+                    ${
+											(cvData.penghargaans || []).length
+												? `<div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// sertifikat</div>
+                    ${sertifikatDev}`
+												: ""
+										}
                 </div>
             </div>
         </div>`;
@@ -521,10 +695,10 @@ export const buildCvHtml = (
                     </div>`,
 			)
 			.join("");
-		const penghargaanLis7 = (cvData.penghargaans || [])
+		const sertifikatLis7 = (cvData.penghargaans || [])
 			.map(
 				(a) =>
-					`<li style="font-size:12px;color:#1F2937;margin-bottom:6px;"><strong style="color:#664229;">${esc(a.judul)}</strong>${a.tahun ? ` — ${esc(a.tahun)}` : ""}</li>`,
+					`<li style="font-size:13px;color:#1F2937;margin-bottom:6px;"><strong style="color:#664229;">${esc(a.judul)}</strong>${a.tahun ? ` — ${esc(a.tahun)}` : ""}</li>`,
 			)
 			.join("");
 		const organisasiLis7 = (cvData.organisasis || [])
@@ -542,17 +716,6 @@ export const buildCvHtml = (
                     </div>`;
 			})
 			.join("");
-		const foto7 = cvData.foto
-			? `<img src="${esc(cvData.foto)}" style="width:140px;height:140px;border-radius:50%;object-fit:cover;margin:0 auto 24px;border:4px solid white;box-shadow:0 2px 8px rgba(0,0,0,.12);display:block;" />`
-			: `<div style="width:140px;height:140px;border-radius:50%;background:white;margin:0 auto 24px;border:4px solid white;box-shadow:0 2px 8px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;"><i class="fa-solid fa-user" style="font-size:44px;color:#C9BBA8;"></i></div>`;
-		const asideBlock7 = (label: string, inner: string) => `
-                    <div style="font-weight:700;color:#664229;font-size:18px;margin:24px 0 12px;">${label}</div>
-                    ${inner}`;
-		const penghargaanBlock7 =
-			(cvData.penghargaans || []).length > 0
-				? asideBlock7("Penghargaan", `<ul style="list-style:disc;padding-left:18px;margin:0;">${penghargaanLis7}</ul>`)
-				: "";
-		const hobiBlock7 = cvData.hobi ? asideBlock7("Hobi", `<div style="font-size:13px;color:#1F2937;">${esc(cvData.hobi)}</div>`) : "";
 		const organisasiBlock7 =
 			(cvData.organisasis || []).length > 0
 				? `
@@ -578,39 +741,189 @@ export const buildCvHtml = (
         <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;">
             <div style="display:flex;height:100%;">
                 <aside style="width:35%;background:#EAE2D6;padding:32px;">
-                    ${foto7}
                     <div style="font-weight:700;color:#664229;font-size:18px;margin:0 0 12px;">Kontak</div>
                     <ul style="list-style:none;padding:0;margin:0;font-size:13px;color:#1F2937;">
                         <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-phone" style="width:14px;color:#664229;"></i>${phone || "-"}</li>
                         <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-envelope" style="width:14px;color:#664229;"></i>${email || "-"}</li>
                         <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-location-dot" style="width:14px;color:#664229;"></i>${address || "-"}</li>
                     </ul>
-                    ${penghargaanBlock7}
-                    ${hobiBlock7}
+                    <div style="font-weight:700;color:#664229;font-size:18px;margin:24px 0 12px;">Riwayat Pendidikan</div>
+                    ${pendidikanLis7}
+                    <div style="font-weight:700;color:#664229;font-size:18px;margin:24px 0 12px;">Kemampuan</div>
+                    <ul style="list-style:disc;padding-left:18px;margin:0;">${skillLis7}</ul>
                 </aside>
                 <section style="flex:1;background:white;padding:40px;">
                     <h1 style="font-weight:800;font-size:40px;color:#664229;text-transform:capitalize;line-height:1.1;margin:0 0 6px;">${name}</h1>
                     <h2 style="font-size:22px;color:#374151;letter-spacing:4px;text-transform:uppercase;margin:0 0 28px;">${title}</h2>
-                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Tentang Saya</h3>
+                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:0 0 12px;">Tentang Saya</h3>
                     <p style="text-align:justify;color:#374151;font-size:13px;line-height:1.7;white-space:pre-line;">${about}</p>
-                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Riwayat Pendidikan</h3>
-                    ${pendidikanLis7}
                     <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Pengalaman Kerja</h3>
                     ${expLis7}
                     ${organisasiBlock7}
-                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Kemampuan</h3>
-                    <ul style="list-style:disc;padding-left:18px;margin:0;">${skillLis7}</ul>
+                    ${(cvData.penghargaans || []).length ? `<h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Sertifikat</h3><ul style="list-style:disc;padding-left:18px;margin:0;">${sertifikatLis7}</ul>` : ""}
                 </section>
             </div>
         </div>`;
 	}
 
+	// cv08 Peacock: banner cokelat tua + foto profil, sidebar cokelat muda
+	if (template === "cv08") {
+		const BR = "#4A3326"; // Dark Elegant Brown
+		const SK = "#F8F4ED"; // Warm Cream
+		const ACCENT = cvData.themeColor || "#A67B5B"; // Warm Gold/Brown Accent
+		
+		const skillLis8 = skills
+			.map(
+				(s) =>
+					`<li style="padding:6px 0;border-bottom:1px solid rgba(74,51,38,.1);font-size:11.5px;color:#333;"><strong>${esc(s.title)}</strong> — ${esc(s.desc)}</li>`,
+			)
+			.join("");
+            
+		const pendidikanLis8 = (cvData.pendidikans || [])
+			.map((pd) => {
+				const kegiatan = (pd.kegiatan || "")
+					.split("\n")
+					.filter((l) => l.trim())
+					.map((l) => `<li style="margin-bottom:3px;">${esc(l.replace(/^•\s*/, ""))}</li>`)
+					.join("");
+				return `
+                    <div style="margin-bottom:14px;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <strong style="font-size:12.5px;color:${BR};">${esc(pd.institusi) || "-"}</strong>
+                            <span style="font-size:10px;color:${ACCENT};font-weight:600;">${esc(pd.tahun)}</span>
+                        </div>
+                        <div style="font-size:11.5px;color:#555;font-weight:500;margin-top:2px;">${esc(pd.jurusan) || "-"}</div>
+                        ${kegiatan ? `<ul style="list-style:disc;list-style-position:outside;padding-left:14px;margin:6px 0 0;font-size:11px;color:#444;">${kegiatan}</ul>` : ""}
+                    </div>`;
+			})
+			.join("");
+            
+		const sertifikatLis8 = (cvData.penghargaans || [])
+			.map(
+				(a) =>
+					`<li style="margin-bottom:6px;font-size:11.5px;color:#333;"><strong style="color:${BR}">${esc(a.judul)}</strong>${a.tahun ? ` <span style="color:#777;font-size:10.5px;">(${esc(a.tahun)})</span>` : ""}</li>`,
+			)
+			.join("");
+            
+		const orgLis8 = (cvData.organisasis || [])
+			.map((o) => {
+				const bullets = (o.deskripsi || "")
+					.split("\n")
+					.filter((l) => l.trim())
+					.map((l) => `<li style="margin-bottom:3px;">${esc(l.replace(/^•\s*/, ""))}</li>`)
+					.join("");
+				return `
+                    <div style="margin-bottom:16px;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <strong style="font-size:13.5px;color:${BR};">${esc(o.instansi) || "Nama Instansi"}</strong>
+                            <span style="font-size:10.5px;color:${ACCENT};font-weight:600;">${esc(o.tanggal)}</span>
+                        </div>
+                        <div style="font-size:12px;color:#666;font-style:italic;margin:2px 0 6px;">${esc(o.posisi) || "Jabatan"}</div>
+                        ${bullets ? `<ul style="list-style:disc;list-style-position:outside;padding-left:14px;margin:0;font-size:11.5px;color:#444;line-height:1.6;">${bullets}</ul>` : ""}
+                    </div>`;
+			})
+			.join("");
+            
+		const expLis8 = (cvData.experiences || [])
+			.map((e) => {
+				const bullets = (e.desc || "")
+					.split("\n")
+					.filter((l) => l.trim())
+					.map((l) => `<li style="margin-bottom:3px;">${esc(l.replace(/^•\s*/, ""))}</li>`)
+					.join("");
+				return `
+                    <div style="margin-bottom:18px;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <strong style="font-size:14px;color:${BR};">${esc(e.company) || "Nama Perusahaan"}</strong>
+                            <span style="font-size:10.5px;color:${ACCENT};font-weight:600;letter-spacing:0.5px;">${esc(e.period)}</span>
+                        </div>
+                        <div style="font-size:12px;color:#555;font-weight:500;margin:3px 0 6px;">${esc(e.role) || "Jabatan"}</div>
+                        ${bullets ? `<ul style="list-style:disc;list-style-position:outside;padding-left:14px;margin:0;font-size:11.5px;color:#444;line-height:1.6;">${bullets}</ul>` : ""}
+                    </div>`;
+			})
+			.join("");
+            
+		const banner8 = (label: string) =>
+			`<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+                <div style="font-size:14px;font-weight:700;color:${BR};text-transform:uppercase;letter-spacing:1.5px;">${label}</div>
+                <div style="flex:1;height:1px;background:${ACCENT};opacity:0.4;"></div>
+            </div>`;
+            
+        const sideBanner8 = (label: string) =>
+            `<div style="font-size:13px;font-weight:700;color:${BR};text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;border-bottom:1px solid rgba(74,51,38,.15);padding-bottom:6px;">${label}</div>`;
+
+		return `
+        <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;font-family: 'Inter', sans-serif;">
+            <div style="display:flex;flex-direction:column;height:100%;">
+                <header style="background:${BR};padding:40px 48px;position:relative;z-index:10;display:flex;align-items:center;gap:32px;">
+                    ${
+                        cvData.photo
+                        ? `<img src="${cvData.photo}" style="width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid ${SK};box-shadow:0 4px 15px rgba(0,0,0,0.2);flex-shrink:0;" />`
+                        : ""
+                    }
+                    <div style="flex:1;">
+                        <div style="color:white;font-weight:800;font-size:36px;line-height:1.2;letter-spacing:-0.5px;">${name}</div>
+                        <div style="color:${SK};font-size:14px;letter-spacing:3px;text-transform:uppercase;margin-top:8px;font-weight:500;">${title}</div>
+                    </div>
+                </header>
+                
+                <div style="display:flex;flex:1;min-height:0;">
+                    <aside style="width:32%;background:${SK};padding:32px 24px;display:flex;flex-direction:column;gap:24px;">
+                        <div>
+                            ${sideBanner8("Kontak")}
+                            <ul style="list-style:none;padding:0;margin:0;font-size:11.5px;color:#444;">
+                                <li style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
+                                    <i class="fa-solid fa-phone" style="width:14px;color:${ACCENT};margin-top:3px;"></i>
+                                    <span style="word-break:break-all;line-height:1.4;">${phone || "-"}</span>
+                                </li>
+                                <li style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
+                                    <i class="fa-solid fa-envelope" style="width:14px;color:${ACCENT};margin-top:3px;"></i>
+                                    <span style="word-break:break-all;line-height:1.4;">${email || "-"}</span>
+                                </li>
+                                <li style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">
+                                    <i class="fa-solid fa-location-dot" style="width:14px;color:${ACCENT};margin-top:3px;"></i>
+                                    <span style="line-height:1.4;">${address || "-"}</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            ${sideBanner8("Kemampuan")}
+                            <ul style="list-style:none;padding:0;margin:0;">${skillLis8}</ul>
+                        </div>
+                        
+                        <div>
+                            ${sideBanner8("Pendidikan")}
+                            ${pendidikanLis8}
+                        </div>
+                    </aside>
+                    
+                    <section style="flex:1;background:white;padding:36px 40px;overflow-y:auto;">
+                        <div style="margin-bottom:28px;">
+                            ${banner8("Profil")}
+                            <p style="font-size:12px;color:#444;line-height:1.7;text-align:justify;white-space:pre-line;margin:0;">${about}</p>
+                        </div>
+                        
+                        <div style="margin-bottom:28px;">
+                            ${banner8("Pengalaman Kerja")}
+                            ${expLis8}
+                        </div>
+                        
+                        ${(cvData.organisasis || []).length ? `<div style="margin-bottom:28px;">${banner8("Organisasi")}${orgLis8}</div>` : ""}
+                        
+                        ${(cvData.penghargaans || []).length ? `<div>${banner8("Sertifikat")}<ul style="list-style:disc;list-style-position:inside;padding-left:4px;margin:0;">${sertifikatLis8}</ul></div>` : ""}
+                    </section>
+                </div>
+            </div>
+        </div>`;
+	}
 
 	// cv01 Editorial: kertas hangat + garis emas, kemampuan berupa penjelasan
+	const t01 = cvData.themeColor || "#C9A227";
 	const skillEd = skills
 		.map(
 			(s) =>
-				`<div style="font-size:11.5px;color:#4A403A;line-height:1.65;margin-bottom:10px;"><span style="font-weight:600;color:#211A17;">${esc(s.title)}</span><span style="color:#C9A227;"> — </span>${esc(s.desc)}</div>`,
+				`<div style="font-size:11.5px;color:#4A403A;line-height:1.65;margin-bottom:10px;"><span style="font-weight:600;color:#211A17;">${esc(s.title)}</span><span style="color:${t01};"> — </span>${esc(s.desc)}</div>`,
 		)
 		.join("");
 	const pendidikanEd = (cvData.pendidikans || [])
@@ -621,7 +934,7 @@ export const buildCvHtml = (
                             <span style="font-weight:700;font-size:12.5px;color:#211A17;">${esc(pd.institusi) || "-"}</span>
                             <span style="font-size:10px;color:#A79A8A;letter-spacing:1px;">${esc(pd.tahun)}</span>
                         </div>
-                        <div style="font-size:11px;color:#C9A227;font-weight:600;margin-top:2px;">${esc(pd.jurusan) || "-"}</div>
+                        <div style="font-size:11px;color:${t01};font-weight:600;margin-top:2px;">${esc(pd.jurusan) || "-"}</div>
                         ${pd.kegiatan ? `<div style="font-size:11px;color:#4A403A;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
                     </div>`,
 		)
@@ -634,36 +947,60 @@ export const buildCvHtml = (
                             <span style="font-weight:700;font-size:13.5px;color:#211A17;">${esc(e.company) || "Nama Perusahaan"}</span>
                             <span style="font-size:10px;color:#A79A8A;letter-spacing:1px;">${esc(e.period)}</span>
                         </div>
-                        <div style="font-size:11.5px;color:#C9A227;font-weight:600;margin:2px 0 5px;">${esc(e.role) || "Jabatan"}</div>
+                        <div style="font-size:11.5px;color:${t01};font-weight:600;margin:2px 0 5px;">${esc(e.role) || "Jabatan"}</div>
                         <div style="font-size:11.5px;color:#4A403A;line-height:1.65;white-space:pre-line;">${esc(e.desc)}</div>
                     </div>`,
+		)
+		.join("");
+	const orgEd = (cvData.organisasis || [])
+		.map(
+			(o) => `
+                    <div style="margin-bottom:16px;border-bottom:1px dashed #E8E0D3;padding-bottom:13px;">
+                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+                            <span style="font-weight:700;font-size:13.5px;color:#211A17;">${esc(o.instansi) || "Nama Instansi"}</span>
+                            <span style="font-size:10px;color:#A79A8A;letter-spacing:1px;">${esc(o.tanggal)}</span>
+                        </div>
+                        <div style="font-size:11.5px;color:${t01};font-weight:600;margin:2px 0 5px;">${esc(o.posisi) || "Jabatan"}</div>
+                        <div style="font-size:11.5px;color:#4A403A;line-height:1.65;white-space:pre-line;">${esc(o.deskripsi)}</div>
+                    </div>`,
+		)
+		.join("");
+	const penghargaanEd = (cvData.penghargaans || [])
+		.map(
+			(a) =>
+				`<div style="font-size:11.5px;color:#4A403A;line-height:1.65;margin-bottom:10px;"><span style="font-weight:600;color:#211A17;">${esc(a.judul)}</span><span style="color:${t01};"> — </span>${esc(a.tahun)}</div>`,
 		)
 		.join("");
 	const edSection = (label: string, inner: string) => `
                     <div style="margin-bottom:16px;">
                         <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#3B2F2A;">${label}</div>
-                        <div style="width:36px;height:2px;background:#C9A227;margin-top:6px;margin-bottom:12px;"></div>
+                        <div style="width:36px;height:2px;background:${t01};margin-top:6px;margin-bottom:12px;"></div>
                         ${inner}
                     </div>`;
 	return `
         <div class="cv-paper" style="width:794px;height:1123px;background:#FDFBF7;overflow:hidden;">
-            <div style="padding:48px 56px 22px;border-bottom:2px solid #C9A227;">
-                <div style="font-family:Poppins,sans-serif;font-size:38px;font-weight:700;line-height:1.1;color:#211A17;">${name}</div>
-                <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8A6D3B;font-weight:600;margin-top:8px;">${title}</div>
-                <div style="display:flex;gap:24px;margin-top:20px;font-size:11px;color:#4A403A;">
-                    <div><i class="fa-solid fa-phone" style="color:#C9A227;margin-right:6px;width:12px;"></i>${phone || "-"}</div>
-                    <div><i class="fa-solid fa-envelope" style="color:#C9A227;margin-right:6px;width:12px;"></i>${email || "-"}</div>
-                    <div><i class="fa-solid fa-location-dot" style="color:#C9A227;margin-right:6px;width:12px;"></i>${address || "-"}</div>
+            <div style="padding:48px 56px 22px;border-bottom:2px solid ${t01};display:flex;justify-content:space-between;align-items:flex-end;gap:24px;">
+                <div style="flex:1;">
+                    <div style="font-family:Poppins,sans-serif;font-size:38px;font-weight:700;line-height:1.1;color:#211A17;">${name}</div>
+                    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8A6D3B;font-weight:600;margin-top:8px;">${title}</div>
+                    <div style="display:flex;gap:24px;margin-top:20px;font-size:11px;color:#4A403A;">
+                        <div><i class="fa-solid fa-phone" style="color:${t01};margin-right:6px;width:12px;"></i>${phone || "-"}</div>
+                        <div><i class="fa-solid fa-envelope" style="color:${t01};margin-right:6px;width:12px;"></i>${email || "-"}</div>
+                        <div><i class="fa-solid fa-location-dot" style="color:${t01};margin-right:6px;width:12px;"></i>${address || "-"}</div>
+                    </div>
                 </div>
+                ${cvData.photo ? `<img src="${cvData.photo}" style="width:105px;height:105px;object-fit:cover;border:3px solid #E8E0D3;border-radius:2px;flex-shrink:0;" />` : ""}
             </div>
             <div style="display:flex;padding:36px 56px;gap:40px;">
                 <div style="width:42%;">
-                    ${edSection("Tentang Saya", `<div style="font-size:12px;color:#4A403A;line-height:1.7;text-align:justify;white-space:pre-line;">${about}</div>`)}
                     ${edSection("Riwayat Pendidikan", pendidikanEd)}
+                    ${edSection("Kemampuan", skillEd)}
                 </div>
                 <div style="flex:1;">
+                    ${edSection("Tentang Saya", `<div style="font-size:12px;color:#4A403A;line-height:1.7;text-align:justify;white-space:pre-line;">${about}</div>`)}
                     ${edSection("Pengalaman Kerja", expEd)}
-                    ${edSection("Kemampuan", skillEd)}
+                    ${edSection("Pengalaman Organisasi", orgEd)}
+                    ${(cvData.penghargaans || []).length ? edSection("Sertifikat", penghargaanEd) : ""}
                 </div>
             </div>
         </div>`;

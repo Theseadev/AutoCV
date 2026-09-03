@@ -330,29 +330,30 @@ export const buildCvHtml = (
 	const address = esc(cvData.address);
 
 	if (template === "cv02") {
+		const t02 = cvData.themeColor || "#1F2937";
 		return `
         <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;position:relative;">
             <div style="padding:56px 64px;height:100%;">
                 <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;">
                     <div style="flex:1;padding-right:16px;">
                         <h1 class="text-4xl font-bold text-gray-900 mb-1">${name}</h1>
-                        <h2 class="text-lg text-gray-600 mb-2">${title}</h2>
+                        <h2 class="text-lg font-semibold mb-2" style="color:${t02};">${title}</h2>
                         <p class="text-xs text-gray-500">
-                            <i class="fa-solid fa-phone mr-1 w-4"></i>${phone || "-"} &nbsp;|&nbsp;
-                            <i class="fa-solid fa-envelope mr-1 w-4"></i>${email || "-"} &nbsp;|&nbsp;
-                            <i class="fa-solid fa-location-dot mr-1 w-4"></i>${address || "-"}
+                            <i class="fa-solid fa-phone mr-1 w-4" style="color:${t02};"></i>${phone || "-"} &nbsp;|&nbsp;
+                            <i class="fa-solid fa-envelope mr-1 w-4" style="color:${t02};"></i>${email || "-"} &nbsp;|&nbsp;
+                            <i class="fa-solid fa-location-dot mr-1 w-4" style="color:${t02};"></i>${address || "-"}
                         </p>
                     </div>
                     ${cvData.photo ? `<img src="${cvData.photo}" style="width:110px;height:110px;border-radius:${getRadius('8px')};object-fit:cover;border:2px solid #F3F4F6;flex-shrink:0;" />` : ""}
                 </div>
-                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Tentang Saya</h3>
+                <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-3" style="color:${t02};border-color:${t02};">Tentang Saya</h3>
                 <p class="text-sm text-gray-700 leading-relaxed text-justify mb-8 whitespace-pre-line">${about}</p>
-                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Riwayat Pendidikan</h3>
+                <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-3" style="color:${t02};border-color:${t02};">Riwayat Pendidikan</h3>
                 <div class="space-y-4 mb-8">${pendidikanLis2}</div>
-                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-4">Pengalaman Kerja</h3>
+                <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-4" style="color:${t02};border-color:${t02};">Pengalaman Kerja</h3>
                 <div class="space-y-5 mb-8">${exps}</div>
                 ${orgBlock}
-                <h3 class="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">Kemampuan</h3>
+                <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-3" style="color:${t02};border-color:${t02};">Kemampuan</h3>
                 <ul class="text-sm text-gray-700 space-y-1">${skillLis}</ul>
                 ${sertifikatBlock}
             </div>
@@ -372,24 +373,24 @@ export const buildCvHtml = (
             </div>
             <div class="flex">
                 <div class="w-2/5 p-8 bg-gray-50 border-r border-gray-200">
-                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Kontak</h3>
+                    <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-4" style="color:${t03};border-color:${t03};">Kontak</h3>
                     <ul class="text-sm space-y-3 mb-8">
-                        <li class="flex items-start"><i class="fa-solid fa-phone mt-1 w-5 text-indigo-600"></i><span>${phone || "-"}</span></li>
-                        <li class="flex items-start"><i class="fa-solid fa-envelope mt-1 w-5 text-indigo-600"></i><span style="word-break:break-all;">${email || "-"}</span></li>
-                        <li class="flex items-start"><i class="fa-solid fa-location-dot mt-1 w-5 text-indigo-600"></i><span>${address || "-"}</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-phone mt-1 w-5" style="color:${t03};"></i><span>${phone || "-"}</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-envelope mt-1 w-5" style="color:${t03};"></i><span style="word-break:break-all;">${email || "-"}</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-location-dot mt-1 w-5" style="color:${t03};"></i><span>${address || "-"}</span></li>
                     </ul>
-                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Riwayat Pendidikan</h3>
+                    <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-4" style="color:${t03};border-color:${t03};">Riwayat Pendidikan</h3>
                     <div class="space-y-4 mb-8">${pendidikanLis3}</div>
-                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-3">Kemampuan</h3>
+                    <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-3" style="color:${t03};border-color:${t03};">Kemampuan</h3>
                     <ul class="text-sm space-y-2 list-disc pl-4">${skillLis}</ul>
                 </div>
                 <div class="w-3/5 p-8">
-                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-3">Tentang Saya</h3>
+                    <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-3" style="color:${t03};border-color:${t03};">Tentang Saya</h3>
                     <p class="text-sm text-gray-700 leading-relaxed text-justify mb-8 whitespace-pre-line">${about}</p>
-                    <h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">Pengalaman Kerja</h3>
+                    <h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-4" style="color:${t03};border-color:${t03};">Pengalaman Kerja</h3>
                     <div class="space-y-5">${exps}</div>
-                    ${(cvData.organisasis || []).length ? `<h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mt-8 mb-4">Pengalaman Organisasi</h3><div class="space-y-5">${orgs}</div>` : ""}
-                    ${(cvData.penghargaans || []).length ? `<h3 class="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mt-8 mb-4">Sertifikat</h3><ul class="text-sm space-y-2 list-disc pl-4">${sertifLis}</ul>` : ""}
+                    ${(cvData.organisasis || []).length ? `<h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mt-8 mb-4" style="color:${t03};border-color:${t03};">Pengalaman Organisasi</h3><div class="space-y-5">${orgs}</div>` : ""}
+                    ${(cvData.penghargaans || []).length ? `<h3 class="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mt-8 mb-4" style="color:${t03};border-color:${t03};">Sertifikat</h3><ul class="text-sm space-y-2 list-disc pl-4">${sertifLis}</ul>` : ""}
                 </div>
             </div>
         </div>`;
@@ -502,7 +503,8 @@ export const buildCvHtml = (
 	}
 
 	if (template === "cv05") {
-		// Lux Monochrome: tipografi serif, palet hitam-putih, garis ganda
+		// Lux Monochrome: tipografi serif, aksen dinamis, garis ganda
+		const t05 = cvData.themeColor || "#111827";
 		const skillLux = skills
 			.map(
 				(s) =>
@@ -558,30 +560,30 @@ export const buildCvHtml = (
         <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;font-family:'Playfair Display',serif;">
             <div style="text-align:center;padding:44px 60px 20px;">
                 <div style="font-size:40px;font-weight:700;color:#111827;letter-spacing:2px;">${name}</div>
-                <div style="font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#6B7280;margin-top:10px;font-family:Inter,sans-serif;font-weight:600;">${title}</div>
-                <div style="border-top:1px solid #111827;border-bottom:1px solid #111827;height:5px;margin:22px 0 0;"></div>
+                <div style="font-size:11px;letter-spacing:4px;text-transform:uppercase;color:${t05};margin-top:10px;font-family:Inter,sans-serif;font-weight:600;">${title}</div>
+                <div style="border-top:1px solid ${t05};border-bottom:1px solid ${t05};height:5px;margin:22px 0 0;"></div>
             </div>
             <div style="text-align:center;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:#9CA3AF;font-family:Inter,sans-serif;padding-top:12px;">${phone || "-"} &nbsp;·&nbsp; ${email || "-"} &nbsp;·&nbsp; ${address || "-"}</div>
             <div style="display:flex;padding:28px 60px 40px;gap:36px;">
                 <div style="width:40%;padding-right:28px;border-right:1px solid #E5E7EB;">
-                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Riwayat Pendidikan</div>
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:${t05};margin-bottom:10px;">Riwayat Pendidikan</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     ${pendidikanLux}
-                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Kemampuan</div>
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:${t05};margin:26px 0 10px;">Kemampuan</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     ${skillLux}
                 </div>
                 <div style="flex:1;">
-                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin-bottom:10px;">Tentang Saya</div>
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:${t05};margin-bottom:10px;">Tentang Saya</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     <div style="font-size:12px;color:#374151;line-height:1.7;text-align:justify;white-space:pre-line;font-family:Inter,sans-serif;">${about}</div>
-                    <div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Pengalaman Kerja</div>
+                    <div style="font-size:17px;font-style:italic;font-weight:700;color:${t05};margin:26px 0 10px;">Pengalaman Kerja</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     ${expLux}
-                    ${(cvData.organisasis || []).length ? `<div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Pengalaman Organisasi</div>
+                    ${(cvData.organisasis || []).length ? `<div style="font-size:17px;font-style:italic;font-weight:700;color:${t05};margin:26px 0 10px;">Pengalaman Organisasi</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     ${orgLux}` : ""}
-                    ${(cvData.penghargaans || []).length ? `<div style="font-size:17px;font-style:italic;font-weight:700;color:#111827;margin:26px 0 10px;">Sertifikat</div>
+                    ${(cvData.penghargaans || []).length ? `<div style="font-size:17px;font-style:italic;font-weight:700;color:${t05};margin:26px 0 10px;">Sertifikat</div>
                     <div style="height:1px;background:#E5E7EB;margin-bottom:16px;"></div>
                     ${sertifikatLux}` : ""}
                 </div>
@@ -590,12 +592,13 @@ export const buildCvHtml = (
 	}
 
 	if (template === "cv06") {
-		// Dev Minimal: rail indigo, aksen monospace, chip skill
+		// Dev Minimal: rail dinamis, aksen monospace, chip skill
+		const t06 = cvData.themeColor || "#4F46E5";
 		const MONO = "ui-monospace,SFMono-Regular,Menlo,Consolas,monospace";
 		const skillChips = skills
 			.map(
 				(s) =>
-					`<span style="display:inline-block;border:1px solid #C7D2FE;background:#EEF2FF;color:#4338CA;border-radius:999px;padding:4px 10px;font-size:10.5px;font-family:${MONO};margin:0 6px 6px 0;">${esc(s.title)}: ${esc(s.desc)}</span>`,
+					`<span style="display:inline-block;border:1px solid ${t06}40;background:${t06}12;color:${t06};border-radius:999px;padding:4px 10px;font-size:10.5px;font-family:${MONO};margin:0 6px 6px 0;">${esc(s.title)}: ${esc(s.desc)}</span>`,
 			)
 			.join("");
 		const pendidikanDev = (cvData.pendidikans || [])
@@ -606,7 +609,7 @@ export const buildCvHtml = (
                             <span style="font-weight:700;font-size:13px;color:#111827;">${esc(pd.institusi) || "-"}</span>
                             <span style="font-size:10px;color:#9CA3AF;font-family:${MONO};">${esc(pd.tahun)}</span>
                         </div>
-                        <div style="font-size:11px;color:#4F46E5;margin-top:2px;font-family:${MONO};">${esc(pd.jurusan) || "-"}</div>
+                        <div style="font-size:11px;color:${t06};margin-top:2px;font-family:${MONO};">${esc(pd.jurusan) || "-"}</div>
                         ${pd.kegiatan ? `<div style="font-size:11px;color:#6B7280;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
                     </div>`,
 			)
@@ -646,29 +649,29 @@ export const buildCvHtml = (
 		return `
         <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;">
             <div style="display:flex;height:100%;">
-                <div style="width:14px;background:#4F46E5;flex-shrink:0;"></div>
+                <div style="width:14px;background:${t06};flex-shrink:0;"></div>
                 <div style="flex:1;padding:40px 48px;">
                     <div style="font-size:11px;color:#9CA3AF;font-family:${MONO};">~/cv/${name.toLowerCase().replace(/\s+/g, "-") || "nama"}</div>
                     <div style="font-family:Poppins,sans-serif;font-size:32px;font-weight:700;color:#111827;margin-top:4px;">${name}</div>
-                    <div style="font-size:12px;color:#4F46E5;font-weight:500;margin-top:2px;font-family:${MONO};">&gt; ${title}</div>
+                    <div style="font-size:12px;color:${t06};font-weight:500;margin-top:2px;font-family:${MONO};">&gt; ${title}</div>
                     <div style="font-size:10.5px;color:#9CA3AF;margin-top:10px;font-family:${MONO};">${phone || "-"} / ${email || "-"} / ${address || "-"}</div>
-                    <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// tentang</div>
+                    <div style="font-size:10.5px;color:${t06};font-weight:600;margin:22px 0 10px;font-family:${MONO};">// tentang</div>
                     <p style="font-size:11.5px;color:#4B5563;line-height:1.65;white-space:pre-line;">${about}</p>
-                    <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// pendidikan</div>
+                    <div style="font-size:10.5px;color:${t06};font-weight:600;margin:22px 0 10px;font-family:${MONO};">// pendidikan</div>
                     ${pendidikanDev}
-                    <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// pengalaman</div>
+                    <div style="font-size:10.5px;color:${t06};font-weight:600;margin:22px 0 10px;font-family:${MONO};">// pengalaman</div>
                     ${expCards}
                     ${
 											(cvData.organisasis || []).length
-												? `<div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// organisasi</div>
+												? `<div style="font-size:10.5px;color:${t06};font-weight:600;margin:22px 0 10px;font-family:${MONO};">// organisasi</div>
                     ${orgCards}`
 												: ""
 										}
-                    <div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// kemampuan</div>
+                    <div style="font-size:10.5px;color:${t06};font-weight:600;margin:22px 0 10px;font-family:${MONO};">// kemampuan</div>
                     <div>${skillChips}</div>
                     ${
 											(cvData.penghargaans || []).length
-												? `<div style="font-size:10.5px;color:#4F46E5;font-weight:600;margin:22px 0 10px;font-family:${MONO};">// sertifikat</div>
+												? `<div style="font-size:10.5px;color:${t06};font-weight:600;margin:22px 0 10px;font-family:${MONO};">// sertifikat</div>
                     ${sertifikatDev}`
 												: ""
 										}
@@ -678,18 +681,19 @@ export const buildCvHtml = (
 	}
 
 	if (template === "cv07") {
-		// Classic Fresh: sidebar krem + aksen cokelat (versi PDF dari template-cv07.html)
+		// Classic Fresh: sidebar krem + aksen dinamis (versi PDF dari template-cv07.html)
+		const t07 = cvData.themeColor || "#664229";
 		const skillLis7 = skills
 			.map(
 				(s) =>
-					`<li style="font-size:12px;color:#1F2937;margin-bottom:6px;"><strong style="color:#664229;">${esc(s.title)}</strong> — ${esc(s.desc)}</li>`,
+					`<li style="font-size:12px;color:#1F2937;margin-bottom:6px;"><strong style="color:${t07};">${esc(s.title)}</strong> — ${esc(s.desc)}</li>`,
 			)
 			.join("");
 		const pendidikanLis7 = (cvData.pendidikans || [])
 			.map(
 				(pd) => `
                     <div style="margin-bottom:12px;">
-                        <div style="font-weight:700;color:#664229;font-size:12px;">${esc(pd.institusi) || "-"}</div>
+                        <div style="font-weight:700;color:${t07};font-size:12px;">${esc(pd.institusi) || "-"}</div>
                         <div style="font-size:12px;color:#1F2937;">${esc(pd.jurusan) || "-"}</div>
                         <div style="font-size:11px;color:#6B7280;">${esc(pd.tahun)}</div>
                         ${pd.kegiatan ? `<div style="font-size:11px;color:#6B7280;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
@@ -699,7 +703,7 @@ export const buildCvHtml = (
 		const sertifikatLis7 = (cvData.penghargaans || [])
 			.map(
 				(a) =>
-					`<li style="font-size:13px;color:#1F2937;margin-bottom:6px;"><strong style="color:#664229;">${esc(a.judul)}</strong>${a.tahun ? ` — ${esc(a.tahun)}` : ""}</li>`,
+					`<li style="font-size:13px;color:#1F2937;margin-bottom:6px;"><strong style="color:${t07};">${esc(a.judul)}</strong>${a.tahun ? ` — ${esc(a.tahun)}` : ""}</li>`,
 			)
 			.join("");
 		const organisasiLis7 = (cvData.organisasis || [])
@@ -711,7 +715,7 @@ export const buildCvHtml = (
 					.join("");
 				return `
                     <div style="margin-bottom:22px;">
-                        <h4 style="font-weight:700;color:#664229;margin:0;">${esc(org.instansi) || "Nama Instansi"}</h4>
+                        <h4 style="font-weight:700;color:${t07};margin:0;">${esc(org.instansi) || "Nama Instansi"}</h4>
                         <p style="font-size:13px;color:#4B5563;margin:2px 0 8px;">${esc(org.posisi) || ""}${org.tanggal ? ` · ${esc(org.tanggal)}` : ""}</p>
                         <ul style="list-style:disc;padding-left:18px;font-size:13px;color:#374151;line-height:1.6;margin:0;">${bullets}</ul>
                     </div>`;
@@ -720,7 +724,7 @@ export const buildCvHtml = (
 		const organisasiBlock7 =
 			(cvData.organisasis || []).length > 0
 				? `
-                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Pengalaman Organisasi</h3>
+                    <h3 style="font-weight:700;color:${t07};font-size:22px;margin:28px 0 12px;">Pengalaman Organisasi</h3>
                     ${organisasiLis7}`
 				: "";
 		const expLis7 = (cvData.experiences || [])
@@ -732,7 +736,7 @@ export const buildCvHtml = (
 					.join("");
 				return `
                     <div style="margin-bottom:22px;">
-                        <h4 style="font-weight:700;color:#664229;margin:0;">${esc(e.company) || "Nama Perusahaan"}</h4>
+                        <h4 style="font-weight:700;color:${t07};margin:0;">${esc(e.company) || "Nama Perusahaan"}</h4>
                         <p style="font-size:13px;color:#4B5563;margin:2px 0 8px;">${esc(e.role) || "Jabatan"} · ${esc(e.period)}</p>
                         <ul style="list-style:disc;padding-left:18px;font-size:13px;color:#374151;line-height:1.6;margin:0;">${bullets}</ul>
                     </div>`;
@@ -742,26 +746,26 @@ export const buildCvHtml = (
         <div class="cv-paper" style="width:794px;height:1123px;background:white;overflow:hidden;">
             <div style="display:flex;height:100%;">
                 <aside style="width:35%;background:#EAE2D6;padding:32px;">
-                    <div style="font-weight:700;color:#664229;font-size:18px;margin:0 0 12px;">Kontak</div>
+                    <div style="font-weight:700;color:${t07};font-size:18px;margin:0 0 12px;">Kontak</div>
                     <ul style="list-style:none;padding:0;margin:0;font-size:13px;color:#1F2937;">
-                        <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-phone" style="width:14px;color:#664229;"></i>${phone || "-"}</li>
-                        <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-envelope" style="width:14px;color:#664229;"></i>${email || "-"}</li>
-                        <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-location-dot" style="width:14px;color:#664229;"></i>${address || "-"}</li>
+                        <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-phone" style="width:14px;color:${t07};"></i>${phone || "-"}</li>
+                        <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-envelope" style="width:14px;color:${t07};"></i>${email || "-"}</li>
+                        <li style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><i class="fa-solid fa-location-dot" style="width:14px;color:${t07};"></i>${address || "-"}</li>
                     </ul>
-                    <div style="font-weight:700;color:#664229;font-size:18px;margin:24px 0 12px;">Riwayat Pendidikan</div>
+                    <div style="font-weight:700;color:${t07};font-size:18px;margin:24px 0 12px;">Riwayat Pendidikan</div>
                     ${pendidikanLis7}
-                    <div style="font-weight:700;color:#664229;font-size:18px;margin:24px 0 12px;">Kemampuan</div>
+                    <div style="font-weight:700;color:${t07};font-size:18px;margin:24px 0 12px;">Kemampuan</div>
                     <ul style="list-style:disc;padding-left:18px;margin:0;">${skillLis7}</ul>
                 </aside>
                 <section style="flex:1;background:white;padding:40px;">
-                    <h1 style="font-weight:800;font-size:40px;color:#664229;text-transform:capitalize;line-height:1.1;margin:0 0 6px;">${name}</h1>
+                    <h1 style="font-weight:800;font-size:40px;color:${t07};text-transform:capitalize;line-height:1.1;margin:0 0 6px;">${name}</h1>
                     <h2 style="font-size:22px;color:#374151;letter-spacing:4px;text-transform:uppercase;margin:0 0 28px;">${title}</h2>
-                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:0 0 12px;">Tentang Saya</h3>
+                    <h3 style="font-weight:700;color:${t07};font-size:22px;margin:0 0 12px;">Tentang Saya</h3>
                     <p style="text-align:justify;color:#374151;font-size:13px;line-height:1.7;white-space:pre-line;">${about}</p>
-                    <h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Pengalaman Kerja</h3>
+                    <h3 style="font-weight:700;color:${t07};font-size:22px;margin:28px 0 12px;">Pengalaman Kerja</h3>
                     ${expLis7}
                     ${organisasiBlock7}
-                    ${(cvData.penghargaans || []).length ? `<h3 style="font-weight:700;color:#664229;font-size:22px;margin:28px 0 12px;">Sertifikat</h3><ul style="list-style:disc;padding-left:18px;margin:0;">${sertifikatLis7}</ul>` : ""}
+                    ${(cvData.penghargaans || []).length ? `<h3 style="font-weight:700;color:${t07};font-size:22px;margin:28px 0 12px;">Sertifikat</h3><ul style="list-style:disc;padding-left:18px;margin:0;">${sertifikatLis7}</ul>` : ""}
                 </section>
             </div>
         </div>`;

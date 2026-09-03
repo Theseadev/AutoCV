@@ -1716,6 +1716,13 @@ function CorporateLayout({
 	cv: CvData;
 	skills: ParsedSkill[];
 }) {
+	const themeColor = cv.themeColor || "#1F2937";
+	const sectionHeader = (title: string) => (
+		<h3 className="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-3" style={{ color: themeColor, borderColor: themeColor }}>
+			{title}
+		</h3>
+	);
+
 	return (
 		<div className="p-14 bg-white h-full relative">
 			<div className="flex justify-between items-start mb-8">
@@ -1723,13 +1730,13 @@ function CorporateLayout({
 					<h1 className="text-4xl font-bold text-gray-900 mb-1">
 						{cv.name || "Nama Lengkap"}
 					</h1>
-					<h2 className="text-lg text-gray-600 mb-2">{cv.title || "Profesi"}</h2>
+					<h2 className="text-lg font-semibold mb-2" style={{ color: themeColor }}>{cv.title || "Profesi"}</h2>
 					<p className="text-xs text-gray-500">
-						<i className="fa-solid fa-phone mr-1 w-4"></i> {cv.phone || "-"}{" "}
+						<i className="fa-solid fa-phone mr-1 w-4" style={{ color: themeColor }}></i> {cv.phone || "-"}{" "}
 						&nbsp;|&nbsp;
-						<i className="fa-solid fa-envelope mr-1 w-4"></i> {cv.email || "-"}{" "}
+						<i className="fa-solid fa-envelope mr-1 w-4" style={{ color: themeColor }}></i> {cv.email || "-"}{" "}
 						&nbsp;|&nbsp;
-						<i className="fa-solid fa-location-dot mr-1 w-4"></i>{" "}
+						<i className="fa-solid fa-location-dot mr-1 w-4" style={{ color: themeColor }}></i>{" "}
 						{cv.address || "-"}
 					</p>
 				</div>
@@ -1742,16 +1749,12 @@ function CorporateLayout({
 				)}
 			</div>
 
-			<h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">
-				Profil
-			</h3>
+			{sectionHeader("Profil")}
 			<p className="text-sm text-gray-700 leading-relaxed text-justify mb-8 whitespace-pre-line">
 				{cv.about || "Tulis ringkasan tentang diri Anda."}
 			</p>
 
-			<h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">
-				Riwayat Pendidikan
-			</h3>
+			{sectionHeader("Riwayat Pendidikan")}
 			<div className="space-y-4 mb-8">
 				{(cv.pendidikans || []).map((pd, index) => (
 					<div
@@ -1772,9 +1775,7 @@ function CorporateLayout({
 				))}
 			</div>
 
-			<h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-4">
-				Pengalaman Kerja
-			</h3>
+			{sectionHeader("Pengalaman Kerja")}
 			<div className="space-y-5 mb-8">
 				{(cv.experiences || []).map((exp, index) => (
 					<div key={exp.id ?? index}>
@@ -1798,9 +1799,7 @@ function CorporateLayout({
 
 			{(cv.organisasis || []).length > 0 && (
 				<>
-					<h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-4">
-						Pengalaman Organisasi
-					</h3>
+					{sectionHeader("Pengalaman Organisasi")}
 					<div className="space-y-5 mb-8">
 						{(cv.organisasis || []).map((org, index) => (
 							<div key={org.id ?? index}>
@@ -1824,9 +1823,7 @@ function CorporateLayout({
 				</>
 			)}
 
-			<h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">
-				Kemampuan
-			</h3>
+			{sectionHeader("Kemampuan")}
 			<ul className="text-sm text-gray-700 space-y-1">
 				{skills.map((s) => (
 					<li key={s.title}>
@@ -1837,9 +1834,7 @@ function CorporateLayout({
 
 			{(cv.penghargaans || []).length > 0 && (
 				<>
-					<h3 className="text-sm font-bold text-gray-900 uppercase tracking-widest border-b-2 border-gray-300 pb-1 mb-3">
-						Sertifikat
-					</h3>
+					{sectionHeader("Sertifikat")}
 					<ul className="text-sm text-gray-700 space-y-1">
 						{(cv.penghargaans || []).map((a) => (
 							<li key={a.id}>
@@ -1877,24 +1872,24 @@ function ModernLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 			</div>
 			<div className="flex flex-1 min-h-0">
 				<div className="w-2/5 p-8 bg-gray-50 border-r border-gray-200">
-					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">
+					<h3 className="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-4" style={{ color: themeColor, borderColor: themeColor }}>
 						Kontak
 					</h3>
 					<ul className="text-sm space-y-3 mb-8">
 						<li className="flex items-start">
-							<i className="fa-solid fa-phone mt-1 w-5 text-indigo-600"></i>{" "}
+							<i className="fa-solid fa-phone mt-1 w-5" style={{ color: themeColor }}></i>{" "}
 							<span>{cv.phone || "-"}</span>
 						</li>
 						<li className="flex items-start">
-							<i className="fa-solid fa-envelope mt-1 w-5 text-indigo-600"></i>{" "}
+							<i className="fa-solid fa-envelope mt-1 w-5" style={{ color: themeColor }}></i>{" "}
 							<span style={{ wordBreak: "break-all" }}>{cv.email || "-"}</span>
 						</li>
 						<li className="flex items-start">
-							<i className="fa-solid fa-location-dot mt-1 w-5 text-indigo-600"></i>{" "}
+							<i className="fa-solid fa-location-dot mt-1 w-5" style={{ color: themeColor }}></i>{" "}
 							<span>{cv.address || "-"}</span>
 						</li>
 					</ul>
-					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">
+					<h3 className="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-4" style={{ color: themeColor, borderColor: themeColor }}>
 						Riwayat Pendidikan
 					</h3>
 					<div className="space-y-4 mb-8">
@@ -1916,7 +1911,7 @@ function ModernLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 							</div>
 						))}
 					</div>
-					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-3">
+					<h3 className="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-3" style={{ color: themeColor, borderColor: themeColor }}>
 						Kemampuan
 					</h3>
 					<ul className="text-sm space-y-2 list-disc pl-4">
@@ -1928,13 +1923,13 @@ function ModernLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 					</ul>
 				</div>
 				<div className="w-3/5 p-8">
-					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-3">
+					<h3 className="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-3" style={{ color: themeColor, borderColor: themeColor }}>
 						Tentang Saya
 					</h3>
 					<p className="text-sm text-gray-700 leading-relaxed text-justify mb-8 whitespace-pre-line">
 						{cv.about || "Tulis ringkasan tentang diri Anda."}
 					</p>
-					<h3 className="text-sm font-bold text-indigo-700 uppercase tracking-widest border-b-2 border-indigo-600 pb-1 mb-4">
+					<h3 className="text-sm font-bold uppercase tracking-widest border-b-2 pb-1 mb-4" style={{ color: themeColor, borderColor: themeColor }}>
 						Pengalaman Kerja
 					</h3>
 					<div className="space-y-5">
@@ -2057,7 +2052,7 @@ function GeometricLayout({
 					</h3>
 					{(cv.pendidikans || []).map((pd, index) => (
 						<div key={pd.id ?? index} className="flex gap-3.5 mb-3.5">
-							<div className="w-7 h-7 rounded-md bg-indigo-600 text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+							<div className="w-7 h-7 rounded-md text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5" style={{ backgroundColor: themeColor }}>
 								{String(index + 1).padStart(2, "0")}
 							</div>
 							<div className="flex-1 border-b border-slate-100 pb-3.5">
@@ -2067,7 +2062,7 @@ function GeometricLayout({
 									</h4>
 									<span className="text-[10px] text-slate-400">{pd.tahun}</span>
 								</div>
-								<p className="text-[11px] font-semibold text-indigo-600 mt-0.5">
+								<p className="text-[11px] font-semibold mt-0.5" style={{ color: themeColor }}>
 									{pd.jurusan || "-"}
 								</p>
 								{pd.kegiatan && (
@@ -2086,7 +2081,7 @@ function GeometricLayout({
 							key={s.title}
 							className="flex gap-2.5 mb-3 text-[11.5px] text-slate-700"
 						>
-							<span className="text-indigo-500 font-mono font-bold shrink-0">
+							<span className="font-mono font-bold shrink-0" style={{ color: themeColor }}>
 								{String(i + 1).padStart(2, "0")}
 							</span>
 							<p className="leading-relaxed">
@@ -2121,7 +2116,7 @@ function GeometricLayout({
 										{exp.period}
 									</span>
 								</div>
-								<p className="text-[11px] font-semibold text-indigo-600 mt-0.5 mb-1">
+								<p className="text-[11px] font-semibold mt-0.5 mb-1" style={{ color: themeColor }}>
 									{exp.role || "Jabatan"}
 								</p>
 								<p className="text-[11.5px] text-slate-600 leading-relaxed whitespace-pre-line">
@@ -2149,7 +2144,7 @@ function GeometricLayout({
 												{org.tanggal}
 											</span>
 										</div>
-										<p className="text-[11px] font-semibold text-indigo-600 mt-0.5 mb-1">
+										<p className="text-[11px] font-semibold mt-0.5 mb-1" style={{ color: themeColor }}>
 											{org.posisi || "Jabatan"}
 										</p>
 										<p className="text-[11.5px] text-slate-600 leading-relaxed whitespace-pre-line">
@@ -2336,9 +2331,10 @@ const mono = {
 };
 
 function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
+	const themeColor = cv.themeColor || "#4F46E5";
 	return (
 		<div className="h-full bg-white flex">
-			<div className="w-3.5 bg-indigo-600 shrink-0"></div>
+			<div className="w-3.5 shrink-0 transition-colors duration-300" style={{ backgroundColor: themeColor }}></div>
 			<div className="flex-1 px-12 py-10">
 				<p className="text-[11px] text-gray-400" style={mono}>
 					~/cv/{cv.name.toLowerCase().replace(/\s+/g, "-") || "nama"}
@@ -2347,19 +2343,19 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 					{cv.name || "Nama Lengkap"}
 				</h1>
 				<p
-					className="text-[12px] text-indigo-600 font-medium mt-0.5"
-					style={mono}
+					className="text-[12px] font-medium mt-0.5"
+					style={{ ...mono, color: themeColor }}
 				>
 					&gt; {cv.title || "Profesi"}
 				</p>
 				<p className="text-[10.5px] text-gray-400 mt-2.5" style={mono}>
 					{cv.phone || "-"} / {cv.email || "-"} / {cv.address || "-"}
 				</p>
-				<DevTag>tentang</DevTag>
+				<DevTag color={themeColor}>tentang</DevTag>
 				<p className="text-[11.5px] text-gray-600 leading-relaxed whitespace-pre-line">
 					{cv.about || "Tulis ringkasan tentang diri Anda."}
 				</p>
-				<DevTag>pendidikan</DevTag>
+				<DevTag color={themeColor}>pendidikan</DevTag>
 				{(cv.pendidikans || []).map((pd, index) => (
 					<div
 						key={pd.id ?? index}
@@ -2374,8 +2370,8 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 							</span>
 						</div>
 						<p
-							className="text-[11px] text-indigo-600 mt-0.5 font-medium"
-							style={mono}
+							className="text-[11px] mt-0.5 font-medium"
+							style={{ ...mono, color: themeColor }}
 						>
 							{pd.jurusan || "-"}
 						</p>
@@ -2386,7 +2382,7 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						)}
 					</div>
 				))}
-				<DevTag>pengalaman</DevTag>
+				<DevTag color={themeColor}>pengalaman</DevTag>
 				{(cv.experiences || []).map((exp, index) => (
 					<div
 						key={exp.id ?? index}
@@ -2410,7 +2406,7 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 				))}
 				{(cv.organisasis || []).length > 0 && (
 					<>
-						<DevTag>organisasi</DevTag>
+						<DevTag color={themeColor}>organisasi</DevTag>
 						{(cv.organisasis || []).map((org, index) => (
 							<div
 								key={org.id ?? index}
@@ -2434,13 +2430,13 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						))}
 					</>
 				)}
-				<DevTag>kemampuan</DevTag>
+				<DevTag color={themeColor}>kemampuan</DevTag>
 				<div className="flex flex-wrap">
 					{skills.map((s) => (
 						<span
 							key={s.title}
-							className="border border-indigo-200 bg-indigo-50 text-indigo-700 rounded-full px-3 py-1 text-[10.5px] mr-1.5 mb-1.5"
-							style={mono}
+							className="border rounded-full px-3 py-1 text-[10.5px] mr-1.5 mb-1.5"
+							style={{ ...mono, borderColor: `${themeColor}40`, backgroundColor: `${themeColor}12`, color: themeColor }}
 						>
 							{s.title}: {s.desc}
 						</span>
@@ -2448,7 +2444,7 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 				</div>
 				{(cv.penghargaans || []).length > 0 && (
 					<>
-						<DevTag>sertifikat</DevTag>
+						<DevTag color={themeColor}>sertifikat</DevTag>
 						{(cv.penghargaans || []).map((a) => (
 							<div
 								key={a.id}
@@ -2458,9 +2454,11 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 									<h4 className="font-bold text-[13px] text-gray-900">
 										{a.judul}
 									</h4>
-									<span className="text-[10px] text-gray-400" style={mono}>
-										{a.tahun}
-									</span>
+									{a.tahun && (
+										<span className="text-[10px] text-gray-400" style={mono}>
+											{a.tahun}
+										</span>
+									)}
 								</div>
 							</div>
 						))}
@@ -2471,11 +2469,11 @@ function DevLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 	);
 }
 
-function DevTag({ children }: { children: React.ReactNode }) {
+function DevTag({ children, color }: { children: React.ReactNode; color?: string }) {
 	return (
 		<p
-			className="text-[10.5px] text-indigo-600 font-semibold mt-5 mb-2.5"
-			style={mono}
+			className="text-[10.5px] font-semibold mt-5 mb-2.5"
+			style={{ ...mono, color: color || "#4F46E5" }}
 		>
 			{"// "}
 			{children}
@@ -2485,30 +2483,31 @@ function DevTag({ children }: { children: React.ReactNode }) {
 
 // cv07 Classic Fresh: sidebar krem + aksen cokelat, gaya fresh graduate (spesifikasi template-cv07.html)
 function CreamLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
+	const themeColor = cv.themeColor || "#664229";
 	const pendidikans = cv.pendidikans || [];
 	const organisasis = cv.organisasis || [];
 	return (
 		<div className="flex h-full">
 			<aside className="w-[35%] bg-[#EAE2D6] p-8 overflow-hidden">
-				<h3 className="font-bold text-[#664229] text-xl mb-4">Kontak</h3>
+				<h3 className="font-bold text-xl mb-4" style={{ color: themeColor }}>Kontak</h3>
 				<ul className="space-y-3">
 					<li className="flex items-center gap-3 text-sm text-gray-800">
-						<i className="fa-solid fa-phone w-4 text-[#664229]"></i>
+						<i className="fa-solid fa-phone w-4" style={{ color: themeColor }}></i>
 						<span>{cv.phone || "-"}</span>
 					</li>
 					<li className="flex items-center gap-3 text-sm text-gray-800">
-						<i className="fa-solid fa-envelope w-4 text-[#664229]"></i>
+						<i className="fa-solid fa-envelope w-4" style={{ color: themeColor }}></i>
 						<span className="break-all">{cv.email || "-"}</span>
 					</li>
 					<li className="flex items-center gap-3 text-sm text-gray-800">
-						<i className="fa-solid fa-location-dot w-4 text-[#664229]"></i>
+						<i className="fa-solid fa-location-dot w-4" style={{ color: themeColor }}></i>
 						<span>{cv.address || "-"}</span>
 					</li>
 				</ul>
-				<h3 className="font-bold text-[#664229] text-xl mb-4 mt-6">Riwayat Pendidikan</h3>
+				<h3 className="font-bold text-xl mb-4 mt-6" style={{ color: themeColor }}>Riwayat Pendidikan</h3>
 				{pendidikans.map((pd) => (
 					<div key={pd.id} className="mb-4">
-						<h4 className="font-bold text-[#664229] text-sm">
+						<h4 className="font-bold text-sm" style={{ color: themeColor }}>
 							{pd.institusi || "-"}
 						</h4>
 						<p className="text-sm text-gray-800">
@@ -2520,35 +2519,35 @@ function CreamLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						)}
 					</div>
 				))}
-				<h3 className="font-bold text-[#664229] text-xl mb-4 mt-6">Kemampuan</h3>
+				<h3 className="font-bold text-xl mb-4 mt-6" style={{ color: themeColor }}>Kemampuan</h3>
 				<ul className="space-y-2.5">
 					{skills.map((skill) => (
 						<li key={skill.title} className="text-sm text-gray-800">
-							<strong className="text-[#664229]">{skill.title}</strong> —{" "}
+							<strong style={{ color: themeColor }}>{skill.title}</strong> —{" "}
 							{skill.desc}
 						</li>
 					))}
 				</ul>
 			</aside>
 			<section className="w-[65%] bg-white p-10 overflow-hidden">
-				<h1 className="font-extrabold text-[40px] text-[#664229] capitalize leading-tight mb-2">
+				<h1 className="font-extrabold text-[40px] capitalize leading-tight mb-2" style={{ color: themeColor }}>
 					{cv.name || "Nama Lengkap"}
 				</h1>
 				<h2 className="text-2xl text-gray-700 tracking-[0.2em] uppercase mb-8">
 					{cv.title || "Profesi"}
 				</h2>
-				<h3 className="font-bold text-2xl text-[#664229] mb-4">
+				<h3 className="font-bold text-2xl mb-4" style={{ color: themeColor }}>
 					Tentang Saya
 				</h3>
 				<p className="text-justify text-gray-700 text-sm leading-relaxed whitespace-pre-line">
 					{cv.about || "Tulis ringkasan tentang diri Anda."}
 				</p>
-				<h3 className="font-bold text-2xl text-[#664229] mb-4 mt-8">
+				<h3 className="font-bold text-2xl mb-4 mt-8" style={{ color: themeColor }}>
 					Pengalaman Kerja
 				</h3>
 				{(cv.experiences || []).map((exp, index) => (
 					<div key={exp.id ?? index} className="mb-6">
-						<h4 className="font-bold text-[#664229]">
+						<h4 className="font-bold" style={{ color: themeColor }}>
 							{exp.company || "Nama Perusahaan"}
 						</h4>
 						<p className="text-sm text-gray-600 mb-2">
@@ -2566,17 +2565,16 @@ function CreamLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 				))}
 				{organisasis.length > 0 && (
 					<>
-						<h3 className="font-bold text-2xl text-[#664229] mb-4 mt-8">
+						<h3 className="font-bold text-2xl mb-4 mt-8" style={{ color: themeColor }}>
 							Pengalaman Organisasi
 						</h3>
-						{organisasis.map((org) => (
-							<div key={org.id} className="mb-6">
-								<h4 className="font-bold text-[#664229]">
+						{organisasis.map((org, index) => (
+							<div key={org.id ?? index} className="mb-6">
+								<h4 className="font-bold" style={{ color: themeColor }}>
 									{org.instansi || "Nama Instansi"}
 								</h4>
 								<p className="text-sm text-gray-600 mb-2">
-									{org.posisi}
-									{org.tanggal ? ` · ${org.tanggal}` : ""}
+									{org.posisi || "Jabatan"} · {org.tanggal}
 								</p>
 								<ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
 									{(org.deskripsi || "")
@@ -2592,14 +2590,14 @@ function CreamLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 				)}
 				{(cv.penghargaans || []).length > 0 && (
 					<>
-						<h3 className="font-bold text-2xl text-[#664229] mb-4 mt-8">
+						<h3 className="font-bold text-2xl mb-4 mt-8" style={{ color: themeColor }}>
 							Sertifikat
 						</h3>
-						<ul className="list-disc pl-5 space-y-2">
+						<ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
 							{(cv.penghargaans || []).map((a) => (
-								<li key={a.id} className="text-sm text-gray-800">
-									<strong className="text-[#664229]">{a.judul}</strong>
-									{a.tahun ? ` — ${a.tahun}` : ""}
+								<li key={a.id}>
+									<strong style={{ color: themeColor }}>{a.judul}</strong>
+									{a.tahun ? ` (${a.tahun})` : ""}
 								</li>
 							))}
 						</ul>

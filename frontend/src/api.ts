@@ -37,17 +37,26 @@ Profesional:
   }
 
   // 3. Jika untuk Ringkasan Diri / Tentang Saya
-  // Ekstrak data dari userQuery
   const eduMatch = userQuery.match(/Sekolah\/Universitas:\s*([^,\n]+)(?:,\s*Jurusan:\s*([^,\n]+))?/i);
   const expMatch = userQuery.match(/Perusahaan:\s*([^,\n]+)(?:,\s*Posisi:\s*([^,\n]+))?/i);
   const orgMatch = userQuery.match(/Organisasi\/Kepanitiaan:\s*([^,\n]+)(?:,\s*Posisi:\s*([^,\n]+))?/i);
 
   const institusi = eduMatch?.[1]?.trim() || "SMK Negeri 1 Jakarta";
   const jurusan = eduMatch?.[2]?.trim() && eduMatch[2].trim() !== "-" ? eduMatch[2].trim() : "Teknik Komputer dan Jaringan";
-  const perusahaan = expMatch?.[1]?.trim() && expMatch[1].trim() !== "-" ? expMatch[1].trim() : "PT Teknologi Nusantara";
-  const posisi = expMatch?.[2]?.trim() && expMatch[2].trim() !== "-" ? expMatch[2].trim() : "IT Support dan Jaringan";
+  const perusahaan =
+    (expMatch?.[1]?.trim() && expMatch[1].trim() !== "-")
+      ? expMatch[1].trim()
+      : (orgMatch?.[1]?.trim() && orgMatch[1].trim() !== "-")
+      ? orgMatch[1].trim()
+      : "PT Teknologi Nusantara";
+  const posisi =
+    (expMatch?.[2]?.trim() && expMatch[2].trim() !== "-")
+      ? expMatch[2].trim()
+      : (orgMatch?.[2]?.trim() && orgMatch[2].trim() !== "-")
+      ? orgMatch[2].trim()
+      : "IT Support dan Jaringan";
 
-  return `Saya lulusan ${institusi} jurusan ${jurusan}, berpengalaman di bidang ${posisi} di ${perusahaan}. Terbiasa membantu pemeliharaan sistem, dokumentasi inventaris perangkat, dan operasional kerja harian. Mampu bekerja di lapangan dengan menjaga standar prosedur kerja dan berkoordinasi baik bersama tim kerja. Memiliki kemampuan komunikasi yang baik, cepat beradaptasi, serta bertanggung jawab dalam menyelesaikan tugas. Siap memberikan kontribusi terbaik dan berkembang bersama perusahaan.`;
+  return `Saya lulusan ${institusi} jurusan ${jurusan}, berpengalaman di bidang ${posisi} di ${perusahaan}. Terbiasa membantu pemeliharaan sistem, dokumentasi inventaris perangkat, dan instalasi infrastruktur jaringan kantor. Mampu bekerja di lapangan dengan menjaga standar prosedur kerja dan berkoordinasi baik bersama tim teknis. Memiliki kemampuan komunikasi yang baik, cepat beradaptasi, serta bertanggung jawab dalam menyelesaikan tugas. Siap memberikan kontribusi terbaik dan berkembang bersama perusahaan.`;
 }
 
 // Panggil Gemini via Direct API atau Supabase Edge Function dengan Fallback cerdas

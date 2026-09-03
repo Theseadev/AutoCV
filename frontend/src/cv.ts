@@ -86,40 +86,40 @@ export const TEMPLATE_SECTIONS: Record<string, CvSection[]> = {
 	],
 };
 export const defaultCv: CvData = {
-	name: "SALVA JAN FERDINO PANGARIBUAN",
+	name: "MUHAMMAD FAHRUL BAHRI",
 	title: "",
-	phone: "+62 812 9517 2972",
-	email: "pangaribuansalva@gmail.com",
-	address: "Jalan Gang Gasan No. 251",
+	phone: "+62 812 3456 7890",
+	email: "fahrulbahri@gmail.com",
+	address: "Jalan Merdeka No. 123, Jakarta",
 	photo: "",
 	themeColor: "#EAEAEA",
 	about:
-		"Saya lulusan SMK Negeri 3 Depok jurusan Bisnis Konstruksi dan Properti, berpengalaman mengikuti Praktik Kerja Lapangan (PKL) di bidang Health, Safety, and Environment di PT Adhi Persada Gedung. Terbiasa membantu inspeksi keselamatan, dokumentasi temuan lapangan, dan sosialisasi prosedur K3 kepada pekerja proyek. Mampu bekerja di lapangan dengan menjaga standar keselamatan dan berkoordinasi baik bersama tim HSE dan teknis. Memiliki kemampuan komunikasi yang baik, cepat beradaptasi, serta bertanggung jawab dalam menyelesaikan tugas. Siap memberikan kontribusi terbaik dan berkembang bersama perusahaan.",
+		"Saya lulusan SMK Negeri 1 Jakarta jurusan Teknik Komputer dan Jaringan, berpengalaman mengikuti Praktik Kerja Lapangan (PKL) di bidang IT Support dan Jaringan di PT Teknologi Nusantara. Terbiasa membantu pemeliharaan sistem, dokumentasi inventaris perangkat, dan instalasi infrastruktur jaringan kantor. Mampu bekerja di lapangan dengan menjaga standar prosedur kerja dan berkoordinasi baik bersama tim teknis. Memiliki kemampuan komunikasi yang baik, cepat beradaptasi, serta bertanggung jawab dalam menyelesaikan tugas. Siap memberikan kontribusi terbaik dan berkembang bersama perusahaan.",
 	experiences: [
 		{
 			id: 1,
-			company: "PT Adhi Persada Gedung",
-			role: "Health, Safety, and Environment - Praktik Kerja Lapangan",
+			company: "PT Teknologi Nusantara",
+			role: "IT Support & Network Administrator - Praktik Kerja Lapangan",
 			period: "2023 - 2024",
-			desc: "Mempelajari penerapan standar K3 (Keselamatan dan Kesehatan Kerja) di lingkungan proyek konstruksi. Membantu melakukan inspeksi rutin area kerja, mendokumentasikan temuan lapangan, serta menyosialisasikan prosedur keselamatan kepada pekerja. Terlibat dalam pencatatan penggunaan alat pelindung diri (APD) dan pelaporan potensi bahaya kepada tim HSE.",
+			desc: "Mempelajari penerapan standar pemeliharaan sistem dan infrastruktur jaringan komputer di lingkungan perusahaan. Membantu melakukan inspeksi berkala perangkat kerja, mendokumentasikan troubleshooting hardware, serta menyosialisasikan panduan operasional IT kepada staf. Terlibat dalam konfigurasi perangkat jaringan dan pelaporan performa sistem kepada tim teknis senior.",
 		},
 	],
 	organisasis: [
 		{
 			id: 1,
-			instansi: "Divisi Humas",
+			instansi: "Divisi Humas & Media",
 			posisi: "Anggota Organisasi",
 			tanggal: "2025",
 			deskripsi:
-				"Berperan aktif mendukung kelancaran acara Civil League melalui pembuatan konten, pengelolaan media sosial, serta dokumentasi. Menjaga komunikasi antara panitia, peserta, dan pihak eksternal untuk menciptakan citra acara positif dan profesional.",
+				"Berperan aktif mendukung kelancaran kegiatan tahunan melalui pembuatan materi publikasi, pengelolaan media informasi, serta dokumentasi visual. Menjaga koordinasi antara panitia, peserta, dan pihak luar untuk membangun citra kegiatan yang positif serta profesional.",
 		},
 		{
 			id: 2,
-			instansi: "divisi Korlap",
-			posisi: "Penanggung Jawab",
+			instansi: "Divisi Lapangan & Logistik",
+			posisi: "Koordinator Tim",
 			tanggal: "2025",
 			deskripsi:
-				"Mengoordinasikan kegiatan pembuatan tempat sampah di Taman Kanak-Kanak sebagai bagian dari program kebersihan dan kepedulian lingkungan. Mengatur pembagian tugas, pengumpulan bahan, serta memastikan kegiatan berjalan tertib dan sesuai rencana.",
+				"Mengoordinasikan rangkaian program bakti sosial dan renovasi fasilitas belajar di panti asuhan sebagai bentuk kepedulian masyarakat. Mengatur pembagian penugasan, pengadaan perlengkapan, serta memastikan seluruh kegiatan berjalan tertib dan tepat waktu.",
 		},
 		{
 			id: 3,
@@ -127,35 +127,35 @@ export const defaultCv: CvData = {
 			posisi: "Anggota Organisasi",
 			tanggal: "2025",
 			deskripsi:
-				"Mendukung kelancaran acara akhir ospek angkatan Sipil 2024 yang diselenggarakan di villa. Menyiapkan perlengkapan kegiatan, mengatur kebutuhan logistik, serta memastikan alat dan fasilitas pendukung tersedia dan berfungsi baik selama acara.",
+				"Mendukung kelancaran pelaksanaan forum diskusi dan seminar kepemudaan 2024. Menyiapkan sarana teknis, mengelola alur distribusi perlengkapan operasional, serta memastikan seluruh fasilitas pendukung siap digunakan sepanjang acara berlangsung.",
 		},
 	],
 	pendidikans: [
 		{
 			id: 1,
-			institusi: "SMK Negeri 3 Depok",
-			jurusan: "Bisnis Konstruksi dan Properti",
+			institusi: "SMK Negeri 1 Jakarta",
+			jurusan: "Teknik Komputer dan Jaringan",
 			tahun: "2021 - 2024",
 			kegiatan:
-				"Mempelajari dasar-dasar konstruksi bangunan, manajemen proyek, dan perencanaan properti. Mengikuti praktik gambar teknik, pengukuran lahan, dan penyusunan Rencana Anggaran Biaya (RAB) secara terstruktur. Terlibat aktif dalam praktik kerja lapangan (PKL) untuk memahami proses pembangunan dan pengelolaan properti secara langsung.",
+				"Mempelajari perancangan sistem jaringan komputer, administrasi server, dan perakitan perangkat keras komputer. Mengikuti praktik simulasi jaringan lokal, pengujian keamanan sistem, dan penyusunan dokumentasi teknis secara terstruktur. Terlibat aktif dalam praktik kerja lapangan (PKL) untuk mendalami implementasi teknologi informasi di dunia industri secara nyata.",
 		},
 	],
 	penghargaans: [],
 };
 
 export const defaultSkillsText = `Pribadi:
-• Mampu berkomunikasi dengan jelas, sopan dan efektif.
+• Mampu berkomunikasi dengan jelas, sopan, dan efektif.
 • Disiplin, bertanggung jawab, serta memiliki etika kerja yang baik.
-• Cepat beradaptasi dalam berbagai situasi kerja.
+• Cepat beradaptasi dalam berbagai situasi lingkungan kerja.
 • Teliti dalam menyelesaikan tugas dan konsisten menjaga kerapian.
-• Cepat memahami hal baru dan semangat belajar.
+• Memiliki kemauan tinggi untuk terus belajar dan berkembang.
 
 Profesional:
-• Terbiasa bekerja sama dalam tim maupun secara individu.
-• Mampu mengatur waktu dengan baik untuk menyelesaikan tugas tepat waktu.
+• Terbiasa bekerja sama dalam tim maupun secara mandiri.
+• Mampu mengelola waktu dengan baik untuk target yang ditentukan.
 • Mampu menangani beberapa tugas secara bersamaan (multitasking).
-• Memiliki keterampilan pelayanan pelanggan yang ramah dan responsif.
-• Terbiasa bekerja di bawah tekanan dan tetap menjaga kualitas kerja.`;
+• Memiliki keterampilan pemecahan masalah yang analitis dan solutif.
+• Terbiasa bekerja di bawah tekanan dengan menjaga kualitas hasil kerja.`;
 
 export const storeSkillsText = defaultSkillsText;
 
@@ -1136,7 +1136,7 @@ export const buildCvHtml = (
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;">
                 <div style="max-width:440px;">
                     <h1 style="font-weight:900;font-size:26px;color:#111111;letter-spacing:1.5px;line-height:1.15;margin:0;text-transform:uppercase;">
-                        ${name ? esc(name) : "SALVA JAN FERDINO<br/>PANGARIBUAN"}
+                        ${name ? esc(name) : "MUHAMMAD FAHRUL<br/>BAHRI"}
                     </h1>
                 </div>
                 <div style="font-size:11.5px;color:#333333;line-height:1.6;display:flex;flex-direction:column;gap:1px;">

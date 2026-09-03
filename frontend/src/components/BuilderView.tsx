@@ -1596,7 +1596,7 @@ function EditorialLayout({
 			<div className="flex justify-between items-start mb-7">
 				<div className="max-w-[440px]">
 					<h1 className="font-black text-[26px] text-[#111111] tracking-[1.5px] leading-tight uppercase">
-						{cv.name || "SALVA JAN FERDINO\nPANGARIBUAN"}
+						{cv.name || "MUHAMMAD FAHRUL\nBAHRI"}
 					</h1>
 				</div>
 				<div className="text-[11.5px] text-[#333333] leading-relaxed space-y-0.5">

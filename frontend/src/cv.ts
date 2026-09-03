@@ -87,79 +87,60 @@ export const TEMPLATE_SECTIONS: Record<string, CvSection[]> = {
 	],
 };
 export const defaultCv: CvData = {
-	name: "Budi Santoso",
-	title: "Staff Administrasi",
-	phone: "0812-3456-7890",
-	email: "budi.santoso@email.com",
-	address: "Jl. Merdeka No.10, Jakarta",
+	name: "Putra Jaya",
+	title: "",
+	phone: "+62 822 8713 4432",
+	email: "pj5695666@gmail.com",
+	address: "Dusun VIII, Ds. Sukaraja, Kec. Simpang Empat, Kab. Asahan, Sumut.",
+	photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
 	about:
-		"Seorang profesional muda di bidang administrasi perkantoran dengan pengalaman mengelola kearsipan digital dan koordinasi operasional.",
+		"Saya lulusan SMK jurusan Akuntansi, memiliki pengalaman di bidang pelayanan, operasional toko, dan barista. Terbiasa memberikan pelayanan ramah dan sopan kepada pelanggan serta mampu bekerja sama dalam tim maupun individu. Saya memiliki kemampuan komunikasi yang baik, disiplin, bertanggung jawab, dan mampu memimpin tim kerja. Siap memberikan kontribusi terbaik bagi kemajuan perusahaan.",
 	experiences: [
 		{
 			id: 1,
-			company: "PT. Maju Mundur",
-			role: "Staff Magang Administrasi",
-			period: "Jan 2023 - Jun 2023",
-			desc: "• Mengelola input data lebih dari 200 dokumen transaksi harian dengan tingkat akurasi 99%.\n• Menyusun jadwal pertemuan manajerial dan menyiapkan berkas presentasi.",
-		},
-	],
-	hobi: "Membaca Buku, Desain Grafis, Menulis Artikel, Fotografi",
-};
-
-export const defaultSkillsText =
-	"Microsoft Office: Mahir mengolah data Excel & Word\nKomunikasi: Kerjasama tim & negosiasi\nProblem Solving: Cepat mencari solusi operasional";
-
-export const storeSkillsText =
-	"Store opening and closing: Prosedur pembukaan dan penutupan toko\nSales expertise: Negosiasi penjualan & customer service\nAccurate Money Handling: Pengelolaan kas dan transaksi keuangan\nLoss prevention: Pengawasan stok & pencegahan kerugian\nProduct promotions: Strategi display dan promosi produk unggulan";
-
-// Data referensi Rudi Santoso untuk tampilan preview etalase
-export const storeCv: CvData = {
-	name: "Rudi Santoso",
-	title: "Senior Sales Manager",
-	phone: "21 2345 6789",
-	email: "rudi.santoso@gmail.com",
-	address: "Jakarta, Jakarta, 10110",
-	photo: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23d1d5db'/><circle cx='50' cy='38' r='18' fill='%23ffffff'/><path d='M20 95 C20 68 32 62 50 62 C68 62 80 68 80 95 Z' fill='%23ffffff'/></svg>",
-	about:
-		"Motivated Sales Associate with 5 years of experience boosting sales and customer loyalty through individualized service. Resourceful expert at learning customer needs, directing to desirable merchandise and upselling to meet sales quotas. Committed to strengthening customer experiences with positivity and professionalism when answering requests and processing sales.",
-	experiences: [
-		{
-			id: 1,
-			company: "Jakarta Business Solutions, Jakarta",
-			role: "Senior Sales Manager",
-			period: "May 2016 - Current",
-			desc: "• Effectively up-sold products by introducing accessories and other add-ons, adding Rp 23,000,000 to average monthly sales.\n• Generated brand awareness and positive product impressions to increase sales 22%.\n• Used consultative sales approach to understand customer needs and recommend relevant offerings.",
+			company: "Instore distro",
+			role: "Shopkeeper",
+			period: "3 Bulan",
+			desc: "• Melayani pelanggan dengan ramah dan sopan.\n• Menata dan merapikan barang di area toko.\n• Membantu menjaga kebersihan toko serta memastikan stok barang tertata dengan baik.",
 		},
 		{
 			id: 2,
-			company: "Archipelago Business Partners, Jakarta",
-			role: "Barista",
-			period: "Jan 2015 - Mar 2016",
-			desc: "• Created over 60 drinks per hour with consistently positive customer satisfaction scores.\n• Learned every menu preparation and numerous off-label drinks to meet all customer needs.\n• Upheld baked goods and extra shots with beverages, increasing store sales Rp 27,800,000 per month.",
+			company: "PT Pesta Pora Abadi (Gacoan)",
+			role: "Crew - Barista",
+			period: "4 Bulan",
+			desc: "• Menyiapkan dan menyajikan minuman sesuai standar.\n• Memberikan pelayanan yang ramah dan cepat.\n• Menjaga kebersihan area kerja serta memastikan peralatan dan bahan selalu siap digunakan.",
+		},
+		{
+			id: 3,
+			company: "PT Sumber Alfaria Trijaya Tbk",
+			role: "Chief Of Store",
+			period: "2018 - 2024",
+			desc: "• Mengawasi kegiatan operasional toko.\n• Mengatur barang serta memastikan ketersediaan stok.\n• Memimpin dan mengoordinasikan tim kerja untuk memberikan pelayanan terbaik kepada pelanggan.",
 		},
 	],
 	pendidikans: [
 		{
 			id: 1,
-			institusi: "University of Indonesia - Surabaya, Jakarta",
-			jurusan: "B.A.: Business",
-			tahun: "June 2018",
+			institusi: "SMK Harapan Simpang Empat",
+			jurusan: "Akuntansi",
+			tahun: "2015 - 2017",
+			kegiatan: "• Mengikuti praktik administrasi keuangan dan pembukuan.\n• Melaksanakan praktik kerja lapangan di perusahaan untuk mengasah keterampilan akuntansi dan administrasi.",
 		},
 	],
 	penghargaans: [
-		{ id: 1, judul: "Top Sales Performer of the Year", tahun: "2019" },
-	],
-	hobi: "Coffee Roasting, Reading, Cycling",
-	organisasis: [
-		{
-			id: 1,
-			instansi: "Indonesia Sales Professionals Club",
-			posisi: "Regional Coordinator",
-			tanggal: "2017 - 2019",
-			deskripsi: "Mengoordinasikan workshop teknik negosiasi dan temu komunitas ritel.",
-		},
+		{ id: 1, judul: "Sertifikat Melukis 2016", tahun: "2016" },
+		{ id: 2, judul: "Sertifikat Paskibra Tahun 2015", tahun: "2015" },
+		{ id: 3, judul: "Sertifikat Badminton 2014", tahun: "2014" },
 	],
 };
+
+export const defaultSkillsText =
+	"Terampil mengoperasikan komputer untuk mendukung pekerjaan administrasi.\nMemiliki kemampuan dalam manajemen tim secara efektif.\nMampu bekerja sama dalam tim maupun individu.\nMampu memberikan pelayanan prima kepada pelanggan.\nTerampil memimpin briefing dan menyampaikan arahan kerja.\nMampu menetapkan target kerja dan memotivasi tim.";
+
+export const storeSkillsText = defaultSkillsText;
+
+// Data referensi untuk tampilan preview etalase
+export const storeCv: CvData = { ...defaultCv };
 
 export const esc = (s: unknown): string =>
 	String(s ?? "").replace(
@@ -1036,90 +1017,157 @@ export const buildCvHtml = (
         </div>`;
 	}
 
-	// cv01 Editorial: kertas hangat + garis emas, kemampuan berupa penjelasan
-	const t01 = cvData.themeColor || "#C9A227";
-	const skillEd = skills
+	// cv01 Putra Jaya: Capsule Header, Left column solid banners, Right column underlined headers, Bottom waves
+	const t01 = cvData.themeColor || "#363636";
+	const skillLis01 = skills
 		.map(
-			(s) =>
-				`<div style="font-size:11.5px;color:#4A403A;line-height:1.65;margin-bottom:10px;"><span style="font-weight:600;color:#211A17;">${esc(s.title)}</span><span style="color:${t01};"> — </span>${esc(s.desc)}</div>`,
+			(s) => `
+            <li style="margin-bottom:7px;line-height:1.45;">
+                <span style="font-weight:500;">${esc(s.title)}${s.desc ? `: ${esc(s.desc)}` : ""}</span>
+            </li>`,
 		)
 		.join("");
-	const pendidikanEd = (cvData.pendidikans || [])
+
+	const sertifikatLis01 = (cvData.penghargaans || [])
 		.map(
-			(pd) => `
-                    <div style="margin-bottom:12px;border-bottom:1px dashed #E8E0D3;padding-bottom:10px;">
-                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
-                            <span style="font-weight:700;font-size:12.5px;color:#211A17;">${esc(pd.institusi) || "-"}</span>
-                            <span style="font-size:10px;color:#A79A8A;letter-spacing:1px;">${esc(pd.tahun)}</span>
-                        </div>
-                        <div style="font-size:11px;color:${t01};font-weight:600;margin-top:2px;">${esc(pd.jurusan) || "-"}</div>
-                        ${pd.kegiatan ? `<div style="font-size:11px;color:#4A403A;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
-                    </div>`,
+			(a) => `
+            <li style="margin-bottom:6px;line-height:1.45;">
+                <span style="font-weight:500;">${esc(a.judul)}${a.tahun ? ` (${esc(a.tahun)})` : ""}</span>
+            </li>`,
 		)
 		.join("");
-	const expEd = (cvData.experiences || [])
-		.map(
-			(e) => `
-                    <div style="margin-bottom:16px;border-bottom:1px dashed #E8E0D3;padding-bottom:13px;">
-                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
-                            <span style="font-weight:700;font-size:13.5px;color:#211A17;">${esc(e.company) || "Nama Perusahaan"}</span>
-                            <span style="font-size:10px;color:#A79A8A;letter-spacing:1px;">${esc(e.period)}</span>
-                        </div>
-                        <div style="font-size:11.5px;color:${t01};font-weight:600;margin:2px 0 5px;">${esc(e.role) || "Jabatan"}</div>
-                        <div style="font-size:11.5px;color:#4A403A;line-height:1.65;white-space:pre-line;">${esc(e.desc)}</div>
-                    </div>`,
-		)
+
+	const pendidikanLis01 = (cvData.pendidikans || [])
+		.map((pd) => {
+			const bullets = (pd.kegiatan || "")
+				.split("\n")
+				.filter(Boolean)
+				.map((k) => `<li style="margin-bottom:4px;">${esc(k.replace(/^[•\-\*]\s*/, ""))}</li>`)
+				.join("");
+			return `
+            <div style="margin-bottom:14px;font-size:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;font-weight:700;color:#111111;">
+                    <span>${esc(pd.institusi)}</span>
+                    <span style="font-size:11.5px;">${esc(pd.tahun)}</span>
+                </div>
+                <div style="font-size:11.5px;font-weight:500;color:#444444;margin-bottom:4px;">${esc(pd.jurusan)}</div>
+                ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:4px 0 0;font-size:11px;color:#333333;line-height:1.5;">${bullets}</ul>` : ""}
+            </div>`;
+		})
 		.join("");
-	const orgEd = (cvData.organisasis || [])
-		.map(
-			(o) => `
-                    <div style="margin-bottom:16px;border-bottom:1px dashed #E8E0D3;padding-bottom:13px;">
-                        <div style="display:flex;justify-content:space-between;align-items:baseline;">
-                            <span style="font-weight:700;font-size:13.5px;color:#211A17;">${esc(o.instansi) || "Nama Instansi"}</span>
-                            <span style="font-size:10px;color:#A79A8A;letter-spacing:1px;">${esc(o.tanggal)}</span>
-                        </div>
-                        <div style="font-size:11.5px;color:${t01};font-weight:600;margin:2px 0 5px;">${esc(o.posisi) || "Jabatan"}</div>
-                        <div style="font-size:11.5px;color:#4A403A;line-height:1.65;white-space:pre-line;">${esc(o.deskripsi)}</div>
-                    </div>`,
-		)
+
+	const expLis01 = (cvData.experiences || [])
+		.map((e) => {
+			const bullets = (e.desc || "")
+				.split("\n")
+				.filter(Boolean)
+				.map((d) => `<li style="margin-bottom:4px;">${esc(d.replace(/^[•\-\*]\s*/, ""))}</li>`)
+				.join("");
+			return `
+            <div style="margin-bottom:14px;font-size:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:baseline;font-weight:700;color:#111111;">
+                    <span>${esc(e.company)}</span>
+                    <span style="font-size:11.5px;">${esc(e.period)}</span>
+                </div>
+                <div style="font-size:11.5px;font-weight:500;color:#444444;margin-bottom:4px;">${esc(e.role)}</div>
+                ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:4px 0 0;font-size:11px;color:#333333;line-height:1.5;">${bullets}</ul>` : ""}
+            </div>`;
+		})
 		.join("");
-	const penghargaanEd = (cvData.penghargaans || [])
-		.map(
-			(a) =>
-				`<div style="font-size:11.5px;color:#4A403A;line-height:1.65;margin-bottom:10px;"><span style="font-weight:600;color:#211A17;">${esc(a.judul)}</span><span style="color:${t01};"> — </span>${esc(a.tahun)}</div>`,
-		)
-		.join("");
-	const edSection = (label: string, inner: string) => `
-                    <div style="margin-bottom:16px;">
-                        <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#3B2F2A;">${label}</div>
-                        <div style="width:36px;height:2px;background:${t01};margin-top:6px;margin-bottom:12px;"></div>
-                        ${inner}
-                    </div>`;
+
+	const sideHeader01 = (title: string) => `
+        <div style="background:${t01};color:white;text-align:center;font-weight:700;font-size:13.5px;text-transform:uppercase;letter-spacing:1px;padding:5px 12px;margin-bottom:12px;">
+            ${title}
+        </div>`;
+
+	const mainHeader01 = (title: string) => `
+        <div style="font-weight:800;font-size:15.5px;color:#111111;text-transform:uppercase;letter-spacing:0.5px;padding-bottom:4px;margin-bottom:8px;border-bottom:2px solid ${t01};">
+            ${title}
+        </div>`;
+
 	return `
-        <div class="cv-paper" style="width:794px;height:1123px;background:#FDFBF7;overflow:hidden;">
-            <div style="padding:48px 56px 22px;border-bottom:2px solid ${t01};display:flex;justify-content:space-between;align-items:flex-end;gap:24px;">
-                <div style="flex:1;">
-                    <div style="font-family:Poppins,sans-serif;font-size:38px;font-weight:700;line-height:1.1;color:#211A17;">${name}</div>
-                    <div style="font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#8A6D3B;font-weight:600;margin-top:8px;">${title}</div>
-                    <div style="display:flex;gap:24px;margin-top:20px;font-size:11px;color:#4A403A;">
-                        <div><i class="fa-solid fa-phone" style="color:${t01};margin-right:6px;width:12px;"></i>${phone || "-"}</div>
-                        <div><i class="fa-solid fa-envelope" style="color:${t01};margin-right:6px;width:12px;"></i>${email || "-"}</div>
-                        <div><i class="fa-solid fa-location-dot" style="color:${t01};margin-right:6px;width:12px;"></i>${address || "-"}</div>
+        <div class="cv-paper" style="width:794px;height:1123px;background:#FFFFFF;color:#222222;font-family:'Inter',sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;">
+            <!-- TOP HEADER -->
+            <div style="padding-top:32px;padding-right:48px;">
+                <div style="height:140px;background:${t01};border-radius:0 100px 100px 0;display:flex;align-items:center;padding-left:40px;padding-right:48px;gap:32px;">
+                    <div style="width:120px;height:120px;border-radius:50%;border:5px solid #FFFFFF;overflow:hidden;flex-shrink:0;background:#E5E7EB;box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+                        ${
+                            cvData.photo
+                                ? `<img src="${cvData.photo}" style="width:100%;height:100%;object-fit:cover;" />`
+                                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:32px;color:#4B5563;">${(name || "PJ").slice(0, 2).toUpperCase()}</div>`
+                        }
+                    </div>
+                    <div style="flex:1;">
+                        <h1 style="color:#FFFFFF;font-size:38px;font-weight:900;letter-spacing:0.5px;margin:0;line-height:1.15;">${name}</h1>
+                        ${title ? `<div style="color:#E5E7EB;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:4px;">${title}</div>` : ""}
                     </div>
                 </div>
-                ${cvData.photo ? `<img src="${cvData.photo}" style="width:105px;height:105px;object-fit:cover;border:3px solid #E8E0D3;border-radius:2px;flex-shrink:0;" />` : ""}
             </div>
-            <div style="display:flex;padding:36px 56px;gap:40px;">
-                <div style="width:42%;">
-                    ${edSection("Riwayat Pendidikan", pendidikanEd)}
-                    ${edSection("Kemampuan", skillEd)}
+
+            <!-- BODY 2-COLUMN -->
+            <div style="padding:24px 40px 12px;display:flex;gap:32px;flex:1;position:relative;z-index:10;">
+                <!-- LEFT COLUMN -->
+                <div style="width:250px;flex-shrink:0;display:flex;flex-direction:column;gap:20px;">
+                    <!-- KONTAK -->
+                    <div>
+                        ${sideHeader01("KONTAK")}
+                        <div style="font-size:11.5px;color:#333333;display:flex;flex-direction:column;gap:8px;padding-left:4px;">
+                            ${phone ? `<div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-phone" style="width:14px;text-align:center;font-size:12px;"></i><span>${phone}</span></div>` : ""}
+                            ${email ? `<div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-envelope" style="width:14px;text-align:center;font-size:12px;"></i><span style="word-break:break-all;">${email}</span></div>` : ""}
+                            ${address ? `<div style="display:flex;align-items:flex-start;gap:10px;"><i class="fa-solid fa-location-dot" style="width:14px;text-align:center;font-size:13px;margin-top:2px;"></i><span style="line-height:1.45;">${address}</span></div>` : ""}
+                        </div>
+                    </div>
+
+                    <!-- KEMAMPUAN -->
+                    <div>
+                        ${sideHeader01("KEMAMPUAN")}
+                        <ul style="list-style:disc;padding-left:18px;margin:0;font-size:11.5px;color:#333333;">
+                            ${skillLis01}
+                        </ul>
+                    </div>
+
+                    <!-- SERTIFIKAT -->
+                    ${(cvData.penghargaans || []).length ? `
+                    <div>
+                        ${sideHeader01("SERTIFIKAT")}
+                        <ul style="list-style:disc;padding-left:18px;margin:0;font-size:11.5px;color:#333333;">
+                            ${sertifikatLis01}
+                        </ul>
+                    </div>` : ""}
                 </div>
-                <div style="flex:1;">
-                    ${edSection("Tentang Saya", `<div style="font-size:12px;color:#4A403A;line-height:1.7;text-align:justify;white-space:pre-line;">${about}</div>`)}
-                    ${edSection("Pengalaman Kerja", expEd)}
-                    ${edSection("Pengalaman Organisasi", orgEd)}
-                    ${(cvData.penghargaans || []).length ? edSection("Sertifikat", penghargaanEd) : ""}
+
+                <!-- RIGHT COLUMN -->
+                <div style="flex:1;display:flex;flex-direction:column;gap:18px;">
+                    <!-- TENTANG SAYA -->
+                    <div>
+                        ${mainHeader01("TENTANG SAYA")}
+                        <p style="font-size:11.5px;color:#333333;line-height:1.65;text-align:justify;margin:0;white-space:pre-line;">${about}</p>
+                    </div>
+
+                    <!-- PENDIDIKAN -->
+                    ${(cvData.pendidikans || []).length ? `
+                    <div>
+                        ${mainHeader01("PENDIDIKAN")}
+                        ${pendidikanLis01}
+                    </div>` : ""}
+
+                    <!-- PENGALAMAN KERJA -->
+                    ${(cvData.experiences || []).length ? `
+                    <div>
+                        ${mainHeader01("PENGALAMAN KERJA")}
+                        ${expLis01}
+                    </div>` : ""}
                 </div>
+            </div>
+
+            <!-- BOTTOM DECORATIVE WAVES -->
+            <div style="width:100%;height:75px;position:relative;margin-top:auto;overflow:hidden;">
+                <svg viewBox="0 0 794 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
+                    <path d="M0 45 C 80 80, 160 10, 240 80 L 0 80 Z" fill="#BDB4A8" opacity="0.6"/>
+                    <path d="M520 80 C 600 20, 680 70, 794 30 L 794 80 Z" fill="#BDB4A8" opacity="0.6"/>
+                    <path d="M0 65 C 60 75, 120 40, 180 80 L 0 80 Z" fill="${t01}"/>
+                    <path d="M600 80 C 660 35, 720 60, 794 45 L 794 80 Z" fill="${t01}"/>
+                </svg>
             </div>
         </div>`;
 };

@@ -1541,171 +1541,240 @@ function EditorialLayout({
 	cv,
 	skills,
 }: { cv: CvData; skills: ParsedSkill[] }) {
-	const themeColor = cv.themeColor || "#C9A227";
-	const banner = (title: string) => (
-		<div className="mb-4">
-			<h3 className="font-bold text-[13px] text-[#211A17] uppercase tracking-[0.15em]">
-				{title}
-			</h3>
-			<div className="w-9 h-0.5 mt-1.5 mb-3" style={{ backgroundColor: themeColor }}></div>
-		</div>
-	);
+	const themeColor = cv.themeColor || "#363636";
 
 	return (
-		<div className="h-full flex flex-col bg-white font-['Lora',serif]">
-			<style>{`@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap');`}</style>
-			{/* Header */}
-			<div className="px-14 pt-12 pb-6 border-b-2 flex justify-between items-end gap-6" style={{ borderColor: themeColor }}>
-				<div className="flex-1">
-					<h1 className="text-4xl font-bold text-[#211A17] mb-1.5 tracking-tight">
-						{cv.name || "Nama Lengkap"}
-					</h1>
-					<h2 className="text-base font-semibold tracking-[0.2em] uppercase" style={{ color: themeColor }}>
-						{cv.title || "Profesi"}
-					</h2>
-					<div className="flex flex-wrap gap-x-5 gap-y-1 mt-4 text-[10.5px] text-[#4A403A] font-sans tracking-wide">
-						<span className="flex items-center">
-							<i className="fa-solid fa-phone w-3 mr-1.5" style={{ color: themeColor }}></i>
-							{cv.phone || "-"}
-						</span>
-						<span className="flex items-center">
-							<i className="fa-solid fa-envelope w-3 mr-1.5" style={{ color: themeColor }}></i>
-							{cv.email || "-"}
-						</span>
-						<span className="flex items-center">
-							<i className="fa-solid fa-location-dot w-3 mr-1.5" style={{ color: themeColor }}></i>
-							{cv.address || "-"}
-						</span>
+		<div className="w-[794px] min-h-[1123px] h-[1123px] bg-white text-[#222222] font-['Inter',sans-serif] relative overflow-hidden flex flex-col justify-between select-none">
+			{/* TOP HEADER */}
+			<div className="pt-8 pr-12">
+				{/* Dark Capsule Banner starting from left edge */}
+				<div
+					className="h-[140px] rounded-r-[100px] flex items-center pl-10 pr-12 gap-8 shadow-sm"
+					style={{ backgroundColor: themeColor }}
+				>
+					{/* Profile Photo */}
+					<div className="w-[120px] h-[120px] rounded-full border-[5px] border-white overflow-hidden shrink-0 shadow-md bg-gray-200">
+						{cv.photo ? (
+							<img
+								src={cv.photo}
+								alt={cv.name || "Foto"}
+								className="w-full h-full object-cover"
+							/>
+						) : (
+							<div className="w-full h-full flex items-center justify-center bg-gray-300 text-gray-600 font-bold text-3xl">
+								{(cv.name || "PJ").slice(0, 2).toUpperCase()}
+							</div>
+						)}
+					</div>
+
+					{/* Candidate Name */}
+					<div className="flex-1">
+						<h1 className="text-white text-[38px] font-black tracking-wide leading-tight">
+							{cv.name || "Putra Jaya"}
+						</h1>
+						{cv.title && (
+							<p className="text-gray-200 text-sm font-medium tracking-wider uppercase mt-1">
+								{cv.title}
+							</p>
+						)}
 					</div>
 				</div>
-				{cv.photo && (
-					<img
-						src={cv.photo}
-						alt="Profile"
-						className={`w-[105px] h-[105px] object-cover border-[3px] border-[#E8E0D3] shadow-sm shrink-0 ${cv.photoShape === 'round' ? 'rounded-full' : cv.photoShape === 'rounded' ? 'rounded-xl' : 'rounded-[2px]'}`}
-					/>
-				)}
 			</div>
-			<div className="flex px-14 py-9 gap-10">
-				{/* Kolom Kiri */}
-				<div className="w-[32%] shrink-0 flex flex-col gap-8">
-					<section>
-						{banner("Pendidikan")}
-						{(cv.pendidikans || []).map((edu, i) => (
-							<div
-								key={edu.id ?? i}
-								className="mb-3.5 pb-2.5 border-b border-dashed border-[#E8E0D3]"
-							>
-								<div className="flex justify-between items-baseline">
-									<h4 className="font-bold text-[12.5px] text-[#211A17]">
-										{edu.institusi || "-"}
-									</h4>
-									<span className="text-[10px] text-[#A79A8A] tracking-wider">
-										{edu.tahun}
-									</span>
-								</div>
-								<p className="text-[11px] font-semibold mt-0.5" style={{ color: themeColor }}>
-									{edu.jurusan || "-"}
-								</p>
-								{edu.kegiatan && (
-									<p className="text-[11px] text-[#4A403A] mt-1.5 leading-relaxed">
-										{edu.kegiatan}
-									</p>
-								)}
-							</div>
-						))}
-					</section>
-					<section>
-						{banner("Keahlian")}
-						<div className="flex flex-col gap-2.5">
-							{skills.map((s, i) => (
-								<div
-									key={i}
-									className="text-[11.5px] text-[#4A403A] leading-relaxed"
-								>
-									<span className="font-semibold text-[#211A17]">
-										{s.title}
-									</span>
-									<span style={{ color: themeColor }}> — </span>
-									{s.desc}
-								</div>
-							))}
+
+			{/* BODY CONTENT: 2-COLUMN GRID */}
+			<div className="px-10 py-6 grid grid-cols-[250px_1fr] gap-8 flex-1 z-10">
+				{/* LEFT COLUMN */}
+				<div className="space-y-6">
+					{/* KONTAK */}
+					<div>
+						<div
+							className="text-white text-center font-bold text-[13.5px] uppercase tracking-wider py-1 px-3 mb-3 shadow-xs"
+							style={{ backgroundColor: themeColor }}
+						>
+							KONTAK
 						</div>
-					</section>
-				</div>
-				{/* Kolom Kanan */}
-				<div className="flex-1 flex flex-col gap-8">
-					<section>
-						{banner("Profil")}
-						<p className="text-[11.5px] text-[#4A403A] leading-[1.75] text-justify">
-							{cv.about ||
-								"Tuliskan profil singkat yang menarik tentang diri Anda..."}
-						</p>
-					</section>
-					<section>
-						{banner("Pengalaman")}
-						{(cv.experiences || []).map((exp, index) => (
-							<div
-								key={index}
-								className="mb-4 pb-3 border-b border-dashed border-[#E8E0D3]"
-							>
-								<div className="flex justify-between items-baseline">
-									<h4 className="font-bold text-[13.5px] text-[#211A17]">
-										{exp.company || "Nama Perusahaan"}
-									</h4>
-									<span className="text-[10px] text-[#A79A8A] tracking-wider">
-										{exp.period}
+						<div className="space-y-2 text-[11.5px] text-[#333333] pl-1">
+							{cv.phone && (
+								<div className="flex items-center gap-3">
+									<i className="fa-solid fa-phone text-[12px] w-4 text-center shrink-0"></i>
+									<span className="font-medium">{cv.phone}</span>
+								</div>
+							)}
+							{cv.email && (
+								<div className="flex items-center gap-3">
+									<i className="fa-solid fa-envelope text-[12px] w-4 text-center shrink-0"></i>
+									<span className="font-medium break-all">{cv.email}</span>
+								</div>
+							)}
+							{cv.address && (
+								<div className="flex items-start gap-3">
+									<i className="fa-solid fa-location-dot text-[13px] w-4 text-center shrink-0 mt-0.5"></i>
+									<span className="font-medium leading-relaxed">{cv.address}</span>
+								</div>
+							)}
+						</div>
+					</div>
+
+					{/* KEMAMPUAN */}
+					<div>
+						<div
+							className="text-white text-center font-bold text-[13.5px] uppercase tracking-wider py-1 px-3 mb-3 shadow-xs"
+							style={{ backgroundColor: themeColor }}
+						>
+							KEMAMPUAN
+						</div>
+						<ul className="space-y-2 text-[11.5px] text-[#333333] pl-4 list-disc leading-snug">
+							{skills.map((s, i) => (
+								<li key={i}>
+									<span className="font-medium">
+										{s.title}
+										{s.desc ? `: ${s.desc}` : ""}
 									</span>
-								</div>
-								<p className="text-[11.5px] font-semibold my-0.5" style={{ color: themeColor }}>
-									{exp.role || "Jabatan"}
-								</p>
-								<div className="text-[11.5px] text-[#4A403A] leading-relaxed mt-1.5 font-sans whitespace-pre-line">
-									{exp.desc}
-								</div>
-							</div>
-						))}
-					</section>
-					
-					{(cv.organisasis || []).length > 0 && (
-						<section>
-							{banner("Organisasi")}
-							{(cv.organisasis || []).map((org, index) => (
-								<div key={org.id ?? index} className="mb-4 pb-3 border-b border-dashed border-[#E8E0D3]">
-									<div className="flex justify-between items-baseline">
-										<h4 className="font-bold text-[13.5px] text-[#211A17]">
-											{org.instansi || "Nama Instansi"}
-										</h4>
-										<span className="text-[10px] text-[#A79A8A] tracking-wider">
-											{org.tanggal}
-										</span>
-									</div>
-									<p className="text-[11.5px] font-semibold my-0.5" style={{ color: themeColor }}>
-										{org.posisi || "Jabatan"}
-									</p>
-									<div className="text-[11.5px] text-[#4A403A] leading-relaxed mt-1.5 font-sans whitespace-pre-line">
-										{org.deskripsi}
-									</div>
-								</div>
+								</li>
 							))}
-						</section>
-					)}
-					
+						</ul>
+					</div>
+
+					{/* SERTIFIKAT */}
 					{(cv.penghargaans || []).length > 0 && (
-						<section>
-							{banner("Sertifikat & Penghargaan")}
-							<div className="flex flex-col gap-2.5">
-								{(cv.penghargaans || []).map((a) => (
-									<div key={a.id} className="text-[11.5px] text-[#4A403A] leading-relaxed">
-										<span className="font-semibold text-[#211A17]">{a.judul}</span>
-										{a.tahun && <span style={{ color: themeColor }}> — </span>}
-										{a.tahun}
+						<div>
+							<div
+								className="text-white text-center font-bold text-[13.5px] uppercase tracking-wider py-1 px-3 mb-3 shadow-xs"
+								style={{ backgroundColor: themeColor }}
+							>
+								SERTIFIKAT
+							</div>
+							<ul className="space-y-1.5 text-[11.5px] text-[#333333] pl-4 list-disc leading-snug">
+								{(cv.penghargaans || []).map((a, i) => (
+									<li key={i}>
+										<span className="font-medium">
+											{a.judul}
+											{a.tahun ? ` (${a.tahun})` : ""}
+										</span>
+									</li>
+								))}
+							</ul>
+						</div>
+					)}
+				</div>
+
+				{/* RIGHT COLUMN */}
+				<div className="space-y-5">
+					{/* TENTANG SAYA */}
+					<div>
+						<div
+							className="font-black text-[15.5px] text-[#111111] uppercase tracking-wider pb-1 mb-2 border-b-2"
+							style={{ borderColor: themeColor }}
+						>
+							TENTANG SAYA
+						</div>
+						<p className="text-[11.5px] text-[#333333] leading-relaxed text-justify whitespace-pre-line m-0">
+							{cv.about || "Ringkasan profil..."}
+						</p>
+					</div>
+
+					{/* PENDIDIKAN */}
+					{(cv.pendidikans || []).length > 0 && (
+						<div>
+							<div
+								className="font-black text-[15.5px] text-[#111111] uppercase tracking-wider pb-1 mb-2 border-b-2"
+								style={{ borderColor: themeColor }}
+							>
+								PENDIDIKAN
+							</div>
+							<div className="space-y-3">
+								{(cv.pendidikans || []).map((pd, i) => (
+									<div key={i} className="text-[12px]">
+										<div className="flex justify-between items-baseline font-bold text-[#111111]">
+											<span>{pd.institusi}</span>
+											<span className="text-[11.5px] font-bold">{pd.tahun}</span>
+										</div>
+										<div className="text-[11.5px] font-medium text-[#444444] mb-1">
+											{pd.jurusan}
+										</div>
+										{pd.kegiatan && (
+											<ul className="list-disc pl-4 space-y-1 text-[11px] text-[#333333] leading-relaxed">
+												{pd.kegiatan
+													.split("\n")
+													.filter(Boolean)
+													.map((k, ki) => (
+														<li key={ki}>{k.replace(/^[•\-\*]\s*/, "")}</li>
+													))}
+											</ul>
+										)}
 									</div>
 								))}
 							</div>
-						</section>
+						</div>
+					)}
+
+					{/* PENGALAMAN KERJA */}
+					{(cv.experiences || []).length > 0 && (
+						<div>
+							<div
+								className="font-black text-[15.5px] text-[#111111] uppercase tracking-wider pb-1 mb-2 border-b-2"
+								style={{ borderColor: themeColor }}
+							>
+								PENGALAMAN KERJA
+							</div>
+							<div className="space-y-3">
+								{(cv.experiences || []).map((exp, i) => (
+									<div key={i} className="text-[12px]">
+										<div className="flex justify-between items-baseline font-bold text-[#111111]">
+											<span>{exp.company}</span>
+											<span className="text-[11.5px] font-bold">{exp.period}</span>
+										</div>
+										<div className="text-[11.5px] font-medium text-[#444444] mb-1">
+											{exp.role}
+										</div>
+										{exp.desc && (
+											<ul className="list-disc pl-4 space-y-1 text-[11px] text-[#333333] leading-relaxed">
+												{exp.desc
+													.split("\n")
+													.filter(Boolean)
+													.map((d, di) => (
+														<li key={di}>{d.replace(/^[•\-\*]\s*/, "")}</li>
+													))}
+											</ul>
+										)}
+									</div>
+								))}
+							</div>
+						</div>
 					)}
 				</div>
+			</div>
+
+			{/* BOTTOM RIGHT & LEFT DECORATIVE WAVES */}
+			<div className="w-full h-[75px] relative pointer-events-none mt-auto overflow-hidden">
+				<svg
+					viewBox="0 0 794 80"
+					fill="none"
+					xmlns="http://www.w3.org/2000/svg"
+					className="absolute bottom-0 left-0 w-full h-full"
+					preserveAspectRatio="none"
+				>
+					{/* Light wave layer */}
+					<path
+						d="M0 45 C 80 80, 160 10, 240 80 L 0 80 Z"
+						fill="#BDB4A8"
+						opacity="0.6"
+					/>
+					<path
+						d="M520 80 C 600 20, 680 70, 794 30 L 794 80 Z"
+						fill="#BDB4A8"
+						opacity="0.6"
+					/>
+					{/* Dark wave layer */}
+					<path
+						d="M0 65 C 60 75, 120 40, 180 80 L 0 80 Z"
+						fill={themeColor}
+					/>
+					<path
+						d="M600 80 C 660 35, 720 60, 794 45 L 794 80 Z"
+						fill={themeColor}
+					/>
+				</svg>
 			</div>
 		</div>
 	);

@@ -299,8 +299,23 @@ export default function BuilderView({
 	const suggestSkillsAI = async () => {
 		setIsSuggestingSkills(true);
 		try {
-			const sysPrompt = `Anda adalah pakar rekrutmen. Berikan 4-5 daftar kemampuan (hard skill & soft skill) yang paling dicari untuk posisi '${cv.title || "Staff Perkantoran"}'. Format setiap baris persis seperti ini: 'Nama Skill: Penjelasan singkat 3-5 kata'. Langsung output daftar baris tersebut tanpa pengantar.`;
-			const userQuery = `Target Profesi: ${cv.title}\nProfil Singkat: ${cv.about}`;
+			const sysPrompt = `Anda adalah pakar rekrutmen profesional. Berikan rekomendasi keahlian yang relevan dan terbagi menjadi dua kategori persis seperti ini:
+Pribadi:
+• (Soft skill / kepribadian 1)
+• (Soft skill / kepribadian 2)
+• (Soft skill / kepribadian 3)
+• (Soft skill / kepribadian 4)
+• (Soft skill / kepribadian 5)
+
+Profesional:
+• (Hard skill / teknis / kerja tim 1)
+• (Hard skill / teknis / kerja tim 2)
+• (Hard skill / teknis / kerja tim 3)
+• (Hard skill / teknis / kerja tim 4)
+• (Hard skill / teknis / kerja tim 5)
+
+Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
+			const userQuery = `Target Profesi: ${cv.title || "Staff"}\nProfil Singkat: ${cv.about}`;
 			const result = await callGeminiAPI(sysPrompt, userQuery);
 			const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 			if (text) setSkillsText(text.trim());
@@ -312,6 +327,60 @@ export default function BuilderView({
 		} finally {
 			setIsSuggestingSkills(false);
 		}
+	};
+
+	// Helper memisahkan skillsText menjadi dua kategori: Pribadi & Profesional
+	const parseSkillsToDual = (text: string) => {
+		const lines = (text || "").split("\n");
+		const pribadi: string[] = [];
+		const profesional: string[] = [];
+		let currentCat: "pribadi" | "profesional" = "pribadi";
+
+		for (const line of lines) {
+			const trimmed = line.trim();
+			if (!trimmed) continue;
+			if (trimmed.toLowerCase().startsWith("pribadi")) {
+				currentCat = "pribadi";
+				const rest = trimmed.replace(/^pribadi[:\-]?\s*/i, "").trim();
+				if (rest) pribadi.push(rest);
+			} else if (trimmed.toLowerCase().startsWith("profesional")) {
+				currentCat = "profesional";
+				const rest = trimmed.replace(/^profesional[:\-]?\s*/i, "").trim();
+				if (rest) profesional.push(rest);
+			} else {
+				if (currentCat === "pribadi") {
+					pribadi.push(trimmed);
+				} else {
+					profesional.push(trimmed);
+				}
+			}
+		}
+
+		if (pribadi.length > 0 && profesional.length === 0) {
+			const half = Math.ceil(pribadi.length / 2);
+			const profPart = pribadi.slice(half);
+			const pribPart = pribadi.slice(0, half);
+			return {
+				pribadi: pribPart.join("\n"),
+				profesional: profPart.join("\n"),
+			};
+		}
+
+		return {
+			pribadi: pribadi.join("\n"),
+			profesional: profesional.join("\n"),
+		};
+	};
+
+	const { pribadi: pribadiSkillsVal, profesional: profesionalSkillsVal } =
+		parseSkillsToDual(skillsText);
+
+	const updatePribadiSkills = (val: string) => {
+		setSkillsText(`Pribadi:\n${val}\n\nProfesional:\n${profesionalSkillsVal}`);
+	};
+
+	const updateProfesionalSkills = (val: string) => {
+		setSkillsText(`Pribadi:\n${pribadiSkillsVal}\n\nProfesional:\n${val}`);
 	};
 
 	const inputCls =
@@ -1290,9 +1359,9 @@ export default function BuilderView({
 									<div className="space-y-3 pt-1">
 										<div
 											id="sec-skills"
-											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm"
+											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm space-y-4"
 										>
-											<div className="flex items-center justify-between mb-3">
+											<div className="flex items-center justify-between">
 												<div className="flex items-center gap-3">
 													<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
 														<i className="fa-solid fa-bolt text-[11px]"></i>
@@ -1313,19 +1382,62 @@ export default function BuilderView({
 													Rekomendasi Skill (AI)
 												</button>
 											</div>
-											<p className="text-xs text-gray-500 ml-10 mb-3">
-												Satu keahlian per baris. Gunakan kategori "Pribadi:" dan "Profesional:" untuk pembagian kolom rapi.
-											</p>
-											<textarea
-												id="cv-skills"
-												value={skillsText}
-												onChange={(e) => setSkillsText(e.target.value)}
-												rows={6}
-												placeholder={
-													"Pribadi:\n• Mampu berkomunikasi dengan jelas\n• Disiplin dan bertanggung jawab\n\nProfesional:\n• Terbiasa bekerja dalam tim\n• Manajemen waktu yang baik"
-												}
-												className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-primary focus:border-primary leading-relaxed font-mono"
-											/>
+
+											<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+												{/* KEAHLIAN PRIBADI */}
+												<div className="bg-gray-50/80 p-3.5 rounded-xl border border-gray-200 flex flex-col">
+													<div className="flex items-center gap-2 mb-1">
+														<span className="w-5 h-5 rounded-md bg-blue-100 text-blue-700 flex items-center justify-center text-[10px]">
+															<i className="fa-solid fa-user"></i>
+														</span>
+														<label
+															htmlFor="cv-skills-pribadi"
+															className="text-xs font-bold text-gray-800"
+														>
+															Keahlian Pribadi
+														</label>
+													</div>
+													<p className="text-[11px] text-gray-500 mb-2">
+														Soft skills & karakter (1 baris per poin)
+													</p>
+													<textarea
+														id="cv-skills-pribadi"
+														value={pribadiSkillsVal}
+														onChange={(e) => updatePribadiSkills(e.target.value)}
+														rows={7}
+														placeholder={`• Mampu berkomunikasi dengan jelas\n• Disiplin dan bertanggung jawab\n• Cepat beradaptasi`}
+														className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-xs leading-relaxed focus:ring-primary focus:border-primary font-sans resize-none flex-1"
+													/>
+												</div>
+
+												{/* KEAHLIAN PROFESIONAL */}
+												<div className="bg-gray-50/80 p-3.5 rounded-xl border border-gray-200 flex flex-col">
+													<div className="flex items-center gap-2 mb-1">
+														<span className="w-5 h-5 rounded-md bg-purple-100 text-purple-700 flex items-center justify-center text-[10px]">
+															<i className="fa-solid fa-briefcase"></i>
+														</span>
+														<label
+															htmlFor="cv-skills-profesional"
+															className="text-xs font-bold text-gray-800"
+														>
+															Keahlian Profesional
+														</label>
+													</div>
+													<p className="text-[11px] text-gray-500 mb-2">
+														Hard skills & teknis (1 baris per poin)
+													</p>
+													<textarea
+														id="cv-skills-profesional"
+														value={profesionalSkillsVal}
+														onChange={(e) =>
+															updateProfesionalSkills(e.target.value)
+														}
+														rows={7}
+														placeholder={`• Terbiasa bekerja dalam tim\n• Manajemen waktu yang baik\n• Problem solving analitis`}
+														className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-xs leading-relaxed focus:ring-primary focus:border-primary font-sans resize-none flex-1"
+													/>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>

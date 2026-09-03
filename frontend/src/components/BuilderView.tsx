@@ -197,12 +197,17 @@ export default function BuilderView({
 		);
 
 	const [eduModalOpen, setEduModalOpen] = useState(false);
+	const [eduPreset, setEduPreset] = useState<
+		"kuliah" | "sma_nilai" | "sma_standar" | "umum" | "custom"
+	>("sma_standar");
 	const [eduIncludeJurusan, setEduIncludeJurusan] = useState(true);
 	const [eduIncludeNilai, setEduIncludeNilai] = useState(false);
 
 	const confirmAddEducation = () => {
 		const list = cv.pendidikans || [];
 		const last = list[list.length - 1];
+		const defaultNilai =
+			eduPreset === "kuliah" ? "IPK 3.85 / 4.00" : "Nilai Rata-rata: 88.5";
 		const newItem = {
 			id: Date.now(),
 			institusi: last ? last.institusi : "SMK Negeri 1 Jakarta",
@@ -210,7 +215,7 @@ export default function BuilderView({
 				? (last?.jurusan || "Teknik Komputer dan Jaringan")
 				: "",
 			nilai: eduIncludeNilai
-				? (last?.nilai || "IPK 3.85 / 4.00")
+				? (last?.nilai || defaultNilai)
 				: "",
 			tahun: last ? last.tahun : "2021 - 2024",
 			kegiatan:
@@ -1735,12 +1740,13 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 								<button
 									type="button"
 									onClick={() => {
+										setEduPreset("kuliah");
 										setEduIncludeJurusan(true);
 										setEduIncludeNilai(true);
 									}}
 									className={`p-2.5 rounded-xl border text-left transition-all ${
-										eduIncludeJurusan && eduIncludeNilai
-											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
+										eduPreset === "kuliah"
+											? "border-primary bg-primary/5 text-primary font-bold shadow-xs ring-1 ring-primary/30"
 											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
 									}`}
 								>
@@ -1754,12 +1760,13 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 								<button
 									type="button"
 									onClick={() => {
+										setEduPreset("sma_nilai");
 										setEduIncludeJurusan(true);
 										setEduIncludeNilai(true);
 									}}
 									className={`p-2.5 rounded-xl border text-left transition-all ${
-										eduIncludeJurusan && eduIncludeNilai
-											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
+										eduPreset === "sma_nilai"
+											? "border-primary bg-primary/5 text-primary font-bold shadow-xs ring-1 ring-primary/30"
 											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
 									}`}
 								>
@@ -1773,12 +1780,13 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 								<button
 									type="button"
 									onClick={() => {
+										setEduPreset("sma_standar");
 										setEduIncludeJurusan(true);
 										setEduIncludeNilai(false);
 									}}
 									className={`p-2.5 rounded-xl border text-left transition-all ${
-										eduIncludeJurusan && !eduIncludeNilai
-											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
+										eduPreset === "sma_standar"
+											? "border-primary bg-primary/5 text-primary font-bold shadow-xs ring-1 ring-primary/30"
 											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
 									}`}
 								>
@@ -1792,12 +1800,13 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 								<button
 									type="button"
 									onClick={() => {
+										setEduPreset("umum");
 										setEduIncludeJurusan(false);
 										setEduIncludeNilai(false);
 									}}
 									className={`p-2.5 rounded-xl border text-left transition-all ${
-										!eduIncludeJurusan && !eduIncludeNilai
-											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
+										eduPreset === "umum"
+											? "border-primary bg-primary/5 text-primary font-bold shadow-xs ring-1 ring-primary/30"
 											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
 									}`}
 								>
@@ -1834,7 +1843,10 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 									<input
 										type="checkbox"
 										checked={eduIncludeJurusan}
-										onChange={(e) => setEduIncludeJurusan(e.target.checked)}
+										onChange={(e) => {
+											setEduIncludeJurusan(e.target.checked);
+											setEduPreset("custom");
+										}}
 										className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
 									/>
 								</label>
@@ -1862,7 +1874,10 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 									<input
 										type="checkbox"
 										checked={eduIncludeNilai}
-										onChange={(e) => setEduIncludeNilai(e.target.checked)}
+										onChange={(e) => {
+											setEduIncludeNilai(e.target.checked);
+											setEduPreset("custom");
+										}}
 										className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
 									/>
 								</label>

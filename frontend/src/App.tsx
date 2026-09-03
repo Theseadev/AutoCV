@@ -184,7 +184,7 @@ export default function App() {
 				{mobileBottomItem("admin", "Admin", "fa-solid fa-shield-halved")}
 			</div>
 
-			<div className="pt-14 sm:pt-16 min-h-screen pb-16 md:pb-0">
+			<div className={`pt-14 sm:pt-16 ${view === "builder" ? "h-screen pb-14 md:pb-0 overflow-hidden" : "min-h-screen pb-16 md:pb-0"}`}>
 				{view === "store" && <StoreView onPick={openBuilder} />}
 				{view === "builder" && (
 					<BuilderView

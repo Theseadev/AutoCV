@@ -494,28 +494,50 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 			setActiveSection(null);
 	}, [template, activeSection]);
 	return (
-		<div className="h-[calc(100dvh-64px)] flex flex-col lg:flex-row overflow-hidden">
+		<div className="h-full w-full flex flex-col lg:flex-row overflow-hidden relative">
 			{/* Tab bar khusus HP: Edit / Preview */}
-			<div className="lg:hidden shrink-0 bg-white border-b border-gray-200 px-4 py-2 flex items-center gap-3 z-20">
-				<div className="flex bg-gray-100 rounded-xl p-1 flex-1">
+			<div className="lg:hidden shrink-0 bg-white border-b border-gray-200 px-4 py-2.5 flex items-center gap-3 z-30 shadow-xs sticky top-0">
+				<div className="flex bg-gray-100 rounded-xl p-1 flex-1 border border-gray-200/60">
 					<button
 						type="button"
 						onClick={() => setMtab("edit")}
 						aria-pressed={mtab === "edit"}
-						className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors ${mtab === "edit" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"}`}
+						className={`flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 ${
+							mtab === "edit"
+								? "bg-white text-primary shadow-sm ring-1 ring-black/5"
+								: "text-gray-500 hover:text-gray-900"
+						}`}
 					>
-						<i className="fa-solid fa-pen mr-1.5 text-xs"></i> Edit
+						<i className="fa-solid fa-pen-to-square text-xs"></i>
+						<span>Edit Form</span>
 					</button>
 					<button
 						type="button"
 						onClick={() => setMtab("preview")}
 						aria-pressed={mtab === "preview"}
-						className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors ${mtab === "preview" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500"}`}
+						className={`flex-1 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-1.5 ${
+							mtab === "preview"
+								? "bg-primary text-white shadow-sm"
+								: "text-gray-500 hover:text-gray-900"
+						}`}
 					>
-						<i className="fa-solid fa-eye mr-1.5 text-xs"></i> Preview
+						<i className="fa-solid fa-eye text-xs"></i>
+						<span>Lihat Preview CV</span>
 					</button>
 				</div>
 			</div>
+
+			{/* Floating Quick Preview Button di Mobile */}
+			{mtab === "edit" && (
+				<button
+					type="button"
+					onClick={() => setMtab("preview")}
+					className="lg:hidden fixed bottom-20 right-4 z-30 bg-primary hover:bg-indigo-700 active:bg-indigo-800 text-white px-4 py-2.5 rounded-full font-bold text-xs shadow-xl flex items-center gap-2 border-2 border-white active:scale-95 transition-all cursor-pointer"
+				>
+					<i className="fa-solid fa-eye text-xs"></i>
+					<span>Preview CV</span>
+				</button>
+			)}
 
 			{/* LEFT PANEL: FORM EDITOR */}
 			<div

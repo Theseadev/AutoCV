@@ -127,13 +127,23 @@ export default function BuilderView({
 		}));
 
 	const addExp = () =>
-		setCv((prev) => ({
-			...prev,
-			experiences: [
-				...(prev.experiences || []),
-				{ id: Date.now(), company: "", role: "", period: "", desc: "" },
-			],
-		}));
+		setCv((prev) => {
+			const list = prev.experiences || [];
+			const last = list[list.length - 1];
+			const newItem = last
+				? { ...last, id: Date.now() }
+				: {
+						id: Date.now(),
+						company: "PT Teknologi Nusantara",
+						role: "IT Support & Network Administrator - Praktik Kerja Lapangan",
+						period: "2023 - 2024",
+						desc: "Mempelajari penerapan standar pemeliharaan sistem dan infrastruktur jaringan komputer di lingkungan perusahaan. Membantu melakukan inspeksi berkala perangkat kerja, mendokumentasikan troubleshooting hardware, serta menyosialisasikan panduan operasional IT kepada staf.",
+				  };
+			return {
+				...prev,
+				experiences: [...list, newItem],
+			};
+		});
 	const removeExp = (index: number) =>
 		setCv((prev) => ({
 			...prev,
@@ -144,18 +154,18 @@ export default function BuilderView({
 		key: "pendidikans" | "penghargaans" | "organisasis",
 		empty: Record<string, string>,
 	) =>
-		setCv(
-			(prev) =>
-				({
-					...prev,
-					[key]: [
-						...((prev[key] as
-							| Array<Record<string, string | number>>
-							| undefined) ?? []),
-						{ ...empty, id: Date.now() },
-					],
-				}) as CvData,
-		);
+		setCv((prev) => {
+			const arr =
+				(prev[key] as Array<Record<string, string | number>> | undefined) ?? [];
+			const last = arr[arr.length - 1];
+			const newItem = last
+				? { ...last, id: Date.now() }
+				: { ...empty, id: Date.now() };
+			return {
+				...prev,
+				[key]: [...arr, newItem],
+			} as CvData;
+		});
 	const updateList = (
 		key: "pendidikans" | "penghargaans" | "organisasis",
 		index: number,

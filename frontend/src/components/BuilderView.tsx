@@ -483,9 +483,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 		? [...baseSections, "foto"] 
 		: baseSections;
 	const has = (sec: CvSection) => sections.includes(sec);
-	const [activeSection, setActiveSection] = useState<string | null>(
-		"informasi",
-	);
+	const [activeSection, setActiveSection] = useState<string | null>(null);
 	useEffect(() => {
 		// Template ganti → tutup section yang tidak didukung template baru
 		if (
@@ -493,7 +491,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 			activeSection !== "informasi" &&
 			!has(activeSection as CvSection)
 		)
-			setActiveSection("informasi");
+			setActiveSection(null);
 	}, [template, activeSection]);
 	return (
 		<div className="h-[calc(100dvh-64px)] flex flex-col lg:flex-row overflow-hidden">

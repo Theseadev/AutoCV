@@ -179,6 +179,9 @@ export default function StoreView({ onPick }: Props) {
 		contemporary: false,
 	});
 
+	const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+	const activeFilterCount = Object.values(filters).filter(Boolean).length;
+
 	const handleClearFilters = () => {
 		setFilters({
 			freshNoExp: false,
@@ -243,21 +246,22 @@ export default function StoreView({ onPick }: Props) {
 			<section className="relative bg-white border-b border-gray-200 overflow-hidden">
 				<HeroBackground />
 
-				<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 grid lg:grid-cols-2 gap-14 items-center">
+				<div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-24 grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
 					<div>
-						<p className="text-sm font-semibold text-primary uppercase tracking-widest mb-4 animate-fade-up">
+						<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-3.5 animate-fade-up">
+							<i className="fa-solid fa-sparkles text-[10px]"></i>
 							AIGen CV · Resume Builder
-						</p>
+						</div>
 
 						<h1
-							className="text-4xl sm:text-5xl font-heading font-bold text-gray-900 leading-[1.15] mb-6 animate-fade-up"
+							className="text-2xl sm:text-4xl md:text-5xl font-heading font-extrabold text-gray-900 leading-[1.25] sm:leading-[1.15] mb-3.5 sm:mb-6 tracking-tight animate-fade-up"
 							style={{ animationDelay: "80ms" }}
 						>
 							CV yang bikin kamu dilirik, bukan cuma dibaca sistem.
 						</h1>
 
 						<p
-							className="text-lg text-gray-600 max-w-xl leading-relaxed mb-8 animate-fade-up"
+							className="text-sm sm:text-base text-gray-600 max-w-xl leading-relaxed mb-6 sm:mb-8 animate-fade-up"
 							style={{ animationDelay: "160ms" }}
 						>
 							Tulis datamu, biarkan AI merapikan kalimatnya. Pilih template,
@@ -265,13 +269,13 @@ export default function StoreView({ onPick }: Props) {
 						</p>
 
 						<div
-							className="flex flex-col sm:flex-row items-start gap-4 animate-fade-up"
+							className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 animate-fade-up"
 							style={{ animationDelay: "240ms" }}
 						>
 							<button
 								type="button"
 								onClick={scrollToTemplates}
-								className="bg-primary hover:bg-indigo-700 text-white px-7 py-3 rounded-xl font-semibold shadow-sm hover:shadow-md transition-all duration-300 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer"
+								className="w-full sm:w-auto bg-primary hover:bg-indigo-700 text-white px-7 py-3 rounded-xl font-bold text-center shadow-sm hover:shadow-md transition-all duration-300 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer"
 							>
 								Pilih Template
 							</button>
@@ -279,17 +283,18 @@ export default function StoreView({ onPick }: Props) {
 							<button
 								type="button"
 								onClick={() => onPick("cv01_photo")}
-								className="text-gray-700 hover:text-gray-900 font-semibold px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors active:scale-[0.96] cursor-pointer"
+								className="w-full sm:w-auto text-gray-700 hover:text-gray-900 font-semibold px-4 py-3 rounded-xl hover:bg-gray-100 transition-colors active:scale-[0.96] text-center cursor-pointer border border-gray-200 sm:border-transparent"
 							>
 								Langsung coba builder →
 							</button>
 						</div>
 
 						<p
-							className="mt-6 text-sm text-gray-500 animate-fade-up"
+							className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-500 animate-fade-up flex items-center gap-2"
 							style={{ animationDelay: "320ms" }}
 						>
-							Tanpa akun · Tanpa kartu kredit · PDF langsung terunduh
+							<i className="fa-solid fa-circle-check text-green-500 text-xs"></i>
+							<span>Tanpa akun · Tanpa kartu kredit · PDF langsung terunduh</span>
 						</p>
 					</div>
 
@@ -305,20 +310,60 @@ export default function StoreView({ onPick }: Props) {
 			{/* SHOW TEMPLATES SECTION (Sesuai Referensi Gambar) */}
 			<section
 				id="templates"
-				className="max-w-[1400px] mx-auto px-6 sm:px-8 py-16 scroll-mt-16"
+				className="max-w-[1400px] mx-auto px-4 sm:px-8 py-10 sm:py-16 scroll-mt-16"
 			>
 				{/* Header referensi: "You can always change your template later." */}
-				<div className="pb-12 text-center">
-					<h2 className="text-xl sm:text-2xl font-normal text-slate-700 tracking-tight font-sans">
+				<div className="pb-8 sm:pb-12 text-center">
+					<h2 className="text-lg sm:text-2xl font-normal text-slate-700 tracking-tight font-sans">
 						You can always change your template later.
 					</h2>
 				</div>
 
-				<div className="flex flex-col md:flex-row gap-12 items-start">
+				{/* Mobile Filter Toggle Button */}
+				<div className="md:hidden flex items-center justify-between pb-6 border-b border-gray-100 mb-6">
+					<button
+						type="button"
+						onClick={() => setMobileFiltersOpen((o) => !o)}
+						className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-all ${
+							mobileFiltersOpen || activeFilterCount > 0
+								? "bg-primary/5 border-primary text-primary"
+								: "bg-white border-gray-200 text-gray-700 shadow-xs"
+						}`}
+					>
+						<i className="fa-solid fa-sliders text-xs"></i>
+						<span>Filter Template</span>
+						{activeFilterCount > 0 && (
+							<span className="w-5 h-5 rounded-full bg-primary text-white text-[11px] font-bold flex items-center justify-center">
+								{activeFilterCount}
+							</span>
+						)}
+						<i
+							className={`fa-solid fa-chevron-down text-xs transition-transform duration-200 ${
+								mobileFiltersOpen ? "rotate-180" : ""
+							}`}
+						></i>
+					</button>
+
+					{activeFilterCount > 0 && (
+						<button
+							type="button"
+							onClick={handleClearFilters}
+							className="text-xs font-semibold text-primary hover:underline"
+						>
+							Reset Filter ({activeFilterCount})
+						</button>
+					)}
+				</div>
+
+				<div className="flex flex-col md:flex-row gap-8 lg:gap-12 items-start">
 					{/* Left Sidebar Filters */}
-					<aside className="w-full md:w-56 shrink-0">
-						<div className="flex items-center justify-between mb-8">
-							<h3 className="text-2xl font-bold text-gray-900 tracking-tight">Filters</h3>
+					<aside
+						className={`w-full md:w-56 shrink-0 bg-gray-50/80 md:bg-transparent p-4 md:p-0 rounded-2xl border md:border-0 border-gray-200 ${
+							mobileFiltersOpen ? "block" : "hidden md:block"
+						}`}
+					>
+						<div className="flex items-center justify-between mb-6 md:mb-8">
+							<h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Filters</h3>
 							<button
 								type="button"
 								onClick={handleClearFilters}

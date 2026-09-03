@@ -95,9 +95,9 @@ export default function App() {
 		<button
 			type="button"
 			onClick={() => setView(v)}
-			className={`px-3 py-2 text-sm transition-colors border-b-2 ${
+			className={`px-3 py-2 text-sm transition-colors border-b-2 font-medium ${
 				view === v
-					? "border-primary text-primary font-semibold"
+					? "border-primary text-primary font-bold"
 					: "border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-200"
 			}`}
 		>
@@ -106,24 +106,54 @@ export default function App() {
 		</button>
 	);
 
+	const mobileBottomItem = (v: View, label: string, icon: string) => {
+		const active = view === v;
+		return (
+			<button
+				type="button"
+				onClick={() => setView(v)}
+				className={`flex-1 flex flex-col items-center justify-center py-2 px-1 transition-colors relative ${
+					active ? "text-primary" : "text-gray-400 hover:text-gray-600"
+				}`}
+			>
+				<div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm mb-0.5 transition-all ${
+					active ? "bg-primary/10 text-primary font-bold scale-110" : ""
+				}`}>
+					<i className={icon}></i>
+				</div>
+				<span className={`text-[10px] leading-tight ${active ? "font-bold text-primary" : "font-medium"}`}>
+					{label}
+				</span>
+			</button>
+		);
+	};
+
 	return (
 		<>
-			<nav className="bg-white shadow-sm border-b border-gray-200 fixed w-full z-40 top-0">
+			{/* Top Navbar */}
+			<nav className="bg-white/95 backdrop-blur-md shadow-xs border-b border-gray-200 fixed w-full z-40 top-0">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-					<div className="flex justify-between h-16">
+					<div className="flex justify-between items-center h-14 sm:h-16">
+						{/* Brand Logo */}
 						<button
 							type="button"
-							className="flex items-center cursor-pointer"
+							className="flex items-center cursor-pointer group"
 							onClick={() => setView("store")}
 						>
-							<i className="fa-solid fa-file-signature text-primary text-2xl mr-2"></i>
-							<span className="font-heading font-bold text-xl text-gray-900">
-								AIGen CV
-							</span>
+							<div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center mr-2.5 group-hover:bg-primary group-hover:text-white transition-all duration-200">
+								<i className="fa-solid fa-file-signature text-lg"></i>
+							</div>
+							<div className="text-left">
+								<span className="font-heading font-extrabold text-lg sm:text-xl text-gray-900 tracking-tight block leading-none">
+									AIGen <span className="text-primary">CV</span>
+								</span>
+							</div>
 						</button>
-						<div className="flex items-center space-x-2 sm:space-x-4">
-							{navItem("store", "Toko Template")}
-							{navItem("builder", "CV Builder")}
+
+						{/* Desktop Navigation */}
+						<div className="hidden md:flex items-center space-x-1 lg:space-x-3">
+							{navItem("store", "Toko Template", "fa-solid fa-store")}
+							{navItem("builder", "CV Builder", "fa-solid fa-pen-nib")}
 							{navItem(
 								"ats",
 								"AI ATS Auditor",
@@ -131,11 +161,30 @@ export default function App() {
 							)}
 							{navItem("admin", "Panel Admin", "fa-solid fa-lock")}
 						</div>
+
+						{/* Mobile Header Right Active View Pill */}
+						<div className="md:hidden flex items-center">
+							<span className="text-xs bg-primary/10 text-primary font-semibold px-2.5 py-1 rounded-full flex items-center gap-1.5">
+								<span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+								{view === "store" && "Toko Template"}
+								{view === "builder" && "CV Builder"}
+								{view === "ats" && "AI ATS Auditor"}
+								{view === "admin" && "Panel Admin"}
+							</span>
+						</div>
 					</div>
 				</div>
 			</nav>
 
-			<div className="pt-16 min-h-screen">
+			{/* Mobile Bottom Navigation Bar */}
+			<div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 flex items-center px-1 shadow-lg pb-[max(env(safe-area-inset-bottom),4px)]">
+				{mobileBottomItem("store", "Template", "fa-solid fa-store")}
+				{mobileBottomItem("builder", "Builder", "fa-solid fa-pen-nib")}
+				{mobileBottomItem("ats", "AI ATS", "fa-solid fa-wand-magic-sparkles")}
+				{mobileBottomItem("admin", "Admin", "fa-solid fa-shield-halved")}
+			</div>
+
+			<div className="pt-14 sm:pt-16 min-h-screen pb-16 md:pb-0">
 				{view === "store" && <StoreView onPick={openBuilder} />}
 				{view === "builder" && (
 					<BuilderView

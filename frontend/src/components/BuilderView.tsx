@@ -58,11 +58,6 @@ export default function BuilderView({
 	price,
 }: Props) {
 	// State AI Profil Writer
-	const [aiKeywords, setAiKeywords] = useState(
-		"lulusan akuntansi, teliti, menguasai excel & SAP, berpengalaman admin",
-	);
-	const [aiTone, setAiTone] = useState("Professional & Formal");
-	const [aiLanguage, setAiLanguage] = useState("Bahasa Indonesia");
 	const [isGenerating, setIsGenerating] = useState(false);
 
 	// State AI Skill Suggester
@@ -280,20 +275,78 @@ export default function BuilderView({
 
 
 
-	// 1. Gemini AI Profile Generator
+	// 1. Gemini AI Profile Generator (Otomatis membaca seluruh data CV: Pendidikan, Pengalaman, Organisasi, Kemampuan)
 	const generateProfileAI = async () => {
-		if (!aiKeywords.trim()) {
-			alert("Masukkan kata kunci latar belakangmu terlebih dahulu!");
-			return;
-		}
 		setIsGenerating(true);
 		try {
-			const sysPrompt = `Anda adalah pakar penulisan CV profesional dan konsultan karir terkemuka. Tugas Anda adalah membuat 1 paragraf 'Tentang Saya' (Summary) CV yang sangat kuat, menarik, dan ramah ATS berdasarkan informasi pengguna. Gunakan gaya ${aiTone} dan tulis dalam ${aiLanguage}. Jangan sertakan tanda petik pembuka/penutup atau teks pengantar lainnya, langsung paragraf ringkasan saja.`;
-			const userQuery = `Nama: ${cv.name}\nProfesi/Target Role: ${cv.title}\nKata kunci/Latar belakang: ${aiKeywords}`;
+			// Kumpulkan data riwayat pendidikan
+			const eduSummary = (cv.pendidikans || [])
+				.map(
+					(e) =>
+						`- Sekolah/Universitas: ${e.institusi || "-"}, Jurusan: ${e.jurusan || "-"}, Tahun: ${e.tahun || "-"}, Keterangan: ${e.kegiatan || "-"}`,
+				)
+				.join("\n");
+
+			// Kumpulkan data pengalaman kerja
+			const expSummary = (cv.experiences || [])
+				.map(
+					(e) =>
+						`- Perusahaan: ${e.company || "-"}, Posisi: ${e.role || "-"}, Periode: ${e.period || "-"}, Deskripsi Tugas: ${e.desc || "-"}`,
+				)
+				.join("\n");
+
+			// Kumpulkan data organisasi
+			const orgSummary = (cv.organisasis || [])
+				.map(
+					(o) =>
+						`- Organisasi/Kepanitiaan: ${o.instansi || "-"}, Posisi: ${o.posisi || "-"}, Periode: ${o.tanggal || "-"}, Deskripsi: ${o.deskripsi || "-"}`,
+				)
+				.join("\n");
+
+			// Kumpulkan data keahlian
+			const skillsSummary =
+				skillsText ||
+				"Keahlian komunikasi, disiplin, kerja sama tim, dan tanggung jawab.";
+
+			const sysPrompt = `Anda adalah pakar konsultan rekrutmen & resume writer profesional terkemuka di Indonesia.
+Tugas Anda adalah membuat 1 paragraf 'Tentang Saya' (Professional Summary) CV yang sangat rapi, natural, profesional, dan ramah ATS berdasarkan data profil kandidat yang diberikan.
+
+WAJIB MENGIKUTI STRUKTUR & RITME KALIMAT DARI TEMPLATE CONTOH BERIKUT:
+"Saya lulusan SMK Negeri 1 Jakarta jurusan Teknik Komputer dan Jaringan, berpengalaman mengikuti Praktik Kerja Lapangan (PKL) di bidang IT Support dan Jaringan di PT Teknologi Nusantara. Terbiasa membantu pemeliharaan sistem, dokumentasi inventaris perangkat, dan instalasi infrastruktur jaringan kantor. Mampu bekerja di lapangan dengan menjaga standar prosedur kerja dan berkoordinasi baik bersama tim teknis. Memiliki kemampuan komunikasi yang baik, cepat beradaptasi, serta bertanggung jawab dalam menyelesaikan tugas. Siap memberikan kontribusi terbaik dan berkembang bersama perusahaan."
+
+ALUR 1 PARAGRAF UTUH (4-6 KALIMAT):
+1. Kalimat 1: Latar belakang pendidikan terakhir & jurusan serta pengalaman kerja/PKL/organisasi utama (sebutkan nama institusi & perusahaan/posisi secara elegan).
+2. Kalimat 2: Tanggung jawab, keahlian teknis, atau aktivitas utama yang terbiasa dilakukan sesuai data pengalaman dan pendidikan.
+3. Kalimat 3: Kemampuan kerja di lapangan/operasional kantor, kepatuhan terhadap standar prosedur kerja (SOP), serta koordinasi yang baik dengan tim.
+4. Kalimat 4: Karakteristik kemampuan komunikasi, adaptasi, ketelitian, dan tanggung jawab kerja (soft skills).
+5. Kalimat 5: Pernyataan penutup yang tegas mengenai kesiapan memberikan kontribusi terbaik dan berkembang bersama perusahaan.
+
+INSTRUKSI KHUSUS:
+- Tulis dalam 1 paragraf yang mengalir lancar (tanpa enter/line-break antar kalimat).
+- JANGAN sertakan tanda kutip (" / '), jangan sertakan markdown bold (**), dan jangan ada teks pengantar seperti "Berikut adalah...".
+- Langsung keluarkan teks 1 paragraf tersebut saja.`;
+
+			const userQuery = `DATA LENGKAP KANDIDAT:
+Nama: ${cv.name || "Muhammad Fahrul Bahri"}
+Profesi/Target: ${cv.title || "Staff"}
+
+DATA RIWAYAT PENDIDIKAN:
+${eduSummary || "-"}
+
+DATA PENGALAMAN KERJA:
+${expSummary || "-"}
+
+DATA PENGALAMAN ORGANISASI:
+${orgSummary || "-"}
+
+DATA KEAHLIAN & KEMAMPUAN:
+${skillsSummary}`;
+
 			const result = await callGeminiAPI(sysPrompt, userQuery);
 			const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 			if (text) {
-				set({ about: text.trim() });
+				const cleaned = text.trim().replace(/^["']|["']$/g, "").replace(/^\*\*|\*\*$/g, "");
+				set({ about: cleaned });
 			} else {
 				alert("Gagal memproses respons AI. Silakan coba lagi.");
 			}
@@ -1436,120 +1489,63 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 									<div className="space-y-3 pt-1">
 										<div
 											id="sec-ai"
-											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 border-l-4 border-l-indigo-500 shadow-sm"
+											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 border-l-4 border-l-indigo-500 shadow-sm space-y-4"
 										>
-											<div className="flex items-center justify-between mb-1">
+											<div className="flex items-center justify-between">
 												<div className="flex items-center gap-3">
-													<span className="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
-														<i className="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+													<span className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+														<i className="fa-solid fa-wand-magic-sparkles text-xs"></i>
 													</span>
-													<h3 className="text-base font-bold text-gray-900">
-														Profil AI & Ringkasan Diri
-													</h3>
+													<div>
+														<h3 className="text-base font-bold text-gray-900 leading-tight">
+															Generate Ringkasan Profil Otomatis
+														</h3>
+														<p className="text-xs text-gray-500">
+															Didukung oleh Google Gemini AI
+														</p>
+													</div>
 												</div>
-												<span className="text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded-full border border-indigo-100">
-													<i className="fa-brands fa-google mr-1"></i>Gemini AI
+												<span className="text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2.5 py-1 rounded-full border border-indigo-100 flex items-center gap-1">
+													<i className="fa-brands fa-google text-[11px]"></i>Gemini AI
 												</span>
 											</div>
-											<p className="text-xs text-gray-500 ml-10 mb-4">
-												Tulis kata kunci latar belakangmu, AI merangkai paragraf
-												profil yang menarik & ramah ATS.
-											</p>
 
-											<div className="space-y-3 mb-4">
-												<div>
-													<label
-														htmlFor="ai-keywords"
-														className="block text-xs font-medium text-gray-700 mb-1"
-													>
-														Kata Kunci / Pengalaman Utama
-													</label>
-													<input
-														id="ai-keywords"
-														value={aiKeywords}
-														onChange={(e) => setAiKeywords(e.target.value)}
-														type="text"
-														placeholder="Cth: Lulusan akuntansi, teliti, menguasai excel, 2 tahun pengalaman"
-														className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-primary focus:border-primary text-sm transition"
-													/>
+											<div className="bg-indigo-50/70 border border-indigo-100/80 rounded-xl p-3.5 text-xs text-indigo-900 leading-relaxed">
+												<div className="font-semibold flex items-center gap-1.5 mb-1 text-indigo-800">
+													<i className="fa-solid fa-circle-info text-[12px]"></i>
+													Cara Kerja AI:
 												</div>
-												<div className="grid grid-cols-2 gap-3">
-													<div>
-														<label
-															htmlFor="ai-tone"
-															className="block text-xs font-medium text-gray-700 mb-1"
-														>
-															Gaya Penulisan
-														</label>
-														<select
-															id="ai-tone"
-															value={aiTone}
-															onChange={(e) => setAiTone(e.target.value)}
-															className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-primary focus:border-primary transition"
-														>
-															<option value="Professional & Formal">
-																Professional & Formal
-															</option>
-															<option value="Creative & Energetic">
-																Creative & Dynamic
-															</option>
-															<option value="Fresh Graduate / Enthusiastic">
-																Fresh Graduate
-															</option>
-															<option value="Executive / Result-Oriented">
-																Executive / Senior
-															</option>
-														</select>
-													</div>
-													<div>
-														<label
-															htmlFor="ai-language"
-															className="block text-xs font-medium text-gray-700 mb-1"
-														>
-															Bahasa
-														</label>
-														<select
-															id="ai-language"
-															value={aiLanguage}
-															onChange={(e) => setAiLanguage(e.target.value)}
-															className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-primary focus:border-primary transition"
-														>
-															<option value="Bahasa Indonesia">
-																Bahasa Indonesia
-															</option>
-															<option value="English">English</option>
-														</select>
-													</div>
-												</div>
+												AI otomatis membaca seluruh data yang telah Anda isi (<strong>Pendidikan</strong>, <strong>Pengalaman Kerja</strong>, <strong>Organisasi</strong>, dan <strong>Keahlian</strong>) lalu menyusunnya menjadi 1 paragraf ringkasan profil profesional berstandar ATS.
 											</div>
 
 											<button
 												type="button"
 												onClick={generateProfileAI}
 												disabled={isGenerating}
-												className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium text-sm transition shadow-sm hover:shadow-md active:scale-[0.96] flex justify-center items-center"
+												className="w-full bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white py-3 rounded-xl font-bold text-sm transition shadow-sm hover:shadow-md active:scale-[0.98] flex justify-center items-center gap-2"
 											>
 												<i
-													className={`${isGenerating ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-sparkles"} mr-2`}
+													className={`${isGenerating ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-wand-magic-sparkles"} text-sm`}
 												></i>
 												{isGenerating
-													? "Gemini AI Sedang Merangkai..."
-													: "Generate Paragraf Profil"}
+													? "Gemini AI Sedang Merangkai Ringkasan Profil..."
+													: "✨ Generate Ringkasan Profil Otomatis (AI)"}
 											</button>
 
-											<div className="mt-4">
+											<div className="pt-2 border-t border-gray-100">
 												<label
 													htmlFor="cv-about"
-													className="block text-xs font-medium text-gray-700 mb-1"
+													className="block text-xs font-bold text-gray-800 mb-1.5"
 												>
-													Hasil Paragraf Profil (bisa diedit manual)
+													Hasil Ringkasan Diri / Tentang Saya (bisa diedit manual):
 												</label>
 												<textarea
 													id="cv-about"
 													value={cv.about}
 													onChange={(e) => set({ about: e.target.value })}
-													rows={4}
-													className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-primary focus:border-primary text-sm leading-relaxed transition"
+													rows={6}
+													placeholder="Klik tombol '✨ Generate Ringkasan Profil Otomatis (AI)' di atas untuk membuat paragraf ringkasan diri secara otomatis, atau ketik langsung di sini..."
+													className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:ring-primary focus:border-primary text-sm leading-relaxed transition shadow-2xs font-sans"
 												/>
 											</div>
 										</div>

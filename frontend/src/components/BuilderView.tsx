@@ -1528,6 +1528,8 @@ export function CvPaper({
 				<CreamLayout cv={cvToRender} skills={skills} />
 			) : baseTemplate === "cv08" ? (
 				<PeacockLayout cv={cvToRender} skills={skills} />
+			) : baseTemplate === "cv09" ? (
+				<FreshGradLayout cv={cvToRender} skills={skills} />
 			) : (
 				<EditorialLayout cv={cvToRender} skills={skills} />
 			)}
@@ -2786,6 +2788,274 @@ function PeacockLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
 						</div>
 					)}
 				</section>
+			</div>
+		</div>
+	);
+}
+
+// cv09 Fresh Start Entry: Khusus Fresh Graduate Non-Pengalaman (Nama, Kontak, Tentang Saya, Pendidikan, Kemampuan, Hobi)
+function FreshGradLayout({ cv, skills }: { cv: CvData; skills: ParsedSkill[] }) {
+	const themeColor = cv.themeColor || "#2563EB";
+	const rawHobbies = (cv.hobi && cv.hobi.trim())
+		? cv.hobi
+		: "Membaca Buku, Desain Grafis, Menulis Artikel, Fotografi";
+	const hobbies = rawHobbies
+		.split(/[,;\n]+/)
+		.map((h) => h.trim())
+		.filter(Boolean);
+
+	const hobbyIcons = [
+		"fa-book-open",
+		"fa-palette",
+		"fa-pen-nib",
+		"fa-camera",
+		"fa-person-running",
+		"fa-laptop-code",
+		"fa-headphones",
+		"fa-mug-hot",
+	];
+
+	return (
+		<div className="h-full flex flex-col bg-white font-['Inter',sans-serif]">
+			{/* Top Header with border accent */}
+			<header
+				className="px-12 py-8 bg-gradient-to-b from-slate-50 to-white border-b border-slate-200"
+				style={{ borderTop: `6px solid ${themeColor}` }}
+			>
+				<div className="flex items-center gap-8">
+					{cv.photo && (
+						<img
+							src={cv.photo}
+							alt="Profile"
+							className={`w-[115px] h-[115px] object-cover border-[3px] border-white shadow-md shrink-0 ${
+								cv.photoShape === "square"
+									? "rounded-md"
+									: cv.photoShape === "rounded"
+									? "rounded-2xl"
+									: "rounded-full"
+							}`}
+						/>
+					)}
+					<div className="flex-1 min-w-0">
+						<h1 className="text-[36px] font-black text-slate-900 tracking-tight leading-tight">
+							{cv.name || "Nama Lengkap"}
+						</h1>
+						<p
+							className="text-[14px] font-bold tracking-wider uppercase mt-0.5 mb-3.5"
+							style={{ color: themeColor }}
+						>
+							{cv.title || "Fresh Graduate"}
+						</p>
+
+						{/* Contact Badges */}
+						<div className="flex flex-wrap gap-2.5 text-[11.5px] text-slate-600">
+							<div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-xs">
+								<i className="fa-brands fa-whatsapp text-emerald-500 text-[13px]"></i>
+								<span className="font-medium truncate">{cv.phone || "-"}</span>
+							</div>
+							<div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-xs">
+								<i className="fa-solid fa-envelope text-[12px]" style={{ color: themeColor }}></i>
+								<span className="font-medium truncate">{cv.email || "-"}</span>
+							</div>
+							<div className="flex items-center gap-2 bg-white border border-slate-200 px-3 py-1.5 rounded-full shadow-xs">
+								<i className="fa-solid fa-location-dot text-rose-500 text-[12px]"></i>
+								<span className="font-medium truncate">{cv.address || "-"}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</header>
+
+			{/* Balanced 2-Column Body */}
+			<div className="flex flex-1 min-h-0">
+				{/* Left Sidebar: Kemampuan & Hobi */}
+				<aside className="w-[36%] bg-slate-50/80 border-r border-slate-200 p-7 flex flex-col justify-between overflow-hidden">
+					<div className="space-y-6">
+						{/* Kemampuan */}
+						<div>
+							<div className="flex items-center gap-2.5 mb-3.5">
+								<div
+									className="w-7 h-7 rounded-lg text-white flex items-center justify-center text-xs shrink-0 shadow-xs"
+									style={{ backgroundColor: themeColor }}
+								>
+									<i className="fa-solid fa-bolt"></i>
+								</div>
+								<h3 className="text-[13.5px] font-extrabold text-slate-900 uppercase tracking-wider">
+									Kemampuan
+								</h3>
+							</div>
+
+							<div className="space-y-2.5">
+								{skills.map((skill) => (
+									<div
+										key={skill.title}
+										className="bg-white border border-slate-200/90 rounded-lg p-3 shadow-2xs border-l-4"
+										style={{ borderLeftColor: themeColor }}
+									>
+										<div className="text-[12.5px] font-bold text-slate-900">
+											{skill.title}
+										</div>
+										{skill.desc && (
+											<div className="text-[11.5px] text-slate-500 mt-0.5 leading-relaxed">
+												{skill.desc}
+											</div>
+										)}
+									</div>
+								))}
+							</div>
+						</div>
+
+						{/* Hobi & Minat */}
+						<div>
+							<div className="flex items-center gap-2.5 mb-3.5">
+								<div
+									className="w-7 h-7 rounded-lg text-white flex items-center justify-center text-xs shrink-0 shadow-xs"
+									style={{ backgroundColor: themeColor }}
+								>
+									<i className="fa-solid fa-heart"></i>
+								</div>
+								<h3 className="text-[13.5px] font-extrabold text-slate-900 uppercase tracking-wider">
+									Hobi & Minat
+								</h3>
+							</div>
+
+							<div className="space-y-2">
+								{hobbies.map((h, i) => {
+									const icon = hobbyIcons[i % hobbyIcons.length];
+									return (
+										<div
+											key={i}
+											className="flex items-center gap-3 bg-white border border-slate-200/80 rounded-lg px-3 py-2 shadow-2xs"
+										>
+											<div
+												className="w-7 h-7 rounded-md flex items-center justify-center text-xs shrink-0"
+												style={{
+													backgroundColor: `${themeColor}15`,
+													color: themeColor,
+												}}
+											>
+												<i className={`fa-solid ${icon}`}></i>
+											</div>
+											<span className="text-[12px] font-semibold text-slate-700">
+												{h}
+											</span>
+										</div>
+									);
+								})}
+							</div>
+						</div>
+					</div>
+
+					{/* Note Kiri Penyeimbang */}
+					<div className="mt-4 p-3.5 rounded-xl bg-white border border-slate-200/80 text-[11px] text-slate-500 leading-relaxed shadow-2xs">
+						<span className="font-bold text-slate-800">Siap Berkembang:</span> Memiliki kemauan tinggi untuk belajar hal baru, beradaptasi cepat, dan bekerja sama dalam tim.
+					</div>
+				</aside>
+
+				{/* Right Column: Tentang Saya & Riwayat Pendidikan */}
+				<main className="flex-1 p-8 flex flex-col justify-between overflow-y-auto">
+					<div className="space-y-7">
+						{/* Tentang Saya */}
+						<div>
+							<div className="flex items-center gap-2.5 mb-3.5">
+								<div
+									className="w-7 h-7 rounded-lg text-white flex items-center justify-center text-xs shrink-0 shadow-xs"
+									style={{ backgroundColor: themeColor }}
+								>
+									<i className="fa-solid fa-user"></i>
+								</div>
+								<h3 className="text-[13.5px] font-extrabold text-slate-900 uppercase tracking-wider">
+									Tentang Saya
+								</h3>
+							</div>
+
+							<div
+								className="bg-slate-50/70 border-l-4 rounded-r-xl p-4.5"
+								style={{ borderLeftColor: themeColor }}
+							>
+								<p className="text-[12.5px] text-slate-700 leading-relaxed text-justify whitespace-pre-line m-0">
+									{cv.about || "Tulis ringkasan tentang diri Anda."}
+								</p>
+							</div>
+						</div>
+
+						{/* Riwayat Pendidikan */}
+						<div>
+							<div className="flex items-center gap-2.5 mb-4">
+								<div
+									className="w-7 h-7 rounded-lg text-white flex items-center justify-center text-xs shrink-0 shadow-xs"
+									style={{ backgroundColor: themeColor }}
+								>
+									<i className="fa-solid fa-graduation-cap"></i>
+								</div>
+								<h3 className="text-[13.5px] font-extrabold text-slate-900 uppercase tracking-wider">
+									Riwayat Pendidikan
+								</h3>
+							</div>
+
+							<div className="space-y-5 pl-1">
+								{(cv.pendidikans || []).map((pd) => (
+									<div
+										key={pd.id}
+										className="relative pl-5.5 border-l-2 border-slate-200"
+									>
+										<div
+											className="absolute -left-[6px] top-1 w-2.5 h-2.5 rounded-full ring-4 ring-white"
+											style={{ backgroundColor: themeColor }}
+										></div>
+										<div className="flex justify-between items-baseline mb-1">
+											<h4 className="font-extrabold text-[14.5px] text-slate-900">
+												{pd.institusi || "-"}
+											</h4>
+											<span
+												className="text-[10.5px] font-bold px-2 py-0.5 rounded-md"
+												style={{
+													backgroundColor: `${themeColor}15`,
+													color: themeColor,
+												}}
+											>
+												{pd.tahun}
+											</span>
+										</div>
+										<div className="text-[12.5px] font-semibold text-slate-700 mb-1.5">
+											{pd.jurusan || "-"}
+										</div>
+										{pd.kegiatan && (
+											<ul className="list-disc list-outside ml-4 text-[11.5px] text-slate-600 space-y-1 leading-relaxed">
+												{pd.kegiatan
+													.split("\n")
+													.filter((l) => l.trim())
+													.map((l, i) => (
+														<li key={i}>{l.replace(/^\u2022\s*/, "")}</li>
+													))}
+											</ul>
+										)}
+									</div>
+								))}
+							</div>
+						</div>
+					</div>
+
+					{/* Banner Komitmen Karir */}
+					<div
+						className="mt-6 p-4 rounded-xl border border-dashed"
+						style={{
+							backgroundColor: `${themeColor}08`,
+							borderColor: `${themeColor}40`,
+						}}
+					>
+						<div
+							className="font-extrabold text-[12.5px] mb-1 flex items-center gap-2"
+							style={{ color: themeColor }}
+						>
+							<i className="fa-solid fa-circle-check"></i>
+							Tujuan & Minat Karir
+						</div>
+						<p className="text-[11.5px] text-slate-600 leading-relaxed m-0">
+							Berkomitmen mendedikasikan kemampuan akademik dan keahlian untuk memberikan kontribusi positif secara profesional bagi kemajuan perusahaan.
+						</p>
+					</div>
+				</main>
 			</div>
 		</div>
 	);

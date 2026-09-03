@@ -21,6 +21,26 @@ interface TemplateItem {
 
 const TEMPLATES: TemplateItem[] = [
 	{
+		id: "cv09_photo",
+		name: "Fresh Start Entry (With Photo)",
+		photo: true,
+		columns: 2,
+		style: "Contemporary",
+		category: ["fresh_no_exp", "internship"],
+		recommended: true,
+		palettes: ["#2563EB", "#0D9488", "#7C3AED", "#D97706", "#DC2626"],
+	},
+	{
+		id: "cv09_no",
+		name: "Fresh Start Entry (No Photo)",
+		photo: false,
+		columns: 2,
+		style: "Contemporary",
+		category: ["fresh_no_exp", "internship"],
+		recommended: false,
+		palettes: ["#2563EB", "#0D9488", "#7C3AED", "#D97706", "#DC2626"],
+	},
+	{
 		id: "cv07_photo",
 		name: "Classic Fresh (With Photo)",
 		photo: true,
@@ -271,6 +291,7 @@ function ResponsiveCvPreview({ template, color }: { template: string; color?: st
 export default function StoreView({ onPick }: Props) {
 	// State warna yang dipilih untuk setiap template
 	const [selectedColors, setSelectedColors] = useState<Record<string, string>>({
+		cv09_photo: "#2563EB",
 		cv01_photo: "#689F38",
 		cv04_photo: "#212121",
 		cv02_photo: "#374151",

@@ -147,6 +147,13 @@ export const TEMPLATE_SECTIONS: Record<string, CvSection[]> = {
 		"kemampuan",
 		"penghargaan",
 	],
+	cv09: [
+		"kontak",
+		"tentang",
+		"pendidikan",
+		"kemampuan",
+		"hobi",
+	],
 };
 export const defaultCv: CvData = {
 	name: "Budi Santoso",
@@ -165,6 +172,7 @@ export const defaultCv: CvData = {
 			desc: "• Mengelola input data lebih dari 200 dokumen transaksi harian dengan tingkat akurasi 99%.\n• Menyusun jadwal pertemuan manajerial dan menyiapkan berkas presentasi.",
 		},
 	],
+	hobi: "Membaca Buku, Desain Grafis, Menulis Artikel, Fotografi",
 };
 
 export const defaultSkillsText =
@@ -919,6 +927,180 @@ export const buildCvHtml = (
                         ${(cvData.penghargaans || []).length ? `<div>${banner8("Sertifikat")}<ul style="list-style:disc;list-style-position:inside;padding-left:4px;margin:0;">${sertifikatLis8}</ul></div>` : ""}
                     </section>
                 </div>
+            </div>
+        </div>`;
+	}
+
+	// cv09 Fresh Start Entry: Khusus Fresh Graduate Non-Pengalaman (Nama, Kontak, Tentang Saya, Pendidikan, Kemampuan, Hobi)
+	if (template === "cv09") {
+		const t09 = cvData.themeColor || "#2563EB";
+		const rawHobbies = (cvData.hobi && cvData.hobi.trim())
+			? cvData.hobi
+			: "Membaca Buku, Desain Grafis, Menulis Artikel, Fotografi";
+		const hobbies = rawHobbies
+			.split(/[,;\n]+/)
+			.map((h) => h.trim())
+			.filter(Boolean);
+
+		const hobbyIcons = [
+			"fa-book-open",
+			"fa-palette",
+			"fa-pen-nib",
+			"fa-camera",
+			"fa-person-running",
+			"fa-laptop-code",
+			"fa-headphones",
+			"fa-mug-hot",
+		];
+
+		const hobbiesHtml = hobbies
+			.map((h, i) => {
+				const icon = hobbyIcons[i % hobbyIcons.length];
+				return `
+                <div style="display:flex;align-items:center;gap:12px;background:#FFFFFF;border:1px solid #E2E8F0;border-radius:10px;padding:10px 14px;margin-bottom:9px;box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+                    <div style="width:28px;height:28px;border-radius:8px;background:${t09}15;color:${t09};display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;">
+                        <i class="fa-solid ${icon}"></i>
+                    </div>
+                    <span style="font-size:12px;font-weight:600;color:#334155;">${esc(h)}</span>
+                </div>`;
+			})
+			.join("");
+
+		const skillsFresh = skills
+			.map(
+				(s) => `
+                <div style="background:#FFFFFF;border:1px solid #E2E8F0;border-left:4px solid ${t09};border-radius:8px;padding:11px 14px;margin-bottom:10px;box-shadow:0 1px 2px rgba(0,0,0,0.02);">
+                    <div style="font-weight:700;font-size:12.5px;color:#0F172A;margin-bottom:2px;">${esc(s.title)}</div>
+                    ${s.desc ? `<div style="font-size:11.5px;color:#64748B;line-height:1.5;">${esc(s.desc)}</div>` : ""}
+                </div>`,
+			)
+			.join("");
+
+		const eduFresh = (cvData.pendidikans || [])
+			.map((pd) => {
+				const bullets = (pd.kegiatan || "")
+					.split("\n")
+					.filter((l) => l.trim())
+					.map((l) => `<li style="margin-bottom:4px;">${esc(l.replace(/^•\s*/, ""))}</li>`)
+					.join("");
+				return `
+                <div style="position:relative;padding-left:22px;margin-bottom:22px;border-left:2px solid #E2E8F0;">
+                    <div style="position:absolute;left:-6px;top:4px;width:10px;height:10px;border-radius:50%;background:${t09};box-shadow:0 0 0 3px ${t09}25;"></div>
+                    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px;">
+                        <h4 style="font-weight:800;font-size:15px;color:#0F172A;margin:0;">${esc(pd.institusi) || "-"}</h4>
+                        <span style="font-size:11px;font-weight:700;color:${t09};background:${t09}12;padding:2px 8px;border-radius:6px;">${esc(pd.tahun)}</span>
+                    </div>
+                    <div style="font-weight:600;font-size:13px;color:#334155;margin-bottom:6px;">${esc(pd.jurusan) || "-"}</div>
+                    ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:6px 0 0;font-size:12px;color:#64748B;line-height:1.65;">${bullets}</ul>` : ""}
+                </div>`;
+			})
+			.join("");
+
+		return `
+        <div class="cv-paper" style="width:794px;height:1123px;background:#FFFFFF;overflow:hidden;font-family:'Inter',sans-serif;display:flex;flex-direction:column;">
+            <!-- Header Atas -->
+            <div style="border-top:6px solid ${t09};padding:40px 48px 28px;background:linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);border-bottom:1px solid #E2E8F0;">
+                <div style="display:flex;align-items:center;gap:32px;">
+                    ${
+                        cvData.photo
+                            ? `<img src="${cvData.photo}" style="width:115px;height:115px;border-radius:${getRadius('16px')};object-fit:cover;border:3px solid #FFFFFF;box-shadow:0 6px 18px rgba(0,0,0,0.08);flex-shrink:0;" />`
+                            : ""
+                    }
+                    <div style="flex:1;">
+                        <h1 style="font-size:36px;font-weight:900;color:#0F172A;letter-spacing:-0.5px;margin:0 0 4px;line-height:1.15;">${name}</h1>
+                        <div style="font-size:14px;font-weight:700;color:${t09};letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;">${title}</div>
+                        <!-- Kontak Pill Badges -->
+                        <div style="display:flex;flex-wrap:wrap;gap:10px;font-size:11.5px;color:#475569;">
+                            <div style="display:flex;align-items:center;gap:7px;background:#FFFFFF;border:1px solid #E2E8F0;padding:5px 12px;border-radius:20px;box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+                                <i class="fa-brands fa-whatsapp" style="color:#22C55E;font-size:13px;"></i>
+                                <span style="font-weight:500;">${phone || "-"}</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:7px;background:#FFFFFF;border:1px solid #E2E8F0;padding:5px 12px;border-radius:20px;box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+                                <i class="fa-solid fa-envelope" style="color:${t09};font-size:12px;"></i>
+                                <span style="font-weight:500;">${email || "-"}</span>
+                            </div>
+                            <div style="display:flex;align-items:center;gap:7px;background:#FFFFFF;border:1px solid #E2E8F0;padding:5px 12px;border-radius:20px;box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+                                <i class="fa-solid fa-location-dot" style="color:#EF4444;font-size:12px;"></i>
+                                <span style="font-weight:500;">${address || "-"}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Body 2-Kolom Seimbang -->
+            <div style="display:flex;flex:1;min-height:0;">
+                <!-- Kolom Kiri: Kemampuan & Hobi -->
+                <aside style="width:36%;background:#F8FAFC;border-right:1px solid #E2E8F0;padding:32px 28px;display:flex;flex-direction:column;justify-content:space-between;">
+                    <div>
+                        <!-- Section: Kemampuan -->
+                        <div style="margin-bottom:28px;">
+                            <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+                                <div style="width:28px;height:28px;border-radius:7px;background:${t09};color:white;display:flex;align-items:center;justify-content:center;font-size:12px;">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <h3 style="font-size:14px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:0.8px;margin:0;">Kemampuan</h3>
+                            </div>
+                            <div>${skillsFresh}</div>
+                        </div>
+
+                        <!-- Section: Hobi & Minat -->
+                        <div>
+                            <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+                                <div style="width:28px;height:28px;border-radius:7px;background:${t09};color:white;display:flex;align-items:center;justify-content:center;font-size:12px;">
+                                    <i class="fa-solid fa-heart"></i>
+                                </div>
+                                <h3 style="font-size:14px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:0.8px;margin:0;">Hobi & Minat</h3>
+                            </div>
+                            <div>${hobbiesHtml}</div>
+                        </div>
+                    </div>
+
+                    <!-- Footer Note Kiri -->
+                    <div style="padding:14px;border-radius:10px;background:#FFFFFF;border:1px solid #E2E8F0;font-size:11px;color:#64748B;line-height:1.5;">
+                        <span style="font-weight:700;color:#0F172A;">Siap Berkembang:</span> Memiliki kemauan tinggi untuk belajar hal baru, beradaptasi cepat, dan bekerja sama dalam tim.
+                    </div>
+                </aside>
+
+                <!-- Kolom Kanan: Tentang Saya & Riwayat Pendidikan -->
+                <main style="flex:1;padding:34px 38px;display:flex;flex-direction:column;justify-content:space-between;">
+                    <div>
+                        <!-- Section: Tentang Saya -->
+                        <div style="margin-bottom:30px;">
+                            <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+                                <div style="width:28px;height:28px;border-radius:7px;background:${t09};color:white;display:flex;align-items:center;justify-content:center;font-size:12px;">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <h3 style="font-size:14px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:0.8px;margin:0;">Tentang Saya</h3>
+                            </div>
+                            <div style="background:#F8FAFC;border-left:4px solid ${t09};border-radius:0 10px 10px 0;padding:16px 20px;">
+                                <p style="font-size:12.5px;color:#334155;line-height:1.75;text-align:justify;margin:0;white-space:pre-line;">${about}</p>
+                            </div>
+                        </div>
+
+                        <!-- Section: Riwayat Pendidikan -->
+                        <div>
+                            <div style="display:flex;align-items:center;gap:9px;margin-bottom:16px;">
+                                <div style="width:28px;height:28px;border-radius:7px;background:${t09};color:white;display:flex;align-items:center;justify-content:center;font-size:12px;">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <h3 style="font-size:14px;font-weight:800;color:#0F172A;text-transform:uppercase;letter-spacing:0.8px;margin:0;">Riwayat Pendidikan</h3>
+                            </div>
+                            <div style="margin-top:8px;">${eduFresh}</div>
+                        </div>
+                    </div>
+
+                    <!-- Highlight Komitmen Karir -->
+                    <div style="background:linear-gradient(135deg, ${t09}10 0%, #FFFFFF 100%);border:1.5px dashed ${t09}50;border-radius:12px;padding:16px 20px;">
+                        <div style="font-weight:800;font-size:12.5px;color:${t09};margin-bottom:4px;display:flex;align-items:center;gap:7px;">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Tujuan & Minat Karir
+                        </div>
+                        <p style="font-size:11.5px;color:#475569;margin:0;line-height:1.6;">
+                            Berkomitmen mendedikasikan kemampuan akademik dan keahlian untuk memberikan kontribusi positif secara profesional bagi kemajuan perusahaan.
+                        </p>
+                    </div>
+                </main>
             </div>
         </div>`;
 	}

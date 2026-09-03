@@ -6,23 +6,37 @@ interface Props {
 	onPick: (template: string, color?: string) => void;
 }
 
+type ExperienceCategory = "fresh_no_exp" | "fresh_org" | "professional" | "internship";
+
 interface TemplateItem {
 	id: string;
 	name: string;
 	photo: boolean;
 	columns: 1 | 2;
 	style: "Traditional" | "Creative" | "Contemporary";
+	category: ExperienceCategory[];
 	recommended?: boolean;
 	palettes: string[];
 }
 
 const TEMPLATES: TemplateItem[] = [
 	{
+		id: "cv07_photo",
+		name: "Classic Fresh (With Photo)",
+		photo: true,
+		columns: 2,
+		style: "Traditional",
+		category: ["fresh_no_exp", "fresh_org", "internship"],
+		recommended: true,
+		palettes: ["#664229", "#1F2937", "#00897B", "#1E88E5", "#D84315"],
+	},
+	{
 		id: "cv01_photo",
 		name: "Creative Pro 01 (With Photo)",
 		photo: true,
 		columns: 2,
 		style: "Creative",
+		category: ["fresh_org", "professional"],
 		recommended: true,
 		palettes: ["#689F38", "#00ACC1", "#1E88E5", "#1565C0", "#2E7D32"],
 	},
@@ -32,6 +46,7 @@ const TEMPLATES: TemplateItem[] = [
 		photo: true,
 		columns: 2,
 		style: "Creative",
+		category: ["fresh_org", "professional", "internship"],
 		recommended: true,
 		palettes: ["#212121", "#00897B", "#1565C0", "#4F46E5", "#D84315"],
 	},
@@ -41,6 +56,7 @@ const TEMPLATES: TemplateItem[] = [
 		photo: true,
 		columns: 1,
 		style: "Traditional",
+		category: ["fresh_no_exp", "fresh_org", "professional"],
 		recommended: true,
 		palettes: ["#374151", "#2E7D32", "#0284C7", "#7E22CE", "#C2410C"],
 	},
@@ -50,8 +66,19 @@ const TEMPLATES: TemplateItem[] = [
 		photo: true,
 		columns: 2,
 		style: "Contemporary",
+		category: ["fresh_org", "professional"],
 		recommended: true,
 		palettes: ["#A67B5B", "#5D4037", "#00897B", "#1E88E5", "#D84315"],
+	},
+	{
+		id: "cv07_no",
+		name: "Classic Fresh (No Photo)",
+		photo: false,
+		columns: 2,
+		style: "Traditional",
+		category: ["fresh_no_exp", "fresh_org", "internship"],
+		recommended: false,
+		palettes: ["#664229", "#1F2937", "#00897B", "#1E88E5", "#D84315"],
 	},
 	{
 		id: "cv01_no",
@@ -59,6 +86,7 @@ const TEMPLATES: TemplateItem[] = [
 		photo: false,
 		columns: 2,
 		style: "Creative",
+		category: ["fresh_org", "professional"],
 		recommended: false,
 		palettes: ["#689F38", "#00ACC1", "#1E88E5", "#1565C0", "#2E7D32"],
 	},
@@ -68,6 +96,7 @@ const TEMPLATES: TemplateItem[] = [
 		photo: false,
 		columns: 1,
 		style: "Traditional",
+		category: ["fresh_no_exp", "fresh_org", "professional"],
 		recommended: false,
 		palettes: ["#374151", "#2E7D32", "#0284C7", "#7E22CE", "#C2410C"],
 	},
@@ -77,6 +106,7 @@ const TEMPLATES: TemplateItem[] = [
 		photo: true,
 		columns: 1,
 		style: "Traditional",
+		category: ["fresh_no_exp", "professional"],
 		recommended: false,
 		palettes: ["#111827", "#4B5563", "#047857", "#1D4ED8", "#991B1B"],
 	},
@@ -86,6 +116,7 @@ const TEMPLATES: TemplateItem[] = [
 		photo: true,
 		columns: 1,
 		style: "Contemporary",
+		category: ["fresh_no_exp", "fresh_org", "professional", "internship"],
 		recommended: false,
 		palettes: ["#4F46E5", "#0891B2", "#059669", "#D97706", "#DC2626"],
 	},
@@ -95,6 +126,7 @@ const TEMPLATES: TemplateItem[] = [
 		photo: false,
 		columns: 2,
 		style: "Creative",
+		category: ["fresh_org", "professional", "internship"],
 		recommended: false,
 		palettes: ["#212121", "#00897B", "#1565C0", "#4F46E5", "#D84315"],
 	},
@@ -104,6 +136,7 @@ const TEMPLATES: TemplateItem[] = [
 		photo: false,
 		columns: 2,
 		style: "Contemporary",
+		category: ["fresh_org", "professional"],
 		recommended: false,
 		palettes: ["#A67B5B", "#5D4037", "#00897B", "#1E88E5", "#D84315"],
 	},
@@ -246,6 +279,10 @@ export default function StoreView({ onPick }: Props) {
 
 	// Filter state
 	const [filters, setFilters] = useState({
+		freshNoExp: false,
+		freshOrg: false,
+		professional: false,
+		internship: false,
 		withPhoto: false,
 		withoutPhoto: false,
 		col1: false,
@@ -257,6 +294,10 @@ export default function StoreView({ onPick }: Props) {
 
 	const handleClearFilters = () => {
 		setFilters({
+			freshNoExp: false,
+			freshOrg: false,
+			professional: false,
+			internship: false,
 			withPhoto: false,
 			withoutPhoto: false,
 			col1: false,
@@ -269,6 +310,21 @@ export default function StoreView({ onPick }: Props) {
 
 	// Filter logic
 	const filteredTemplates = TEMPLATES.filter((t) => {
+		// Category / Experience filter
+		const catFilterActive =
+			filters.freshNoExp ||
+			filters.freshOrg ||
+			filters.professional ||
+			filters.internship;
+		if (catFilterActive) {
+			const matchesCategory =
+				(filters.freshNoExp && t.category.includes("fresh_no_exp")) ||
+				(filters.freshOrg && t.category.includes("fresh_org")) ||
+				(filters.professional && t.category.includes("professional")) ||
+				(filters.internship && t.category.includes("internship"));
+			if (!matchesCategory) return false;
+		}
+
 		// Headshot filter
 		const photoFilterActive = filters.withPhoto || filters.withoutPhoto;
 		if (photoFilterActive) {
@@ -386,6 +442,49 @@ export default function StoreView({ onPick }: Props) {
 						</div>
 
 						<div className="space-y-8">
+							{/* Kategori / Pengalaman */}
+							<div>
+								<h4 className="text-base font-bold text-gray-900 mb-3.5">Kategori / Level</h4>
+								<div className="space-y-2.5">
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.freshNoExp}
+											onChange={(e) => setFilters((f) => ({ ...f, freshNoExp: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">Fresh Grad (Nol Pengalaman)</span>
+									</label>
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.freshOrg}
+											onChange={(e) => setFilters((f) => ({ ...f, freshOrg: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">Fresh Grad (Aktif Organisasi)</span>
+									</label>
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.professional}
+											onChange={(e) => setFilters((f) => ({ ...f, professional: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">Profesional / Berpengalaman</span>
+									</label>
+									<label className="flex items-center gap-3 cursor-pointer select-none group">
+										<input
+											type="checkbox"
+											checked={filters.internship}
+											onChange={(e) => setFilters((f) => ({ ...f, internship: e.target.checked }))}
+											className="w-[18px] h-[18px] rounded border-gray-300 text-blue-600 focus:ring-0 cursor-pointer"
+										/>
+										<span className="text-[14px] text-gray-700 group-hover:text-gray-900">Magang / Mahasiswa / SMK</span>
+									</label>
+								</div>
+							</div>
+
 							{/* Headshot */}
 							<div>
 								<h4 className="text-base font-bold text-gray-900 mb-3.5">Headshot</h4>

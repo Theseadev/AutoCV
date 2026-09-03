@@ -533,18 +533,6 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 				</div>
 			</div>
 
-			{/* Floating Quick Preview Button di Mobile */}
-			{mtab === "edit" && (
-				<button
-					type="button"
-					onClick={() => setMtab("preview")}
-					className="lg:hidden fixed bottom-20 right-4 z-30 bg-primary hover:bg-indigo-700 active:bg-indigo-800 text-white px-4 py-2.5 rounded-full font-bold text-xs shadow-xl flex items-center gap-2 border-2 border-white active:scale-95 transition-all cursor-pointer"
-				>
-					<i className="fa-solid fa-eye text-xs"></i>
-					<span>Preview CV</span>
-				</button>
-			)}
-
 			{/* LEFT PANEL: FORM EDITOR */}
 			<div
 				className={`flex flex-col flex-1 min-h-0 h-full w-full lg:w-1/2 lg:flex bg-gray-50 border-r border-gray-200 overflow-y-auto editor-scroll p-4 sm:p-6 lg:p-8 pb-32 ${
@@ -610,7 +598,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 											</h3>
 										</div>
 										<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-											<div className="col-span-2">
+											<div className="sm:col-span-2">
 												<label
 													htmlFor="cv-name"
 													className="block text-sm font-medium text-gray-700 mb-1"
@@ -626,7 +614,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 												/>
 											</div>
 											{has("title") && (
-												<div className="col-span-2">
+												<div className="sm:col-span-2">
 													<label
 														htmlFor="cv-title"
 														className="block text-sm font-medium text-gray-700 mb-1"
@@ -672,7 +660,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 													className={inputCls}
 												/>
 											</div>
-											<div className="col-span-2">
+											<div className="sm:col-span-2">
 												<label
 													htmlFor="cv-address"
 													className="block text-sm font-medium text-gray-700 mb-1"
@@ -839,8 +827,8 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 														>
 															<i className="fa-solid fa-trash text-xs"></i>
 														</button>
-														<div className="grid grid-cols-2 gap-3 mb-2">
-															<div className="col-span-2 sm:col-span-1">
+														<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+															<div className="col-span-1">
 																<label
 																	htmlFor={`exp-company-${index}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"
@@ -857,7 +845,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 																	className={`font-semibold text-sm ${inputSmCls}`}
 																/>
 															</div>
-															<div className="col-span-2 sm:col-span-1">
+															<div className="col-span-1">
 																<label
 																	htmlFor={`exp-role-${index}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"
@@ -974,8 +962,8 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 														>
 															<i className="fa-solid fa-trash text-xs"></i>
 														</button>
-														<div className="grid grid-cols-2 gap-3 mb-2">
-															<div className="col-span-2 sm:col-span-1">
+														<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+															<div className="col-span-1">
 																<label
 																	htmlFor={`pendidikans-instansi-${i}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"
@@ -994,7 +982,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 																	className={`text-sm text-gray-700 ${inputSmCls}`}
 																/>
 															</div>
-															<div className="col-span-2 sm:col-span-1">
+															<div className="col-span-1">
 																<label
 																	htmlFor={`pendidikans-posisi-${i}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"
@@ -1013,7 +1001,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 																	className={`text-sm text-gray-700 ${inputSmCls}`}
 																/>
 															</div>
-															<div className="col-span-2">
+															<div className="sm:col-span-2">
 																<label
 																	htmlFor={`pendidikans-tanggal-${i}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"
@@ -1032,7 +1020,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 																	className={`text-xs text-gray-600 ${inputSmCls}`}
 																/>
 															</div>
-															<div className="col-span-2">
+															<div className="sm:col-span-2">
 																<label
 																	htmlFor={`pendidikans-deskripsi-${i}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"
@@ -1171,8 +1159,8 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 															<i className="fa-solid fa-trash text-xs"></i>
 														</button>
 
-														<div className="grid grid-cols-2 gap-3">
-															<div className="col-span-2">
+														<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+															<div className="sm:col-span-2">
 																<label
 																	htmlFor={`pendidikans-institusi-${i}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"
@@ -1193,7 +1181,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 															</div>
 
 															{hasJurusan && (
-																<div className={hasNilai ? "col-span-1" : "col-span-2"}>
+																<div className="col-span-1">
 																	<label
 																		htmlFor={`pendidikans-jurusan-${i}`}
 																		className="block text-xs font-medium text-gray-500 mb-1"
@@ -1215,7 +1203,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 															)}
 
 															{hasNilai && (
-																<div className={hasJurusan ? "col-span-1" : "col-span-2"}>
+																<div className="col-span-1">
 																	<label
 																		htmlFor={`pendidikans-nilai-${i}`}
 																		className="block text-xs font-medium text-gray-500 mb-1"
@@ -1236,7 +1224,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 																</div>
 															)}
 
-															<div className="col-span-2">
+															<div className="sm:col-span-2">
 																<label
 																	htmlFor={`pendidikans-tahun-${i}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"
@@ -1256,7 +1244,7 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 																/>
 															</div>
 
-															<div className="col-span-2">
+															<div className="sm:col-span-2">
 																<label
 																	htmlFor={`pendidikans-kegiatan-${i}`}
 																	className="block text-xs font-medium text-gray-500 mb-1"

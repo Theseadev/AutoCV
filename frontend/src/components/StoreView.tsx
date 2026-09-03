@@ -261,20 +261,12 @@ export default function StoreView({ onPick }: Props) {
 						</h1>
 
 						<p
-							className="text-sm sm:text-base text-gray-600 max-w-xl leading-relaxed mb-5 sm:mb-8 animate-fade-up"
+							className="text-sm sm:text-base text-gray-600 max-w-xl leading-relaxed mb-6 sm:mb-8 animate-fade-up"
 							style={{ animationDelay: "160ms" }}
 						>
 							Tulis datamu, biarkan AI merapikan kalimatnya. Pilih template,
 							lihat preview A4 langsung, unduh PDF bersih tanpa watermark.
 						</p>
-
-						{/* Preview CV Card di Mobile */}
-						<div
-							className="flex lg:hidden justify-center relative my-5 sm:my-7 animate-fade-up"
-							style={{ animationDelay: "200ms" }}
-						>
-							<TemplateStack />
-						</div>
 
 						<div
 							className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 animate-fade-up"

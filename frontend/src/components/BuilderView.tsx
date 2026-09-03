@@ -88,15 +88,21 @@ export default function BuilderView({
 	useEffect(() => {
 		const update = () => {
 			const area = areaRef.current;
-			// Di HP saat tab editor aktif, area preview tersembunyi — lewati
 			if (
 				!area ||
 				(mtab === "edit" && !window.matchMedia("(min-width: 1024px)").matches)
 			)
 				return;
-			const availW = area.clientWidth - 64; // padding p-8 (32px kiri + kanan)
-			const availH = area.clientHeight - 64; // padding p-8 (32px atas + bawah)
-			setScale(Math.max(0.3, Math.min(availW / 794, availH / 1123, 1)));
+			const isMobile = !window.matchMedia("(min-width: 1024px)").matches;
+			const pad = isMobile ? 16 : 64;
+			const availW = Math.max(100, area.clientWidth - pad);
+			const availH = Math.max(100, area.clientHeight - pad);
+			// Di HP, sesuaikan skala ke lebar layar agar CV pas dan terbaca proporsional
+			if (isMobile) {
+				setScale(Math.max(0.38, Math.min(availW / 794, 0.95)));
+			} else {
+				setScale(Math.max(0.3, Math.min(availW / 794, availH / 1123, 1)));
+			}
 		};
 		update();
 		window.addEventListener("resize", update);
@@ -1605,32 +1611,33 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 					mtab === "edit" ? "hidden" : ""
 				}`}
 			>
-				<div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-gray-200 p-3 sm:p-4 flex justify-between items-center gap-3 shadow-sm">
-					<div className="min-w-0">
+				<div className="sticky top-0 z-10 bg-white/95 backdrop-blur-md border-b border-gray-200 px-3 py-2 sm:p-4 flex items-center justify-between gap-2 shadow-xs">
+					<div className="min-w-0 hidden sm:block">
 						<p className="text-sm font-bold text-gray-900 flex items-center">
 							<span className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
 							Live Preview
 						</p>
 						<p className="text-xs text-gray-500 truncate">{templateLabel}</p>
 					</div>
+
 					<fieldset
 						aria-label="Perbesar atau perkecil pratinjau"
-						className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-1 shrink-0 border-0 m-0 min-w-0"
+						className="flex items-center gap-0.5 bg-gray-100 rounded-lg p-1 shrink-0 border-0 m-0"
 					>
 						<button
 							type="button"
 							onClick={() => zoom(-1)}
 							aria-label="Perkecil pratinjau"
-							className="w-8 h-8 rounded-md text-gray-600 hover:bg-white hover:text-gray-900 flex items-center justify-center transition-colors"
+							className="w-7 h-7 sm:w-8 sm:h-8 rounded-md text-gray-600 hover:bg-white hover:text-gray-900 flex items-center justify-center transition-colors text-xs"
 						>
-							<i className="fa-solid fa-minus text-xs"></i>
+							<i className="fa-solid fa-minus"></i>
 						</button>
 						<button
 							type="button"
 							onClick={() => setUserScale(null)}
 							title="Klik untuk sesuaikan otomatis"
 							aria-label={`Perbesaran saat ini ${Math.round(renderScale * 100)} persen. Klik untuk sesuaikan otomatis`}
-							className="h-8 px-2 rounded-md text-xs font-bold tabular-nums text-gray-700 hover:bg-white transition-colors"
+							className="h-7 sm:h-8 px-2 rounded-md text-xs font-bold tabular-nums text-gray-700 hover:bg-white transition-colors"
 						>
 							{Math.round(renderScale * 100)}%
 						</button>
@@ -1638,26 +1645,27 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 							type="button"
 							onClick={() => zoom(1)}
 							aria-label="Perbesar pratinjau"
-							className="w-8 h-8 rounded-md text-gray-600 hover:bg-white hover:text-gray-900 flex items-center justify-center transition-colors"
+							className="w-7 h-7 sm:w-8 sm:h-8 rounded-md text-gray-600 hover:bg-white hover:text-gray-900 flex items-center justify-center transition-colors text-xs"
 						>
-							<i className="fa-solid fa-plus text-xs"></i>
+							<i className="fa-solid fa-plus"></i>
 						</button>
 					</fieldset>
+
 					<button
 						type="button"
 						onClick={onCheckout}
-						className="shrink-0 bg-green-500 hover:bg-green-600 text-white px-5 sm:px-6 py-2.5 rounded-lg font-bold shadow-lg hover:shadow-xl transition-shadow active:scale-[0.96] flex items-center"
+						className="shrink-0 bg-green-500 hover:bg-green-600 active:bg-green-700 text-white px-3 sm:px-6 py-2 rounded-lg font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all active:scale-[0.96] flex items-center gap-1.5 cursor-pointer ml-auto sm:ml-0"
 					>
-						<i className="fa-brands fa-whatsapp mr-2 text-lg"></i>
-						<span className="hidden sm:inline">Beli PDF Bersih </span>
-						<span className="sm:hidden">Beli </span>({price})
+						<i className="fa-brands fa-whatsapp text-sm sm:text-base"></i>
+						<span className="hidden xs:inline sm:inline">Beli PDF </span>
+						<span>({price})</span>
 					</button>
 				</div>
 
 				<section
 					ref={areaRef}
 					aria-label="Pratinjau CV"
-					className="flex-1 min-h-0 overflow-auto p-6 lg:p-8 flex"
+					className="flex-1 min-h-0 overflow-auto p-2 sm:p-6 lg:p-8 flex justify-center items-start"
 				>
 					<div
 						className="m-auto"

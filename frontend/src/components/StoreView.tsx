@@ -45,7 +45,7 @@ function TemplateStack() {
 		setOrder((o) => [...o.filter((x) => x !== id), id]);
 
 	return (
-		<div className="relative w-[520px] h-[360px] select-none">
+		<div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[520px] h-[300px] sm:h-[350px] select-none mx-auto flex items-center justify-center">
 			{order.map((t, i) => {
 				const dist = order.length - 1 - i;
 				const front = dist === 0;
@@ -55,8 +55,8 @@ function TemplateStack() {
 						type="button"
 						aria-label={`Lihat preview template ${t}`}
 						onClick={() => bringToFront(t)}
-						className={`absolute left-1/2 bottom-0 w-[238px] aspect-[1/1.414] rounded-lg overflow-hidden ring-1 ring-black/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${
-							front ? "shadow-xl" : "shadow-md hover:shadow-lg"
+						className={`absolute left-1/2 bottom-0 w-[210px] sm:w-[238px] aspect-[1/1.414] rounded-xl overflow-hidden ring-1 ring-black/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 bg-white ${
+							front ? "shadow-2xl shadow-indigo-500/15" : "shadow-md hover:shadow-lg"
 						}`}
 						style={{
 							transformOrigin: "50% 100%",
@@ -68,7 +68,7 @@ function TemplateStack() {
 						<CvPaper
 							cv={storeCv}
 							skills={parseSkills(storeSkillsText)}
-							scale={0.3}
+							scale={0.27}
 							template={t}
 							watermark={false}
 						/>
@@ -261,12 +261,20 @@ export default function StoreView({ onPick }: Props) {
 						</h1>
 
 						<p
-							className="text-sm sm:text-base text-gray-600 max-w-xl leading-relaxed mb-6 sm:mb-8 animate-fade-up"
+							className="text-sm sm:text-base text-gray-600 max-w-xl leading-relaxed mb-5 sm:mb-8 animate-fade-up"
 							style={{ animationDelay: "160ms" }}
 						>
 							Tulis datamu, biarkan AI merapikan kalimatnya. Pilih template,
 							lihat preview A4 langsung, unduh PDF bersih tanpa watermark.
 						</p>
+
+						{/* Preview CV Card di Mobile */}
+						<div
+							className="flex lg:hidden justify-center relative my-5 sm:my-7 animate-fade-up"
+							style={{ animationDelay: "200ms" }}
+						>
+							<TemplateStack />
+						</div>
 
 						<div
 							className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 animate-fade-up"
@@ -275,7 +283,7 @@ export default function StoreView({ onPick }: Props) {
 							<button
 								type="button"
 								onClick={scrollToTemplates}
-								className="w-full sm:w-auto bg-primary hover:bg-indigo-700 text-white px-7 py-3 rounded-xl font-bold text-center shadow-sm hover:shadow-md transition-all duration-300 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer"
+								className="w-full sm:w-auto bg-primary hover:bg-indigo-700 text-white px-7 py-3.5 rounded-xl font-bold text-center shadow-sm hover:shadow-md transition-all duration-300 active:scale-[0.96] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 cursor-pointer"
 							>
 								Pilih Template
 							</button>

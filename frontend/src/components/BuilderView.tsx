@@ -1731,22 +1731,43 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 							</p>
 
 							{/* OPSI PILIHAN PRESET CEPAT */}
-							<div className="grid grid-cols-3 gap-2 pb-2">
+							<div className="grid grid-cols-2 gap-2 pb-2">
 								<button
 									type="button"
 									onClick={() => {
 										setEduIncludeJurusan(true);
 										setEduIncludeNilai(true);
 									}}
-									className={`p-2.5 rounded-xl border text-center transition-all ${
+									className={`p-2.5 rounded-xl border text-left transition-all ${
 										eduIncludeJurusan && eduIncludeNilai
 											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
 											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
 									}`}
 								>
-									<div className="text-base mb-1">🎓</div>
-									<div className="text-[11px] font-semibold leading-tight">Kuliah / Diploma</div>
-									<div className="text-[9.5px] text-gray-400 mt-0.5">Jurusan + IPK</div>
+									<div className="flex items-center gap-2">
+										<span className="text-base">🎓</span>
+										<span className="text-xs font-bold leading-tight">Kuliah / Diploma</span>
+									</div>
+									<div className="text-[10px] text-gray-500 mt-1">Jurusan & IPK</div>
+								</button>
+
+								<button
+									type="button"
+									onClick={() => {
+										setEduIncludeJurusan(true);
+										setEduIncludeNilai(true);
+									}}
+									className={`p-2.5 rounded-xl border text-left transition-all ${
+										eduIncludeJurusan && eduIncludeNilai
+											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
+											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
+									}`}
+								>
+									<div className="flex items-center gap-2">
+										<span className="text-base">🏫</span>
+										<span className="text-xs font-bold leading-tight">SMA / SMK (Ada Nilai)</span>
+									</div>
+									<div className="text-[10px] text-gray-500 mt-1">Jurusan & Nilai Rata-rata</div>
 								</button>
 
 								<button
@@ -1755,15 +1776,17 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 										setEduIncludeJurusan(true);
 										setEduIncludeNilai(false);
 									}}
-									className={`p-2.5 rounded-xl border text-center transition-all ${
+									className={`p-2.5 rounded-xl border text-left transition-all ${
 										eduIncludeJurusan && !eduIncludeNilai
 											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
 											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
 									}`}
 								>
-									<div className="text-base mb-1">🏫</div>
-									<div className="text-[11px] font-semibold leading-tight">SMA / SMK</div>
-									<div className="text-[9.5px] text-gray-400 mt-0.5">Jurusan saja</div>
+									<div className="flex items-center gap-2">
+										<span className="text-base">🏫</span>
+										<span className="text-xs font-bold leading-tight">SMA / SMK (Standar)</span>
+									</div>
+									<div className="text-[10px] text-gray-500 mt-1">Hanya Jurusan saja</div>
 								</button>
 
 								<button
@@ -1772,15 +1795,17 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 										setEduIncludeJurusan(false);
 										setEduIncludeNilai(false);
 									}}
-									className={`p-2.5 rounded-xl border text-center transition-all ${
+									className={`p-2.5 rounded-xl border text-left transition-all ${
 										!eduIncludeJurusan && !eduIncludeNilai
 											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
 											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
 									}`}
 								>
-									<div className="text-base mb-1">🏢</div>
-									<div className="text-[11px] font-semibold leading-tight">SMP / SD / Umum</div>
-									<div className="text-[9.5px] text-gray-400 mt-0.5">Tanpa Jurusan</div>
+									<div className="flex items-center gap-2">
+										<span className="text-base">🏢</span>
+										<span className="text-xs font-bold leading-tight">SMP / SD / Umum</span>
+									</div>
+									<div className="text-[10px] text-gray-500 mt-1">Tanpa Jurusan / Nilai</div>
 								</button>
 							</div>
 
@@ -1799,10 +1824,10 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 										</div>
 										<div>
 											<div className="text-xs font-bold text-gray-900">
-												Pakai Jurusan / Program Studi
+												Pakai Jurusan / Peminatan
 											</div>
 											<div className="text-[11px] text-gray-500">
-												Cth: Teknik Komputer dan Jaringan
+												Cth: IPA, IPS, Teknik Komputer dan Jaringan, S1 Manajemen
 											</div>
 										</div>
 									</div>
@@ -1827,10 +1852,10 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 										</div>
 										<div>
 											<div className="text-xs font-bold text-gray-900">
-												Pakai Nilai / IPK
+												Pakai Nilai Rata-rata / IPK
 											</div>
 											<div className="text-[11px] text-gray-500">
-												Cth: IPK 3.85 / 4.00 atau Nilai 89.0
+												Cth: Nilai Rata-rata 88.5, Nilai Ijazah 90, atau IPK 3.85
 											</div>
 										</div>
 									</div>

@@ -10,32 +10,25 @@ type View = "store" | "builder" | "ats" | "admin";
 
 // Daftar template & harga (satu sumber kebenaran untuk toko & checkout)
 const TEMPLATES: Record<string, { label: string; price: number }> = {
-	cv01_photo: { label: "CV Kreatif 01 (Dengan Foto)", price: 25000 },
-	cv01_no: { label: "CV Kreatif 01 (Tanpa Foto)", price: 25000 },
-	cv02_photo: { label: "CV Corporate Standard (Dengan Foto)", price: 20000 },
-	cv02_no: { label: "CV Corporate Standard (Tanpa Foto)", price: 20000 },
-	cv03_photo: { label: "CV Modern Executive (Dengan Foto)", price: 30000 },
-	cv03_no: { label: "CV Modern Executive (Tanpa Foto)", price: 30000 },
-	cv04_photo: { label: "CV Neo Creative (Dengan Foto)", price: 35000 },
-	cv04_no: { label: "CV Neo Creative (Tanpa Foto)", price: 35000 },
-	cv05_photo: { label: "CV Lux Monochrome (Dengan Foto)", price: 25000 },
-	cv05_no: { label: "CV Lux Monochrome (Tanpa Foto)", price: 25000 },
-	cv06_photo: { label: "CV Dev Minimal (Dengan Foto)", price: 30000 },
-	cv06_no: { label: "CV Dev Minimal (Tanpa Foto)", price: 30000 },
-	cv07_photo: { label: "CV Classic Fresh (Dengan Foto)", price: 20000 },
-	cv07_no: { label: "CV Classic Fresh (Tanpa Foto)", price: 20000 },
-	cv08_photo: { label: "CV Peacock Brown (Dengan Foto)", price: 30000 },
-	cv08_no: { label: "CV Peacock Brown (Tanpa Foto)", price: 30000 },
+	cv01: { label: "Template CV 01 (Minimalist ATS)", price: 25000 },
+	cv01_photo: { label: "Template CV 01 (Minimalist ATS)", price: 25000 },
 };
 
 const rupiah = (n: number) => `Rp ${n.toLocaleString("id-ID")}`;
 
 // Draft otomatis: refresh / keluar browser tidak menghilangkan isian
-const DRAFT_KEY = "autocv_draft_v1";
+const DRAFT_KEY = "autocv_draft_v2";
 const loadDraft = () => {
 	try {
-		const raw = localStorage.getItem(DRAFT_KEY);
-		return raw ? (JSON.parse(raw) as { cv?: CvData; skillsText?: string; template?: string }) : null;
+		const raw = localStorage.getItem(DRAFT_KEY) || localStorage.getItem("autocv_draft_v1");
+		if (!raw) return null;
+		const parsed = JSON.parse(raw) as { cv?: CvData; skillsText?: string; template?: string };
+		if (parsed?.cv?.name?.toLowerCase().includes("salva")) {
+			localStorage.removeItem(DRAFT_KEY);
+			localStorage.removeItem("autocv_draft_v1");
+			return null;
+		}
+		return parsed;
 	} catch {
 		return null;
 	}
@@ -45,7 +38,7 @@ const draft = loadDraft();
 export default function App() {
 	const [view, setView] = useState<View>("store");
 	const [template, setTemplate] = useState(
-		draft?.template && TEMPLATES[draft.template] ? draft.template : "cv01_photo",
+		draft?.template && TEMPLATES[draft.template] ? draft.template : "cv01",
 	);
 	const [cv, setCv] = useState<CvData>({ ...storeCv, ...(draft?.cv ?? {}) });
 	const [skillsText, setSkillsText] = useState(draft?.skillsText ?? storeSkillsText);

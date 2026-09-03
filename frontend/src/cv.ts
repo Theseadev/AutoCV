@@ -159,7 +159,7 @@ export const parseSkills = (text: string): ParsedSkill[] =>
 			const parts = line.split(":");
 			return parts.length > 1
 				? { title: parts[0].trim(), desc: parts.slice(1).join(":").trim() }
-				: { title: line.trim(), desc: "Kualifikasi handal" };
+				: { title: line.trim(), desc: "" };
 		});
 
 // Bangun HTML kertas CV dari data (dipakai untuk PDF bersih tanpa watermark)
@@ -1029,12 +1029,13 @@ export const buildCvHtml = (
 		.join("");
 
 	const sertifikatLis01 = (cvData.penghargaans || [])
-		.map(
-			(a) => `
+		.map((a) => {
+			const text = (!a.tahun || a.judul.includes(a.tahun)) ? a.judul : `${a.judul} (${a.tahun})`;
+			return `
             <li style="margin-bottom:6px;line-height:1.45;">
-                <span style="font-weight:500;">${esc(a.judul)}${a.tahun ? ` (${esc(a.tahun)})` : ""}</span>
-            </li>`,
-		)
+                <span style="font-weight:500;">${esc(text)}</span>
+            </li>`;
+		})
 		.join("");
 
 	const pendidikanLis01 = (cvData.pendidikans || [])

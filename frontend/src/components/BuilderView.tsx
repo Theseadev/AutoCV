@@ -1645,14 +1645,14 @@ function EditorialLayout({
 								SERTIFIKAT
 							</div>
 							<ul className="space-y-1.5 text-[11.5px] text-[#333333] pl-4 list-disc leading-snug">
-								{(cv.penghargaans || []).map((a, i) => (
-									<li key={i}>
-										<span className="font-medium">
-											{a.judul}
-											{a.tahun ? ` (${a.tahun})` : ""}
-										</span>
-									</li>
-								))}
+								{(cv.penghargaans || []).map((a, i) => {
+									const text = (!a.tahun || a.judul.includes(a.tahun)) ? a.judul : `${a.judul} (${a.tahun})`;
+									return (
+										<li key={i}>
+											<span className="font-medium">{text}</span>
+										</li>
+									);
+								})}
 							</ul>
 						</div>
 					)}

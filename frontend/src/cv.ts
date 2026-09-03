@@ -87,55 +87,76 @@ export const TEMPLATE_SECTIONS: Record<string, CvSection[]> = {
 	],
 };
 export const defaultCv: CvData = {
-	name: "Putra Jaya",
+	name: "SALVA JAN FERDINO PANGARIBUAN",
 	title: "",
-	phone: "+62 822 8713 4432",
-	email: "pj5695666@gmail.com",
-	address: "Dusun VIII, Ds. Sukaraja, Kec. Simpang Empat, Kab. Asahan, Sumut.",
-	photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
+	phone: "+62 812 9517 2972",
+	email: "pangaribuansalva@gmail.com",
+	address: "Jalan Gang Gasan No. 251",
+	photo: "",
+	themeColor: "#EAEAEA",
 	about:
-		"Saya lulusan SMK jurusan Akuntansi, memiliki pengalaman di bidang pelayanan, operasional toko, dan barista. Terbiasa memberikan pelayanan ramah dan sopan kepada pelanggan serta mampu bekerja sama dalam tim maupun individu. Saya memiliki kemampuan komunikasi yang baik, disiplin, bertanggung jawab, dan mampu memimpin tim kerja. Siap memberikan kontribusi terbaik bagi kemajuan perusahaan.",
+		"Saya lulusan SMK Negeri 3 Depok jurusan Bisnis Konstruksi dan Properti, berpengalaman mengikuti Praktik Kerja Lapangan (PKL) di bidang Health, Safety, and Environment di PT Adhi Persada Gedung. Terbiasa membantu inspeksi keselamatan, dokumentasi temuan lapangan, dan sosialisasi prosedur K3 kepada pekerja proyek. Mampu bekerja di lapangan dengan menjaga standar keselamatan dan berkoordinasi baik bersama tim HSE dan teknis. Memiliki kemampuan komunikasi yang baik, cepat beradaptasi, serta bertanggung jawab dalam menyelesaikan tugas. Siap memberikan kontribusi terbaik dan berkembang bersama perusahaan.",
 	experiences: [
 		{
 			id: 1,
-			company: "Instore distro",
-			role: "Shopkeeper",
-			period: "3 Bulan",
-			desc: "• Melayani pelanggan dengan ramah dan sopan.\n• Menata dan merapikan barang di area toko.\n• Membantu menjaga kebersihan toko serta memastikan stok barang tertata dengan baik.",
+			company: "PT Adhi Persada Gedung",
+			role: "Health, Safety, and Environment - Praktik Kerja Lapangan",
+			period: "2023 - 2024",
+			desc: "Mempelajari penerapan standar K3 (Keselamatan dan Kesehatan Kerja) di lingkungan proyek konstruksi. Membantu melakukan inspeksi rutin area kerja, mendokumentasikan temuan lapangan, serta menyosialisasikan prosedur keselamatan kepada pekerja. Terlibat dalam pencatatan penggunaan alat pelindung diri (APD) dan pelaporan potensi bahaya kepada tim HSE.",
+		},
+	],
+	organisasis: [
+		{
+			id: 1,
+			instansi: "Divisi Humas",
+			posisi: "Anggota Organisasi",
+			tanggal: "2025",
+			deskripsi:
+				"Berperan aktif mendukung kelancaran acara Civil League melalui pembuatan konten, pengelolaan media sosial, serta dokumentasi. Menjaga komunikasi antara panitia, peserta, dan pihak eksternal untuk menciptakan citra acara positif dan profesional.",
 		},
 		{
 			id: 2,
-			company: "PT Pesta Pora Abadi (Gacoan)",
-			role: "Crew - Barista",
-			period: "4 Bulan",
-			desc: "• Menyiapkan dan menyajikan minuman sesuai standar.\n• Memberikan pelayanan yang ramah dan cepat.\n• Menjaga kebersihan area kerja serta memastikan peralatan dan bahan selalu siap digunakan.",
+			instansi: "divisi Korlap",
+			posisi: "Penanggung Jawab",
+			tanggal: "2025",
+			deskripsi:
+				"Mengoordinasikan kegiatan pembuatan tempat sampah di Taman Kanak-Kanak sebagai bagian dari program kebersihan dan kepedulian lingkungan. Mengatur pembagian tugas, pengumpulan bahan, serta memastikan kegiatan berjalan tertib dan sesuai rencana.",
 		},
 		{
 			id: 3,
-			company: "PT Sumber Alfaria Trijaya Tbk",
-			role: "Chief Of Store",
-			period: "2018 - 2024",
-			desc: "• Mengawasi kegiatan operasional toko.\n• Mengatur barang serta memastikan ketersediaan stok.\n• Memimpin dan mengoordinasikan tim kerja untuk memberikan pelayanan terbaik kepada pelanggan.",
+			instansi: "Divisi Perlengkapan",
+			posisi: "Anggota Organisasi",
+			tanggal: "2025",
+			deskripsi:
+				"Mendukung kelancaran acara akhir ospek angkatan Sipil 2024 yang diselenggarakan di villa. Menyiapkan perlengkapan kegiatan, mengatur kebutuhan logistik, serta memastikan alat dan fasilitas pendukung tersedia dan berfungsi baik selama acara.",
 		},
 	],
 	pendidikans: [
 		{
 			id: 1,
-			institusi: "SMK Harapan Simpang Empat",
-			jurusan: "Akuntansi",
-			tahun: "2015 - 2017",
-			kegiatan: "• Mengikuti praktik administrasi keuangan dan pembukuan.\n• Melaksanakan praktik kerja lapangan di perusahaan untuk mengasah keterampilan akuntansi dan administrasi.",
+			institusi: "SMK Negeri 3 Depok",
+			jurusan: "Bisnis Konstruksi dan Properti",
+			tahun: "2021 - 2024",
+			kegiatan:
+				"Mempelajari dasar-dasar konstruksi bangunan, manajemen proyek, dan perencanaan properti. Mengikuti praktik gambar teknik, pengukuran lahan, dan penyusunan Rencana Anggaran Biaya (RAB) secara terstruktur. Terlibat aktif dalam praktik kerja lapangan (PKL) untuk memahami proses pembangunan dan pengelolaan properti secara langsung.",
 		},
 	],
-	penghargaans: [
-		{ id: 1, judul: "Sertifikat Melukis 2016", tahun: "2016" },
-		{ id: 2, judul: "Sertifikat Paskibra Tahun 2015", tahun: "2015" },
-		{ id: 3, judul: "Sertifikat Badminton 2014", tahun: "2014" },
-	],
+	penghargaans: [],
 };
 
-export const defaultSkillsText =
-	"Terampil mengoperasikan komputer untuk mendukung pekerjaan administrasi.\nMemiliki kemampuan dalam manajemen tim secara efektif.\nMampu bekerja sama dalam tim maupun individu.\nMampu memberikan pelayanan prima kepada pelanggan.\nTerampil memimpin briefing dan menyampaikan arahan kerja.\nMampu menetapkan target kerja dan memotivasi tim.";
+export const defaultSkillsText = `Pribadi:
+• Mampu berkomunikasi dengan jelas, sopan dan efektif.
+• Disiplin, bertanggung jawab, serta memiliki etika kerja yang baik.
+• Cepat beradaptasi dalam berbagai situasi kerja.
+• Teliti dalam menyelesaikan tugas dan konsisten menjaga kerapian.
+• Cepat memahami hal baru dan semangat belajar.
+
+Profesional:
+• Terbiasa bekerja sama dalam tim maupun secara individu.
+• Mampu mengatur waktu dengan baik untuk menyelesaikan tugas tepat waktu.
+• Mampu menangani beberapa tugas secara bersamaan (multitasking).
+• Memiliki keterampilan pelayanan pelanggan yang ramah dan responsif.
+• Terbiasa bekerja di bawah tekanan dan tetap menjaga kualitas kerja.`;
 
 export const storeSkillsText = defaultSkillsText;
 
@@ -1017,158 +1038,163 @@ export const buildCvHtml = (
         </div>`;
 	}
 
-	// cv01 Putra Jaya: Capsule Header, Left column solid banners, Right column underlined headers, Bottom waves
-	const t01 = cvData.themeColor || "#363636";
-	const skillLis01 = skills
+	// cv01 Salva Jan Ferdino Pangaribuan Layout
+	const headerBg01 = cvData.themeColor || "#EAEAEA";
+
+	// Parse Skills into Pribadi and Profesional lists
+	const rawSkillLines = (skillsText || "")
+		.split("\n")
+		.map((l) => l.trim())
+		.filter(Boolean);
+
+	let pribadiSkills: string[] = [];
+	let profesionalSkills: string[] = [];
+	let currentCat: "pribadi" | "profesional" = "pribadi";
+
+	for (const line of rawSkillLines) {
+		if (line.toLowerCase().startsWith("pribadi")) {
+			currentCat = "pribadi";
+			const rest = line.replace(/^pribadi[:\-]?\s*/i, "").trim();
+			if (rest) pribadiSkills.push(rest.replace(/^[•\-\*]\s*/, ""));
+		} else if (line.toLowerCase().startsWith("profesional")) {
+			currentCat = "profesional";
+			const rest = line.replace(/^profesional[:\-]?\s*/i, "").trim();
+			if (rest) profesionalSkills.push(rest.replace(/^[•\-\*]\s*/, ""));
+		} else {
+			const clean = line.replace(/^[•\-\*]\s*/, "").trim();
+			if (clean) {
+				if (currentCat === "pribadi") {
+					pribadiSkills.push(clean);
+				} else {
+					profesionalSkills.push(clean);
+				}
+			}
+		}
+	}
+
+	if (pribadiSkills.length > 0 && profesionalSkills.length === 0) {
+		const half = Math.ceil(pribadiSkills.length / 2);
+		profesionalSkills = pribadiSkills.slice(half);
+		pribadiSkills = pribadiSkills.slice(0, half);
+	}
+
+	const sectionBar01 = (title: string, customWidth?: string) => `
+        <div style="background:${headerBg01};padding:5px 12px;margin-bottom:10px;${customWidth ? `width:${customWidth};` : "width:100%;"}box-sizing:border-box;">
+            <span style="font-weight:700;font-size:12.5px;color:#111111;text-transform:uppercase;letter-spacing:1px;">${title}</span>
+        </div>`;
+
+	const expLis01 = (cvData.experiences || [])
 		.map(
-			(s) => `
-            <li style="margin-bottom:6px;line-height:1.35;">
-                <span style="font-weight:400;color:#222222;">${esc(s.title)}${s.desc ? `: ${esc(s.desc)}` : ""}</span>
-            </li>`,
+			(e) => `
+        <div style="display:flex;gap:24px;margin-bottom:12px;font-size:11px;">
+            <div style="width:170px;flex-shrink:0;">
+                <div style="font-weight:700;color:#111111;line-height:1.2;">${esc(e.company)}</div>
+                <div style="color:#555555;font-size:10.5px;margin-top:2px;">${esc(e.period)}</div>
+            </div>
+            <div style="flex:1;">
+                <div style="font-weight:700;color:#111111;line-height:1.2;">${esc(e.role)}</div>
+                <div style="color:#333333;font-size:10.5px;line-height:1.5;text-align:justify;margin-top:3px;">${esc(e.desc)}</div>
+            </div>
+        </div>`,
 		)
 		.join("");
 
-	const sertifikatLis01 = (cvData.penghargaans || [])
-		.map((a) => {
-			const text = (!a.tahun || a.judul.includes(a.tahun)) ? a.judul : `${a.judul} ${a.tahun}`;
-			return `
-            <li style="margin-bottom:6px;line-height:1.35;">
-                <span style="font-weight:400;color:#222222;">${esc(text)}</span>
-            </li>`;
-		})
+	const orgLis01 = (cvData.organisasis || [])
+		.map(
+			(o) => `
+        <div style="display:flex;gap:24px;margin-bottom:10px;font-size:11px;">
+            <div style="width:170px;flex-shrink:0;">
+                <div style="font-weight:700;color:#111111;line-height:1.2;">${esc(o.instansi)}</div>
+                <div style="color:#555555;font-size:10.5px;margin-top:2px;">${esc(o.tanggal)}</div>
+            </div>
+            <div style="flex:1;">
+                <div style="font-weight:700;color:#111111;line-height:1.2;">${esc(o.posisi)}</div>
+                <div style="color:#333333;font-size:10.5px;line-height:1.5;text-align:justify;margin-top:3px;">${esc(o.deskripsi)}</div>
+            </div>
+        </div>`,
+		)
 		.join("");
 
-	const pendidikanLis01 = (cvData.pendidikans || [])
-		.map((pd) => {
-			const bullets = (pd.kegiatan || "")
-				.split("\n")
-				.filter(Boolean)
-				.map((k) => `<li style="margin-bottom:4px;line-height:1.35;">${esc(k.replace(/^[•\-\*]\s*/, ""))}</li>`)
-				.join("");
-			return `
-            <div style="margin-bottom:10px;font-size:11.5px;">
-                <div style="display:flex;justify-content:space-between;align-items:baseline;font-weight:700;color:#111111;">
-                    <span>${esc(pd.institusi)}</span>
-                    <span style="font-size:11.5px;font-weight:700;">${esc(pd.tahun)}</span>
-                </div>
-                <div style="font-size:11px;font-weight:400;color:#444444;margin-bottom:2px;">${esc(pd.jurusan)}</div>
-                ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:2px 0 0;font-size:10.5px;color:#333333;line-height:1.35;">${bullets}</ul>` : ""}
-            </div>`;
-		})
+	const eduLis01 = (cvData.pendidikans || [])
+		.map(
+			(pd) => `
+        <div style="display:flex;gap:24px;margin-bottom:10px;font-size:11px;">
+            <div style="width:170px;flex-shrink:0;">
+                <div style="font-weight:700;color:#111111;line-height:1.2;">${esc(pd.institusi)}</div>
+                <div style="color:#555555;font-size:10.5px;margin-top:2px;">${esc(pd.tahun)}</div>
+            </div>
+            <div style="flex:1;">
+                <div style="font-weight:700;color:#111111;line-height:1.2;">${esc(pd.jurusan)}</div>
+                <div style="color:#333333;font-size:10.5px;line-height:1.5;text-align:justify;margin-top:3px;">${esc(pd.kegiatan || "")}</div>
+            </div>
+        </div>`,
+		)
 		.join("");
-
-	const expLis01 = (cvData.experiences || [])
-		.map((e) => {
-			const bullets = (e.desc || "")
-				.split("\n")
-				.filter(Boolean)
-				.map((d) => `<li style="margin-bottom:4px;line-height:1.35;">${esc(d.replace(/^[•\-\*]\s*/, ""))}</li>`)
-				.join("");
-			return `
-            <div style="margin-bottom:10px;font-size:11.5px;">
-                <div style="display:flex;justify-content:space-between;align-items:baseline;font-weight:700;color:#111111;">
-                    <span>${esc(e.company)}</span>
-                    <span style="font-size:11.5px;font-weight:700;">${esc(e.period)}</span>
-                </div>
-                <div style="font-size:11px;font-weight:400;color:#444444;margin-bottom:2px;">${esc(e.role)}</div>
-                ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:2px 0 0;font-size:10.5px;color:#333333;line-height:1.35;">${bullets}</ul>` : ""}
-            </div>`;
-		})
-		.join("");
-
-	const sideHeader01 = (title: string) => `
-        <div style="background:${t01};color:white;text-align:center;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;margin-bottom:10px;">
-            ${title}
-        </div>`;
-
-	const mainHeader01 = (title: string) => `
-        <div style="font-weight:700;font-size:15.5px;color:#111111;text-transform:uppercase;letter-spacing:0.5px;padding-bottom:4px;margin-bottom:8px;border-bottom:1.5px solid ${t01};">
-            ${title}
-        </div>`;
 
 	return `
-        <div class="cv-paper" style="width:794px;height:1123px;background:#FFFFFF;color:#222222;font-family:'Inter',sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;">
-            <!-- TOP HEADER -->
-            <div style="width:100%;padding-top:24px;">
-                <div style="height:160px;background:${t01};border-radius:0 80px 80px 0;display:flex;align-items:center;padding-left:40px;padding-right:48px;gap:28px;width:calc(100% - 48px);">
-                    <div style="width:115px;height:115px;border-radius:50%;border:5px solid #FFFFFF;overflow:hidden;flex-shrink:0;background:#FFFFFF;box-shadow:0 4px 10px rgba(0,0,0,0.15);">
-                        ${
-                            cvData.photo
-                                ? `<img src="${cvData.photo}" style="width:100%;height:100%;object-fit:cover;object-position:top;" />`
-                                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:32px;color:#4B5563;background:#E5E7EB;">${(name || "PJ").slice(0, 2).toUpperCase()}</div>`
-                        }
-                    </div>
-                    <div style="flex:1;min-width:0;">
-                        <h1 style="color:#FFFFFF;font-size:38px;font-weight:700;letter-spacing:0px;margin:0;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</h1>
-                        ${title ? `<div style="color:#E5E7EB;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:4px;">${title}</div>` : ""}
-                    </div>
+        <div class="cv-paper" style="width:794px;height:1123px;background:#FFFFFF;color:#222222;font-family:'Inter',sans-serif;position:relative;overflow:hidden;box-sizing:border-box;padding:42px 48px 36px;display:flex;flex-direction:column;justify-content:flex-start;">
+            <!-- HEADER -->
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:28px;">
+                <div style="max-width:440px;">
+                    <h1 style="font-weight:900;font-size:26px;color:#111111;letter-spacing:1.5px;line-height:1.15;margin:0;text-transform:uppercase;">
+                        ${name ? esc(name) : "SALVA JAN FERDINO<br/>PANGARIBUAN"}
+                    </h1>
+                </div>
+                <div style="font-size:11.5px;color:#333333;line-height:1.6;display:flex;flex-direction:column;gap:1px;">
+                    ${phone ? `<div>&bull; ${esc(phone)}</div>` : ""}
+                    ${email ? `<div>&bull; ${esc(email)}</div>` : ""}
+                    ${address ? `<div>&bull; ${esc(address)}</div>` : ""}
                 </div>
             </div>
 
-            <!-- BODY 2-COLUMN -->
-            <div style="padding:28px 48px 8px;display:flex;gap:36px;flex:1;position:relative;z-index:10;">
-                <!-- LEFT COLUMN -->
-                <div style="width:240px;flex-shrink:0;display:flex;flex-direction:column;gap:20px;">
-                    <!-- KONTAK -->
-                    <div>
-                        ${sideHeader01("KONTAK")}
-                        <div style="font-size:11px;color:#222222;display:flex;flex-direction:column;gap:8px;padding-left:4px;">
-                            ${phone ? `<div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-phone" style="width:14px;text-align:center;font-size:12px;color:#000;"></i><span>${phone}</span></div>` : ""}
-                            ${email ? `<div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-envelope" style="width:14px;text-align:center;font-size:12px;color:#000;"></i><span style="word-break:break-all;">${email}</span></div>` : ""}
-                            ${address ? `<div style="display:flex;align-items:flex-start;gap:10px;"><i class="fa-solid fa-location-dot" style="width:14px;text-align:center;font-size:13px;margin-top:2px;color:#000;"></i><span style="line-height:1.4;">${address}</span></div>` : ""}
+            <!-- TENTANG SAYA -->
+            <div style="margin-bottom:18px;">
+                ${sectionBar01("TENTANG SAYA")}
+                <p style="font-size:10.5px;color:#333333;line-height:1.55;text-align:justify;margin:0;padding:0 2px;">${about}</p>
+            </div>
+
+            <!-- PENGALAMAN KERJA -->
+            ${(cvData.experiences || []).length ? `
+            <div style="margin-bottom:18px;">
+                ${sectionBar01("PENGALAMAN KERJA")}
+                ${expLis01}
+            </div>` : ""}
+
+            <!-- PENGALAMAN ORGANISASI -->
+            ${(cvData.organisasis || []).length ? `
+            <div style="margin-bottom:18px;">
+                ${sectionBar01("PENGALAMAN ORGANISASI")}
+                ${orgLis01}
+            </div>` : ""}
+
+            <!-- PENDIDIKAN -->
+            ${(cvData.pendidikans || []).length ? `
+            <div style="margin-bottom:18px;">
+                ${sectionBar01("PENDIDIKAN")}
+                ${eduLis01}
+            </div>` : ""}
+
+            <!-- KEAHLIAN -->
+            <div>
+                <div style="display:flex;gap:24px;align-items:flex-start;">
+                    <div style="width:170px;flex-shrink:0;">
+                        ${sectionBar01("KEAHLIAN", "170px")}
+                    </div>
+                    <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:24px;font-size:10.5px;color:#333333;padding-top:4px;">
+                        <div>
+                            <div style="font-weight:700;color:#111111;margin-bottom:6px;font-size:11px;">Pribadi</div>
+                            <ul style="list-style:disc;padding-left:14px;margin:0;line-height:1.45;">
+                                ${pribadiSkills.map((s) => `<li style="margin-bottom:4px;">${esc(s)}</li>`).join("")}
+                            </ul>
+                        </div>
+                        <div>
+                            <div style="font-weight:700;color:#111111;margin-bottom:6px;font-size:11px;">Profesional</div>
+                            <ul style="list-style:disc;padding-left:14px;margin:0;line-height:1.45;">
+                                ${profesionalSkills.map((s) => `<li style="margin-bottom:4px;">${esc(s)}</li>`).join("")}
+                            </ul>
                         </div>
                     </div>
-
-                    <!-- KEMAMPUAN -->
-                    <div>
-                        ${sideHeader01("KEMAMPUAN")}
-                        <ul style="list-style:disc;padding-left:16px;margin:0;font-size:10.5px;color:#222222;">
-                            ${skillLis01}
-                        </ul>
-                    </div>
-
-                    <!-- SERTIFIKAT -->
-                    ${(cvData.penghargaans || []).length ? `
-                    <div>
-                        ${sideHeader01("SERTIFIKAT")}
-                        <ul style="list-style:disc;padding-left:16px;margin:0;font-size:11px;color:#222222;">
-                            ${sertifikatLis01}
-                        </ul>
-                    </div>` : ""}
                 </div>
-
-                <!-- RIGHT COLUMN -->
-                <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
-                    <!-- TENTANG SAYA -->
-                    <div>
-                        ${mainHeader01("TENTANG SAYA")}
-                        <p style="font-size:11px;color:#333333;line-height:1.5;text-align:justify;margin:0;white-space:pre-line;">${about}</p>
-                    </div>
-
-                    <!-- PENDIDIKAN -->
-                    ${(cvData.pendidikans || []).length ? `
-                    <div>
-                        ${mainHeader01("PENDIDIKAN")}
-                        ${pendidikanLis01}
-                    </div>` : ""}
-
-                    <!-- PENGALAMAN KERJA -->
-                    ${(cvData.experiences || []).length ? `
-                    <div>
-                        ${mainHeader01("PENGALAMAN KERJA")}
-                        ${expLis01}
-                    </div>` : ""}
-                </div>
-            </div>
-
-            <!-- BOTTOM DECORATIVE WAVES -->
-            <div style="width:100%;height:95px;position:relative;margin-top:auto;overflow:hidden;">
-                <svg viewBox="0 0 794 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
-                    <path d="M0 35 C 70 45, 140 85, 210 100 L 0 100 Z" fill="#C5B8A5"/>
-                    <path d="M0 60 C 50 68, 110 88, 160 100 L 0 100 Z" fill="${t01}"/>
-                    <path d="M520 100 C 620 75, 710 25, 794 0 L 794 100 Z" fill="#C5B8A5"/>
-                    <path d="M600 100 C 670 85, 730 55, 794 30 L 794 100 Z" fill="${t01}"/>
-                </svg>
             </div>
         </div>`;
 };

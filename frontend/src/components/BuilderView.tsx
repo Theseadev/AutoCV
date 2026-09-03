@@ -1541,243 +1541,195 @@ function EditorialLayout({
 	cv,
 	skills,
 }: { cv: CvData; skills: ParsedSkill[] }) {
-	const themeColor = cv.themeColor || "#363636";
+	const themeColor = cv.themeColor || "#EAEAEA";
+
+	// Parse raw skills into Pribadi & Profesional
+	const allSkills = skills.map((s) => (s.desc ? `${s.title}: ${s.desc}` : s.title));
+	let pribadiSkills: string[] = [];
+	let profesionalSkills: string[] = [];
+	let currentCat: "pribadi" | "profesional" = "pribadi";
+
+	for (const s of allSkills) {
+		if (s.toLowerCase().startsWith("pribadi")) {
+			currentCat = "pribadi";
+			const rest = s.replace(/^pribadi[:\-]?\s*/i, "").trim();
+			if (rest) pribadiSkills.push(rest.replace(/^[•\-\*]\s*/, ""));
+		} else if (s.toLowerCase().startsWith("profesional")) {
+			currentCat = "profesional";
+			const rest = s.replace(/^profesional[:\-]?\s*/i, "").trim();
+			if (rest) profesionalSkills.push(rest.replace(/^[•\-\*]\s*/, ""));
+		} else {
+			const clean = s.replace(/^[•\-\*]\s*/, "").trim();
+			if (clean) {
+				if (currentCat === "pribadi") {
+					pribadiSkills.push(clean);
+				} else {
+					profesionalSkills.push(clean);
+				}
+			}
+		}
+	}
+
+	if (pribadiSkills.length > 0 && profesionalSkills.length === 0) {
+		const half = Math.ceil(pribadiSkills.length / 2);
+		profesionalSkills = pribadiSkills.slice(half);
+		pribadiSkills = pribadiSkills.slice(0, half);
+	}
+
+	const sectionBar = (title: string, customWidth?: string) => (
+		<div
+			className="py-1 px-3 mb-2.5 flex items-center"
+			style={{
+				backgroundColor: themeColor,
+				width: customWidth || "100%",
+			}}
+		>
+			<span className="font-bold text-[12.5px] uppercase tracking-wider text-[#111111]">
+				{title}
+			</span>
+		</div>
+	);
 
 	return (
-		<div className="w-[794px] min-h-[1123px] h-[1123px] bg-white text-[#222222] font-['Inter',sans-serif] relative overflow-hidden flex flex-col justify-between select-none">
-			{/* TOP HEADER */}
-			<div className="w-full pt-6">
-				{/* Dark Capsule Banner with top white space */}
-				<div
-					className="h-[160px] rounded-r-[80px] flex items-center pl-10 pr-12 gap-7 shadow-xs"
-					style={{
-						backgroundColor: themeColor,
-						width: "calc(100% - 48px)",
-					}}
-				>
-					{/* Profile Photo - 100% enclosed within banner */}
-					<div className="w-[115px] h-[115px] rounded-full border-[5px] border-white overflow-hidden shrink-0 shadow-md bg-white">
-						{cv.photo ? (
-							<img
-								src={cv.photo}
-								alt={cv.name || "Foto"}
-								className="w-full h-full object-cover object-top"
-							/>
-						) : (
-							<div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-700 font-bold text-3xl">
-								{(cv.name || "PJ").slice(0, 2).toUpperCase()}
-							</div>
-						)}
-					</div>
-
-					{/* Candidate Name */}
-					<div className="flex-1 min-w-0">
-						<h1 className="text-white text-[38px] font-bold tracking-normal leading-tight truncate">
-							{cv.name || "Putra Jaya"}
-						</h1>
-						{cv.title && (
-							<p className="text-gray-200 text-sm font-medium tracking-wider uppercase mt-1 truncate">
-								{cv.title}
-							</p>
-						)}
-					</div>
+		<div className="w-[794px] min-h-[1123px] h-[1123px] bg-white text-[#222222] font-['Inter',sans-serif] relative overflow-hidden flex flex-col justify-start select-none px-12 pt-11 pb-8 box-border">
+			{/* HEADER: NAME ON LEFT, BULLETED CONTACT ON RIGHT */}
+			<div className="flex justify-between items-start mb-7">
+				<div className="max-w-[440px]">
+					<h1 className="font-black text-[26px] text-[#111111] tracking-[1.5px] leading-tight uppercase">
+						{cv.name || "SALVA JAN FERDINO\nPANGARIBUAN"}
+					</h1>
+				</div>
+				<div className="text-[11.5px] text-[#333333] leading-relaxed space-y-0.5">
+					{cv.phone && <div>&bull; {cv.phone}</div>}
+					{cv.email && <div>&bull; {cv.email}</div>}
+					{cv.address && <div>&bull; {cv.address}</div>}
 				</div>
 			</div>
 
-			{/* BODY CONTENT: 2-COLUMN GRID */}
-			<div className="px-12 pt-7 pb-2 grid grid-cols-[240px_1fr] gap-9 flex-1 z-10">
-				{/* LEFT COLUMN */}
-				<div className="space-y-5">
-					{/* KONTAK */}
-					<div>
-						<div
-							className="text-white text-center font-bold text-[13px] uppercase tracking-wider py-1 px-3 mb-2.5 shadow-2xs"
-							style={{ backgroundColor: themeColor }}
-						>
-							KONTAK
-						</div>
-						<div className="space-y-2 text-[11px] text-[#222222] pl-1">
-							{cv.phone && (
-								<div className="flex items-center gap-2.5">
-									<i className="fa-solid fa-phone text-[12px] w-4 text-center shrink-0 text-black"></i>
-									<span className="font-normal">{cv.phone}</span>
-								</div>
-							)}
-							{cv.email && (
-								<div className="flex items-center gap-2.5">
-									<i className="fa-solid fa-envelope text-[12px] w-4 text-center shrink-0 text-black"></i>
-									<span className="font-normal break-all">{cv.email}</span>
-								</div>
-							)}
-							{cv.address && (
-								<div className="flex items-start gap-2.5">
-									<i className="fa-solid fa-location-dot text-[13px] w-4 text-center shrink-0 mt-0.5 text-black"></i>
-									<span className="font-normal leading-snug">{cv.address}</span>
-								</div>
-							)}
-						</div>
-					</div>
+			{/* TENTANG SAYA */}
+			<div className="mb-4">
+				{sectionBar("TENTANG SAYA")}
+				<p className="text-[10.5px] text-[#333333] leading-[1.55] text-justify m-0 px-0.5 whitespace-pre-line">
+					{cv.about || "Ringkasan profil..."}
+				</p>
+			</div>
 
-					{/* KEMAMPUAN */}
-					<div>
-						<div
-							className="text-white text-center font-bold text-[13px] uppercase tracking-wider py-1 px-3 mb-2.5 shadow-2xs"
-							style={{ backgroundColor: themeColor }}
-						>
-							KEMAMPUAN
-						</div>
-						<ul className="space-y-1.5 text-[10.5px] text-[#222222] pl-4 list-disc leading-[1.35]">
-							{skills.map((s, i) => (
-								<li key={i}>
-									<span className="font-normal">
-										{s.title}
-										{s.desc ? `: ${s.desc}` : ""}
-									</span>
-								</li>
-							))}
-						</ul>
-					</div>
-
-					{/* SERTIFIKAT */}
-					{(cv.penghargaans || []).length > 0 && (
-						<div>
-							<div
-								className="text-white text-center font-bold text-[13px] uppercase tracking-wider py-1 px-3 mb-2.5 shadow-2xs"
-								style={{ backgroundColor: themeColor }}
-							>
-								SERTIFIKAT
+			{/* PENGALAMAN KERJA */}
+			{(cv.experiences || []).length > 0 && (
+				<div className="mb-4">
+					{sectionBar("PENGALAMAN KERJA")}
+					<div className="space-y-3">
+						{(cv.experiences || []).map((exp, i) => (
+							<div key={i} className="flex gap-6 text-[11px]">
+								<div className="w-[170px] shrink-0">
+									<div className="font-bold text-[#111111] leading-tight">
+										{exp.company}
+									</div>
+									<div className="text-[#555555] text-[10.5px] mt-0.5">
+										{exp.period}
+									</div>
+								</div>
+								<div className="flex-1">
+									<div className="font-bold text-[#111111] leading-tight">
+										{exp.role}
+									</div>
+									<div className="text-[#333333] text-[10.5px] leading-[1.5] text-justify mt-0.5 whitespace-pre-line">
+										{exp.desc}
+									</div>
+								</div>
 							</div>
-							<ul className="space-y-1.5 text-[11px] text-[#222222] pl-4 list-disc leading-snug">
-								{(cv.penghargaans || []).map((a, i) => {
-									const text = (!a.tahun || a.judul.includes(a.tahun)) ? a.judul : `${a.judul} ${a.tahun}`;
-									return (
-										<li key={i}>
-											<span className="font-normal">{text}</span>
-										</li>
-									);
-								})}
+						))}
+					</div>
+				</div>
+			)}
+
+			{/* PENGALAMAN ORGANISASI */}
+			{(cv.organisasis || []).length > 0 && (
+				<div className="mb-4">
+					{sectionBar("PENGALAMAN ORGANISASI")}
+					<div className="space-y-2.5">
+						{(cv.organisasis || []).map((org, i) => (
+							<div key={i} className="flex gap-6 text-[11px]">
+								<div className="w-[170px] shrink-0">
+									<div className="font-bold text-[#111111] leading-tight">
+										{org.instansi}
+									</div>
+									<div className="text-[#555555] text-[10.5px] mt-0.5">
+										{org.tanggal}
+									</div>
+								</div>
+								<div className="flex-1">
+									<div className="font-bold text-[#111111] leading-tight">
+										{org.posisi}
+									</div>
+									<div className="text-[#333333] text-[10.5px] leading-[1.5] text-justify mt-0.5 whitespace-pre-line">
+										{org.deskripsi}
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+
+			{/* PENDIDIKAN */}
+			{(cv.pendidikans || []).length > 0 && (
+				<div className="mb-4">
+					{sectionBar("PENDIDIKAN")}
+					<div className="space-y-2.5">
+						{(cv.pendidikans || []).map((pd, i) => (
+							<div key={i} className="flex gap-6 text-[11px]">
+								<div className="w-[170px] shrink-0">
+									<div className="font-bold text-[#111111] leading-tight">
+										{pd.institusi}
+									</div>
+									<div className="text-[#555555] text-[10.5px] mt-0.5">
+										{pd.tahun}
+									</div>
+								</div>
+								<div className="flex-1">
+									<div className="font-bold text-[#111111] leading-tight">
+										{pd.jurusan}
+									</div>
+									<div className="text-[#333333] text-[10.5px] leading-[1.5] text-justify mt-0.5 whitespace-pre-line">
+										{pd.kegiatan}
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
+
+			{/* KEAHLIAN */}
+			<div>
+				<div className="flex gap-6 items-start">
+					<div className="w-[170px] shrink-0">
+						{sectionBar("KEAHLIAN", "170px")}
+					</div>
+					<div className="flex-1 grid grid-cols-2 gap-6 text-[10.5px] text-[#333333] pt-1">
+						<div>
+							<div className="font-bold text-[#111111] text-[11px] mb-1.5">
+								Pribadi
+							</div>
+							<ul className="list-disc pl-3.5 space-y-1 leading-[1.45]">
+								{pribadiSkills.map((s, i) => (
+									<li key={i}>{s}</li>
+								))}
 							</ul>
 						</div>
-					)}
-				</div>
-
-				{/* RIGHT COLUMN */}
-				<div className="space-y-4">
-					{/* TENTANG SAYA */}
-					<div>
-						<div
-							className="font-bold text-[15.5px] text-[#111111] uppercase tracking-wide pb-1 mb-2 border-b-[1.5px]"
-							style={{ borderColor: themeColor }}
-						>
-							TENTANG SAYA
+						<div>
+							<div className="font-bold text-[#111111] text-[11px] mb-1.5">
+								Profesional
+							</div>
+							<ul className="list-disc pl-3.5 space-y-1 leading-[1.45]">
+								{profesionalSkills.map((s, i) => (
+									<li key={i}>{s}</li>
+								))}
+							</ul>
 						</div>
-						<p className="text-[11px] text-[#333333] leading-[1.5] text-justify whitespace-pre-line m-0">
-							{cv.about || "Ringkasan profil..."}
-						</p>
 					</div>
-
-					{/* PENDIDIKAN */}
-					{(cv.pendidikans || []).length > 0 && (
-						<div>
-							<div
-								className="font-bold text-[15.5px] text-[#111111] uppercase tracking-wide pb-1 mb-2 border-b-[1.5px]"
-								style={{ borderColor: themeColor }}
-							>
-								PENDIDIKAN
-							</div>
-							<div className="space-y-2.5">
-								{(cv.pendidikans || []).map((pd, i) => (
-									<div key={i} className="text-[11.5px]">
-										<div className="flex justify-between items-baseline font-bold text-[#111111]">
-											<span>{pd.institusi}</span>
-											<span className="text-[11.5px] font-bold">{pd.tahun}</span>
-										</div>
-										<div className="text-[11px] font-normal text-[#444444] mb-0.5">
-											{pd.jurusan}
-										</div>
-										{pd.kegiatan && (
-											<ul className="list-disc pl-4 space-y-1 text-[10.5px] text-[#333333] leading-[1.35]">
-												{pd.kegiatan
-													.split("\n")
-													.filter(Boolean)
-													.map((k, ki) => (
-														<li key={ki}>{k.replace(/^[•\-\*]\s*/, "")}</li>
-													))}
-											</ul>
-										)}
-									</div>
-								))}
-							</div>
-						</div>
-					)}
-
-					{/* PENGALAMAN KERJA */}
-					{(cv.experiences || []).length > 0 && (
-						<div>
-							<div
-								className="font-bold text-[15.5px] text-[#111111] uppercase tracking-wide pb-1 mb-2 border-b-[1.5px]"
-								style={{ borderColor: themeColor }}
-							>
-								PENGALAMAN KERJA
-							</div>
-							<div className="space-y-2.5">
-								{(cv.experiences || []).map((exp, i) => (
-									<div key={i} className="text-[11.5px]">
-										<div className="flex justify-between items-baseline font-bold text-[#111111]">
-											<span>{exp.company}</span>
-											<span className="text-[11.5px] font-bold">{exp.period}</span>
-										</div>
-										<div className="text-[11px] font-normal text-[#444444] mb-0.5">
-											{exp.role}
-										</div>
-										{exp.desc && (
-											<ul className="list-disc pl-4 space-y-1 text-[10.5px] text-[#333333] leading-[1.35]">
-												{exp.desc
-													.split("\n")
-													.filter(Boolean)
-													.map((d, di) => (
-														<li key={di}>{d.replace(/^[•\-\*]\s*/, "")}</li>
-													))}
-											</ul>
-										)}
-									</div>
-								))}
-							</div>
-						</div>
-					)}
 				</div>
-			</div>
-
-			{/* BOTTOM RIGHT & LEFT DECORATIVE WAVES */}
-			<div className="w-full h-[95px] relative pointer-events-none mt-auto overflow-hidden">
-				<svg
-					viewBox="0 0 794 100"
-					fill="none"
-					xmlns="http://www.w3.org/2000/svg"
-					className="absolute bottom-0 left-0 w-full h-full"
-					preserveAspectRatio="none"
-				>
-					{/* Left Beige Wave */}
-					<path
-						d="M0 35 C 70 45, 140 85, 210 100 L 0 100 Z"
-						fill="#C5B8A5"
-					/>
-					{/* Left Dark Wave */}
-					<path
-						d="M0 60 C 50 68, 110 88, 160 100 L 0 100 Z"
-						fill={themeColor}
-					/>
-					{/* Right Beige Wave */}
-					<path
-						d="M520 100 C 620 75, 710 25, 794 0 L 794 100 Z"
-						fill="#C5B8A5"
-					/>
-					{/* Right Dark Wave */}
-					<path
-						d="M600 100 C 670 85, 730 55, 794 30 L 794 100 Z"
-						fill={themeColor}
-					/>
-				</svg>
 			</div>
 		</div>
 	);

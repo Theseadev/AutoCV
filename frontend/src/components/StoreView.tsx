@@ -22,13 +22,13 @@ interface TemplateItem {
 const TEMPLATES: TemplateItem[] = [
 	{
 		id: "cv01_photo",
-		name: "Template CV 01",
-		photo: true,
-		columns: 2,
-		style: "Creative",
+		name: "Template CV 01 (Minimalist ATS)",
+		photo: false,
+		columns: 1,
+		style: "Contemporary",
 		category: ["fresh_no_exp", "fresh_org", "professional", "internship"],
 		recommended: true,
-		palettes: ["#363636", "#2563EB", "#00ACC1", "#1565C0", "#2E7D32"],
+		palettes: ["#EAEAEA", "#E2E8F0", "#E0E7FF", "#DCFCE7", "#FEF3C7"],
 	},
 ];
 
@@ -161,7 +161,7 @@ function ResponsiveCvPreview({ template, color }: { template: string; color?: st
 export default function StoreView({ onPick }: Props) {
 	// State warna yang dipilih untuk setiap template
 	const [selectedColors, setSelectedColors] = useState<Record<string, string>>({
-		cv01_photo: "#363636",
+		cv01_photo: "#EAEAEA",
 	});
 
 	// Filter state

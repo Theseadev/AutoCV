@@ -78,12 +78,10 @@ export const TEMPLATE_SECTIONS: Record<string, CvSection[]> = {
 	cv01: [
 		"kontak",
 		"tentang",
-		"pendidikan",
-		"kemampuan",
-		"hobi",
 		"pengalaman",
 		"organisasi",
-		"penghargaan",
+		"pendidikan",
+		"kemampuan",
 	],
 };
 export const defaultCv: CvData = {

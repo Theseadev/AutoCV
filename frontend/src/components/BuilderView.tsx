@@ -722,6 +722,294 @@ export default function BuilderView({
 						</div>
 					)}
 
+					{(has("pengalaman") || has("organisasi")) && (
+						<div className="space-y-3">
+							<button
+								type="button"
+								onClick={() =>
+									setActiveSection((cur) =>
+										cur === "pengalaman" ? null : "pengalaman",
+									)
+								}
+								aria-expanded={activeSection === "pengalaman"}
+								className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
+							>
+								<span className="flex items-center gap-3">
+									<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+										<i className="fa-solid fa-briefcase text-[11px]"></i>
+									</span>
+									<span className="text-base font-bold text-gray-900">
+										Pengalaman
+									</span>
+								</span>
+								<i
+									className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "pengalaman" ? "rotate-180" : ""}`}
+								></i>
+							</button>
+							<div
+								className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "pengalaman" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+							>
+								<div className="overflow-hidden">
+									<div className="space-y-3 pt-1">
+										{has("pengalaman") && (
+											<div
+												id="sec-pengalaman"
+												className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm"
+											>
+												<div className="flex items-center justify-between mb-5">
+													<div className="flex items-center gap-3">
+														<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+															<i className="fa-solid fa-briefcase text-[11px]"></i>
+														</span>
+														<h3 className="text-base font-bold text-gray-900">
+															Pengalaman Kerja
+														</h3>
+													</div>
+													<button
+														type="button"
+														onClick={addExp}
+														className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]"
+													>
+														<i className="fa-solid fa-plus mr-1"></i> Tambah
+													</button>
+												</div>
+
+												{(cv.experiences || []).map((exp, index) => (
+													<div
+														key={exp.id ?? index}
+														className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative"
+													>
+														<button
+															type="button"
+															onClick={() => removeExp(index)}
+															className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2"
+														>
+															<i className="fa-solid fa-trash text-xs"></i>
+														</button>
+														<div className="grid grid-cols-2 gap-3 mb-2">
+															<div className="col-span-2 sm:col-span-1">
+																<label
+																	htmlFor={`exp-company-${index}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Perusahaan / Instansi
+																</label>
+																<input
+																	id={`exp-company-${index}`}
+																	value={exp.company}
+																	onChange={(e) =>
+																		updateExp(index, { company: e.target.value })
+																	}
+																	placeholder="Nama Perusahaan"
+																	className={`font-semibold text-sm ${inputSmCls}`}
+																/>
+															</div>
+															<div className="col-span-2 sm:col-span-1">
+																<label
+																	htmlFor={`exp-role-${index}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Jabatan / Role
+																</label>
+																<input
+																	id={`exp-role-${index}`}
+																	value={exp.role}
+																	onChange={(e) =>
+																		updateExp(index, { role: e.target.value })
+																	}
+																	placeholder="Cth: Health, Safety, and Environment"
+																	className={`text-sm text-gray-700 ${inputSmCls}`}
+																/>
+															</div>
+														</div>
+														<div className="mb-3">
+															<label
+																htmlFor={`exp-period-${index}`}
+																className="block text-xs font-medium text-gray-500 mb-1"
+															>
+																Periode
+															</label>
+															<input
+																id={`exp-period-${index}`}
+																value={exp.period}
+																onChange={(e) =>
+																	updateExp(index, { period: e.target.value })
+																}
+																placeholder="Tahun (Cth: 2023 - 2024)"
+																className={`text-xs text-gray-600 ${inputSmCls}`}
+															/>
+														</div>
+														<div className="mb-2">
+															<div className="flex justify-between items-center mb-1">
+																<label
+																	htmlFor={`exp-desc-${index}`}
+																	className="block text-xs font-medium text-gray-700"
+																>
+																	Deskripsi Tugas / Pencapaian
+																</label>
+																<button
+																	type="button"
+																	onClick={() => enhanceExpAI(index)}
+																	disabled={enhancingIdx !== null}
+																	className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded transition-colors active:scale-[0.96]"
+																>
+																	<i
+																		className={`${
+																			enhancingIdx === index
+																				? "fa-solid fa-circle-notch fa-spin"
+																				: "fa-solid fa-wand-magic-sparkles"
+																		} mr-1`}
+																	></i>
+																	{enhancingIdx === index
+																		? "Gemini Poles..."
+																		: "Poles Deskripsi (Gemini AI)"}
+																</button>
+															</div>
+															<textarea
+																id={`exp-desc-${index}`}
+																value={exp.desc}
+																onChange={(e) =>
+																	updateExp(index, { desc: e.target.value })
+																}
+																rows={3}
+																placeholder="Tuliskan tugas utama atau deskripsi pekerjaan..."
+																className="w-full text-sm border border-gray-200 rounded-md p-2 focus:border-primary focus:ring-0 leading-relaxed"
+															/>
+														</div>
+													</div>
+												))}
+											</div>
+										)}
+										{has("organisasi") && (
+											<div
+												id="sec-organisasi"
+												className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm"
+											>
+												<div className="flex items-center justify-between mb-5">
+													<div className="flex items-center gap-3">
+														<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+															<i className="fa-solid fa-users text-[11px]"></i>
+														</span>
+														<h3 className="text-base font-bold text-gray-900">
+															Pengalaman Organisasi
+														</h3>
+													</div>
+													<button
+														type="button"
+														onClick={() =>
+															addList("organisasis", {
+																instansi: "",
+																posisi: "",
+																tanggal: "",
+																deskripsi: "",
+															})
+														}
+														className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]"
+													>
+														<i className="fa-solid fa-plus mr-1"></i> Tambah
+													</button>
+												</div>
+												{(cv.organisasis || []).map((it, i) => (
+													<div
+														key={it.id ?? i}
+														className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative"
+													>
+														<button
+															type="button"
+															onClick={() => removeList("organisasis", i)}
+															className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2"
+														>
+															<i className="fa-solid fa-trash text-xs"></i>
+														</button>
+														<div className="grid grid-cols-2 gap-3 mb-2">
+															<div className="col-span-2 sm:col-span-1">
+																<label
+																	htmlFor={`pendidikans-instansi-${i}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Nama Organisasi / Divisi
+																</label>
+																<input
+																	id={`pendidikans-instansi-${i}`}
+																	value={it.instansi}
+																	onChange={(e) =>
+																		updateList("organisasis", i, {
+																			instansi: e.target.value,
+																		})
+																	}
+																	placeholder="Cth: Divisi Humas"
+																	className={`text-sm text-gray-700 ${inputSmCls}`}
+																/>
+															</div>
+															<div className="col-span-2 sm:col-span-1">
+																<label
+																	htmlFor={`pendidikans-posisi-${i}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Posisi / Peran
+																</label>
+																<input
+																	id={`pendidikans-posisi-${i}`}
+																	value={it.posisi}
+																	onChange={(e) =>
+																		updateList("organisasis", i, {
+																			posisi: e.target.value,
+																		})
+																	}
+																	placeholder="Cth: Anggota Organisasi"
+																	className={`text-sm text-gray-700 ${inputSmCls}`}
+																/>
+															</div>
+															<div className="col-span-2">
+																<label
+																	htmlFor={`pendidikans-tanggal-${i}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Periode / Tahun
+																</label>
+																<input
+																	id={`pendidikans-tanggal-${i}`}
+																	value={it.tanggal}
+																	onChange={(e) =>
+																		updateList("organisasis", i, {
+																			tanggal: e.target.value,
+																		})
+																	}
+																	placeholder="Cth: 2025"
+																	className={`text-xs text-gray-600 ${inputSmCls}`}
+																/>
+															</div>
+															<div className="col-span-2">
+																<label
+																	htmlFor={`pendidikans-deskripsi-${i}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Deskripsi Tugas / Kegiatan
+																</label>
+																<textarea
+																	id={`pendidikans-deskripsi-${i}`}
+																	value={it.deskripsi}
+																	onChange={(e) =>
+																		updateList("organisasis", i, {
+																			deskripsi: e.target.value,
+																		})
+																	}
+																	rows={3}
+																	placeholder="Tuliskan tugas atau kegiatan organisasi..."
+																	className="w-full text-sm border border-gray-200 rounded-md p-2 focus:border-primary focus:ring-0 leading-relaxed"
+																/>
+															</div>
+														</div>
+													</div>
+												))}
+											</div>
+										)}
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
+
 					{has("pendidikan") && (
 						<div className="space-y-3">
 							<button
@@ -797,7 +1085,7 @@ export default function BuilderView({
 																htmlFor={`pendidikans-institusi-${i}`}
 																className="block text-xs font-medium text-gray-500 mb-1"
 															>
-																Institusi
+																Institusi / Sekolah
 															</label>
 															<input
 																id={`pendidikans-institusi-${i}`}
@@ -826,7 +1114,7 @@ export default function BuilderView({
 																		jurusan: e.target.value,
 																	})
 																}
-																placeholder="Cth: S1 Manajemen"
+																placeholder="Cth: Bisnis Konstruksi dan Properti"
 																className={`text-sm text-gray-700 ${inputSmCls}`}
 															/>
 														</div>
@@ -845,7 +1133,7 @@ export default function BuilderView({
 																		tahun: e.target.value,
 																	})
 																}
-																placeholder="Cth: 2019 - 2023"
+																placeholder="Cth: 2021 - 2024"
 																className={`text-xs text-gray-600 ${inputSmCls}`}
 															/>
 														</div>
@@ -854,10 +1142,7 @@ export default function BuilderView({
 																htmlFor={`pendidikans-kegiatan-${i}`}
 																className="block text-xs font-medium text-gray-500 mb-1"
 															>
-																Kegiatan{" "}
-																<span className="text-gray-400 font-normal">
-																	(opsional)
-																</span>
+																Keterangan / Kompetensi
 															</label>
 															<textarea
 																id={`pendidikans-kegiatan-${i}`}
@@ -867,7 +1152,7 @@ export default function BuilderView({
 																		kegiatan: e.target.value,
 																	})
 																}
-																placeholder="Cth: Anggota Himpunan Mahasiswa, Panitia Dies Natalis"
+																placeholder="Tuliskan kompetensi atau rincian pembelajaran..."
 																rows={2}
 																className={`text-xs text-gray-600 resize-none ${inputSmCls}`}
 															/>
@@ -962,321 +1247,35 @@ export default function BuilderView({
 						</div>
 					)}
 
-					<div className="space-y-3">
-						<button
-							type="button"
-							onClick={() =>
-								setActiveSection((cur) =>
-									cur === "pengalaman" ? null : "pengalaman",
-								)
-							}
-							aria-expanded={activeSection === "pengalaman"}
-							className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
-						>
-							<span className="flex items-center gap-3">
-								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-									<i className="fa-solid fa-briefcase text-[11px]"></i>
+					{has("kemampuan") && (
+						<div className="space-y-3">
+							<button
+								type="button"
+								onClick={() =>
+									setActiveSection((cur) =>
+										cur === "kemampuan" ? null : "kemampuan",
+									)
+								}
+								aria-expanded={activeSection === "kemampuan"}
+								className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
+							>
+								<span className="flex items-center gap-3">
+									<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+										<i className="fa-solid fa-bolt text-[11px]"></i>
+									</span>
+									<span className="text-base font-bold text-gray-900">
+										Keahlian & Kemampuan
+									</span>
 								</span>
-								<span className="text-base font-bold text-gray-900">
-									Pengalaman
-								</span>
-							</span>
-							<i
-								className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "pengalaman" ? "rotate-180" : ""}`}
-							></i>
-						</button>
-						<div
-							className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "pengalaman" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-						>
-							<div className="overflow-hidden">
-								<div className="space-y-3 pt-1">
-									{has("pengalaman") && (
-										<div
-											id="sec-pengalaman"
-											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm"
-										>
-											<div className="flex items-center justify-between mb-5">
-												<div className="flex items-center gap-3">
-													<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-														2
-													</span>
-													<h3 className="text-base font-bold text-gray-900">
-														Pengalaman Kerja
-													</h3>
-												</div>
-												<button
-													type="button"
-													onClick={addExp}
-													className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]"
-												>
-													<i className="fa-solid fa-plus mr-1"></i> Tambah
-												</button>
-											</div>
-
-											{(cv.experiences || []).map((exp, index) => (
-												<div
-													key={exp.id ?? index}
-													className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative"
-												>
-													<button
-														type="button"
-														onClick={() => removeExp(index)}
-														className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2"
-													>
-														<i className="fa-solid fa-trash text-xs"></i>
-													</button>
-													<div className="grid grid-cols-2 gap-3 mb-2">
-														<div className="col-span-2 sm:col-span-1">
-															<label
-																htmlFor={`exp-company-${index}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Perusahaan
-															</label>
-															<input
-																id={`exp-company-${index}`}
-																value={exp.company}
-																onChange={(e) =>
-																	updateExp(index, { company: e.target.value })
-																}
-																placeholder="Nama Perusahaan"
-																className={`font-semibold text-sm ${inputSmCls}`}
-															/>
-														</div>
-														<div className="col-span-2 sm:col-span-1">
-															<label
-																htmlFor={`exp-role-${index}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Jabatan / Role
-															</label>
-															<input
-																id={`exp-role-${index}`}
-																value={exp.role}
-																onChange={(e) =>
-																	updateExp(index, { role: e.target.value })
-																}
-																placeholder="Cth: Staff Marketing"
-																className={`text-sm text-gray-700 ${inputSmCls}`}
-															/>
-														</div>
-													</div>
-													<div className="mb-3">
-														<label
-															htmlFor={`exp-period-${index}`}
-															className="block text-xs font-medium text-gray-500 mb-1"
-														>
-															Periode
-														</label>
-														<input
-															id={`exp-period-${index}`}
-															value={exp.period}
-															onChange={(e) =>
-																updateExp(index, { period: e.target.value })
-															}
-															placeholder="Tahun (Cth: Jan 2022 - Des 2023)"
-															className={`text-xs text-gray-600 ${inputSmCls}`}
-														/>
-													</div>
-													<div className="mb-2">
-														<div className="flex justify-between items-center mb-1">
-															<label
-																htmlFor={`exp-desc-${index}`}
-																className="block text-xs font-medium text-gray-700"
-															>
-																Deskripsi Tugas / Pencapaian
-															</label>
-															<button
-																type="button"
-																onClick={() => enhanceExpAI(index)}
-																disabled={enhancingIdx !== null}
-																className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center bg-indigo-50 hover:bg-indigo-100 px-2 py-1 rounded transition-colors active:scale-[0.96]"
-															>
-																<i
-																	className={`${
-																		enhancingIdx === index
-																			? "fa-solid fa-circle-notch fa-spin"
-																			: "fa-solid fa-wand-magic-sparkles"
-																	} mr-1`}
-																></i>
-																{enhancingIdx === index
-																	? "Gemini Poles..."
-																	: "Poles Deskripsi (Gemini AI)"}
-															</button>
-														</div>
-														<textarea
-															id={`exp-desc-${index}`}
-															value={exp.desc}
-															onChange={(e) =>
-																updateExp(index, { desc: e.target.value })
-															}
-															rows={3}
-															placeholder="Tuliskan tugas utama atau kata kunci sederhana, lalu tekan Poles Deskripsi..."
-															className="w-full text-sm border border-gray-200 rounded-md p-2 focus:border-primary focus:ring-0 leading-relaxed"
-														/>
-													</div>
-												</div>
-											))}
-										</div>
-									)}
-									{has("organisasi") && (
-										<div
-											id="sec-organisasi"
-											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm"
-										>
-											<div className="flex items-center justify-between mb-5">
-												<div className="flex items-center gap-3">
-													<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-														<i className="fa-solid fa-users text-[11px]"></i>
-													</span>
-													<h3 className="text-base font-bold text-gray-900">
-														Pengalaman Organisasi
-													</h3>
-												</div>
-												<button
-													type="button"
-													onClick={() =>
-														addList("organisasis", {
-															instansi: "",
-															posisi: "",
-															tanggal: "",
-															deskripsi: "",
-														})
-													}
-													className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]"
-												>
-													<i className="fa-solid fa-plus mr-1"></i> Tambah
-												</button>
-											</div>
-											{(cv.organisasis || []).map((it, i) => (
-												<div
-													key={it.id ?? i}
-													className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative"
-												>
-													<button
-														type="button"
-														onClick={() => removeList("organisasis", i)}
-														className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2"
-													>
-														<i className="fa-solid fa-trash text-xs"></i>
-													</button>
-													<div className="grid grid-cols-2 gap-3">
-														<div className="col-span-2">
-															<label
-																htmlFor={`pendidikans-instansi-${i}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Instansi
-															</label>
-															<input
-																id={`pendidikans-instansi-${i}`}
-																value={it.instansi}
-																onChange={(e) =>
-																	updateList("organisasis", i, {
-																		instansi: e.target.value,
-																	})
-																}
-																placeholder="Nama Organisasi / Komunitas"
-																className={`text-sm text-gray-700 ${inputSmCls}`}
-															/>
-														</div>
-														<div className="">
-															<label
-																htmlFor={`pendidikans-posisi-${i}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Posisi
-															</label>
-															<input
-																id={`pendidikans-posisi-${i}`}
-																value={it.posisi}
-																onChange={(e) =>
-																	updateList("organisasis", i, {
-																		posisi: e.target.value,
-																	})
-																}
-																placeholder="Cth: Ketua Divisi"
-																className={`text-sm text-gray-700 ${inputSmCls}`}
-															/>
-														</div>
-														<div className="">
-															<label
-																htmlFor={`pendidikans-tanggal-${i}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Periode
-															</label>
-															<input
-																id={`pendidikans-tanggal-${i}`}
-																value={it.tanggal}
-																onChange={(e) =>
-																	updateList("organisasis", i, {
-																		tanggal: e.target.value,
-																	})
-																}
-																placeholder="Cth: 2021 - 2022"
-																className={`text-xs text-gray-600 ${inputSmCls}`}
-															/>
-														</div>
-														<div className="col-span-2">
-															<label
-																htmlFor={`pendidikans-deskripsi-${i}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Deskripsi / Pencapaian
-															</label>
-															<textarea
-																id={`pendidikans-deskripsi-${i}`}
-																value={it.deskripsi}
-																onChange={(e) =>
-																	updateList("organisasis", i, {
-																		deskripsi: e.target.value,
-																	})
-																}
-																rows={3}
-																placeholder="Tuliskan tugas atau pencapaian, satu baris per poin"
-																className="w-full text-sm border border-gray-200 rounded-md p-2 focus:border-primary focus:ring-0 leading-relaxed"
-															/>
-														</div>
-													</div>
-												</div>
-											))}
-										</div>
-									)}
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div className="space-y-3">
-						<button
-							type="button"
-							onClick={() =>
-								setActiveSection((cur) =>
-									cur === "kemampuan" ? null : "kemampuan",
-								)
-							}
-							aria-expanded={activeSection === "kemampuan"}
-							className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
-						>
-							<span className="flex items-center gap-3">
-								<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-									<i className="fa-solid fa-bolt text-[11px]"></i>
-								</span>
-								<span className="text-base font-bold text-gray-900">
-									Kemampuan
-								</span>
-							</span>
-							<i
-								className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "kemampuan" ? "rotate-180" : ""}`}
-							></i>
-						</button>
-						<div
-							className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "kemampuan" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
-						>
-							<div className="overflow-hidden">
-								<div className="space-y-3 pt-1">
-									{has("kemampuan") && (
+								<i
+									className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "kemampuan" ? "rotate-180" : ""}`}
+								></i>
+							</button>
+							<div
+								className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "kemampuan" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+							>
+								<div className="overflow-hidden">
+									<div className="space-y-3 pt-1">
 										<div
 											id="sec-skills"
 											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm"
@@ -1284,10 +1283,10 @@ export default function BuilderView({
 											<div className="flex items-center justify-between mb-3">
 												<div className="flex items-center gap-3">
 													<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-														3
+														<i className="fa-solid fa-bolt text-[11px]"></i>
 													</span>
 													<h3 className="text-base font-bold text-gray-900">
-														Kemampuan / Skills
+														Keahlian / Skills
 													</h3>
 												</div>
 												<button
@@ -1303,25 +1302,24 @@ export default function BuilderView({
 												</button>
 											</div>
 											<p className="text-xs text-gray-500 ml-10 mb-3">
-												Satu skill per baris (Format: Nama Skill: Penjelasan
-												singkat)
+												Satu keahlian per baris. Gunakan kategori "Pribadi:" dan "Profesional:" untuk pembagian kolom rapi.
 											</p>
 											<textarea
 												id="cv-skills"
 												value={skillsText}
 												onChange={(e) => setSkillsText(e.target.value)}
-												rows={4}
+												rows={6}
 												placeholder={
-													"Microsoft Office: Mahir mengolah data\nKomunikasi: Kerjasama tim yang solid"
+													"Pribadi:\n• Mampu berkomunikasi dengan jelas\n• Disiplin dan bertanggung jawab\n\nProfesional:\n• Terbiasa bekerja dalam tim\n• Manajemen waktu yang baik"
 												}
-												className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-primary focus:border-primary leading-relaxed"
+												className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-primary focus:border-primary leading-relaxed font-mono"
 											/>
 										</div>
-									)}
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
 

@@ -21,7 +21,7 @@ interface TemplateItem {
 
 const TEMPLATES: TemplateItem[] = [
 	{
-		id: "cv01_photo",
+		id: "cv01",
 		name: "Template CV 01 (Minimalist ATS)",
 		photo: false,
 		columns: 1,
@@ -36,7 +36,7 @@ const scrollToTemplates = () =>
 	document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" });
 
 // Tumpukan CV interaktif untuk Hero Section
-const HERO_TEMPLATES = ["cv01_photo"];
+const HERO_TEMPLATES = ["cv01"];
 const FAN_ANGLES = [0];
 
 function TemplateStack() {
@@ -161,7 +161,7 @@ function ResponsiveCvPreview({ template, color }: { template: string; color?: st
 export default function StoreView({ onPick }: Props) {
 	// State warna yang dipilih untuk setiap template
 	const [selectedColors, setSelectedColors] = useState<Record<string, string>>({
-		cv01_photo: "#EAEAEA",
+		cv01: "#EAEAEA",
 	});
 
 	// Filter state

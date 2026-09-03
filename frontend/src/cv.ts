@@ -66,6 +66,7 @@ export interface Organization {
 export type CvSection =
 	| "foto"
 	| "kontak"
+	| "title"
 	| "pendidikan"
 	| "kemampuan"
 	| "penghargaan"

@@ -432,21 +432,23 @@ export default function BuilderView({
 													className={inputCls}
 												/>
 											</div>
-											<div className="col-span-2">
-												<label
-													htmlFor="cv-title"
-													className="block text-sm font-medium text-gray-700 mb-1"
-												>
-													Profesi / Title
-												</label>
-												<input
-													id="cv-title"
-													value={cv.title}
-													onChange={(e) => set({ title: e.target.value })}
-													type="text"
-													className={inputCls}
-												/>
-											</div>
+											{has("title") && (
+												<div className="col-span-2">
+													<label
+														htmlFor="cv-title"
+														className="block text-sm font-medium text-gray-700 mb-1"
+													>
+														Profesi / Title
+													</label>
+													<input
+														id="cv-title"
+														value={cv.title}
+														onChange={(e) => set({ title: e.target.value })}
+														type="text"
+														className={inputCls}
+													/>
+												</div>
+											)}
 											<div>
 												<label
 													htmlFor="cv-phone"

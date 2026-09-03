@@ -610,148 +610,6 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 											</div>
 										</div>
 									</div>
-									{has("tentang") && (
-										<div
-											id="sec-ai"
-											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 border-l-4 border-l-indigo-500 shadow-sm"
-										>
-											<div className="flex items-center justify-between mb-1">
-												<div className="flex items-center gap-3">
-													<span className="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
-														<i className="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
-													</span>
-													<h3 className="text-base font-bold text-gray-900">
-														Profil AI
-													</h3>
-												</div>
-												<span className="text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded-full border border-indigo-100">
-													<i className="fa-brands fa-google mr-1"></i>Gemini
-												</span>
-											</div>
-											<p className="text-xs text-gray-500 ml-10 mb-4">
-												Tulis kata kunci latar belakangmu, AI merangkai paragraf
-												profil yang menarik & ramah ATS.
-											</p>
-
-											<div className="space-y-3 mb-4">
-												<div>
-													<label
-														htmlFor="ai-keywords"
-														className="block text-xs font-medium text-gray-700 mb-1"
-													>
-														Kata Kunci / Pengalaman Utama
-													</label>
-													<input
-														id="ai-keywords"
-														value={aiKeywords}
-														onChange={(e) => setAiKeywords(e.target.value)}
-														type="text"
-														placeholder="Cth: Lulusan akuntansi, teliti, menguasai excel, 2 tahun pengalaman"
-														className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-primary focus:border-primary text-sm transition"
-													/>
-												</div>
-												<div className="grid grid-cols-2 gap-3">
-													<div>
-														<label
-															htmlFor="ai-tone"
-															className="block text-xs font-medium text-gray-700 mb-1"
-														>
-															Gaya Penulisan
-														</label>
-														<select
-															id="ai-tone"
-															value={aiTone}
-															onChange={(e) => setAiTone(e.target.value)}
-															className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-primary focus:border-primary transition"
-														>
-															<option value="Professional & Formal">
-																Professional & Formal
-															</option>
-															<option value="Creative & Energetic">
-																Creative & Dynamic
-															</option>
-															<option value="Fresh Graduate / Enthusiastic">
-																Fresh Graduate
-															</option>
-															<option value="Executive / Result-Oriented">
-																Executive / Senior
-															</option>
-														</select>
-													</div>
-													<div>
-														<label
-															htmlFor="ai-language"
-															className="block text-xs font-medium text-gray-700 mb-1"
-														>
-															Bahasa
-														</label>
-														<select
-															id="ai-language"
-															value={aiLanguage}
-															onChange={(e) => setAiLanguage(e.target.value)}
-															className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-primary focus:border-primary transition"
-														>
-															<option value="Bahasa Indonesia">
-																Bahasa Indonesia
-															</option>
-															<option value="English">English</option>
-														</select>
-													</div>
-												</div>
-											</div>
-
-											<button
-												type="button"
-												onClick={generateProfileAI}
-												disabled={isGenerating}
-												className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium text-sm transition shadow-sm hover:shadow-md active:scale-[0.96] flex justify-center items-center"
-											>
-												<i
-													className={`${isGenerating ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-sparkles"} mr-2`}
-												></i>
-												{isGenerating
-													? "Gemini AI Sedang Merangkai..."
-													: "Generate Paragraf Profil"}
-											</button>
-
-											<div className="mt-4">
-												<label
-													htmlFor="cv-about"
-													className="block text-xs font-medium text-gray-700 mb-1"
-												>
-													Hasil Paragraf Profil (bisa diedit manual)
-												</label>
-												<textarea
-													id="cv-about"
-													value={cv.about}
-													onChange={(e) => set({ about: e.target.value })}
-													rows={4}
-													className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-primary focus:border-primary text-sm leading-relaxed transition"
-												/>
-											</div>
-										</div>
-									)}
-									{has("hobi") && (
-										<div
-											id="sec-hobi"
-											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm"
-										>
-											<div className="flex items-center gap-3 mb-4">
-												<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
-													<i className="fa-solid fa-heart text-[11px]"></i>
-												</span>
-												<h3 className="text-base font-bold text-gray-900">
-													Hobi
-												</h3>
-											</div>
-											<input
-												value={cv.hobi ?? ""}
-												onChange={(e) => set({ hobi: e.target.value })}
-												placeholder="Cth: Membaca, Menulis, Fotografi"
-												className={`text-sm text-gray-700 ${inputSmCls}`}
-											/>
-										</div>
-									)}
 								</div>
 							</div>
 						</div>
@@ -1541,6 +1399,182 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 												</div>
 											</div>
 										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
+
+					{has("tentang") && (
+						<div className="space-y-3">
+							<button
+								type="button"
+								onClick={() =>
+									setActiveSection((cur) =>
+										cur === "tentang" ? null : "tentang",
+									)
+								}
+								aria-expanded={activeSection === "tentang"}
+								className="w-full bg-white rounded-xl border border-gray-200 shadow-sm px-5 py-4 flex items-center justify-between gap-3 text-left hover:border-gray-300 transition-colors"
+							>
+								<span className="flex items-center gap-3">
+									<span className="w-7 h-7 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold flex items-center justify-center shrink-0">
+										<i className="fa-solid fa-wand-magic-sparkles text-[11px]"></i>
+									</span>
+									<span className="text-base font-bold text-gray-900">
+										Tentang Saya (Profil Diri)
+									</span>
+								</span>
+								<i
+									className={`fa-solid fa-chevron-down text-gray-400 text-sm transition-transform duration-300 ${activeSection === "tentang" ? "rotate-180" : ""}`}
+								></i>
+							</button>
+							<div
+								className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${activeSection === "tentang" ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}
+							>
+								<div className="overflow-hidden">
+									<div className="space-y-3 pt-1">
+										<div
+											id="sec-ai"
+											className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 border-l-4 border-l-indigo-500 shadow-sm"
+										>
+											<div className="flex items-center justify-between mb-1">
+												<div className="flex items-center gap-3">
+													<span className="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center shrink-0">
+														<i className="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+													</span>
+													<h3 className="text-base font-bold text-gray-900">
+														Profil AI & Ringkasan Diri
+													</h3>
+												</div>
+												<span className="text-[10px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded-full border border-indigo-100">
+													<i className="fa-brands fa-google mr-1"></i>Gemini AI
+												</span>
+											</div>
+											<p className="text-xs text-gray-500 ml-10 mb-4">
+												Tulis kata kunci latar belakangmu, AI merangkai paragraf
+												profil yang menarik & ramah ATS.
+											</p>
+
+											<div className="space-y-3 mb-4">
+												<div>
+													<label
+														htmlFor="ai-keywords"
+														className="block text-xs font-medium text-gray-700 mb-1"
+													>
+														Kata Kunci / Pengalaman Utama
+													</label>
+													<input
+														id="ai-keywords"
+														value={aiKeywords}
+														onChange={(e) => setAiKeywords(e.target.value)}
+														type="text"
+														placeholder="Cth: Lulusan akuntansi, teliti, menguasai excel, 2 tahun pengalaman"
+														className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-primary focus:border-primary text-sm transition"
+													/>
+												</div>
+												<div className="grid grid-cols-2 gap-3">
+													<div>
+														<label
+															htmlFor="ai-tone"
+															className="block text-xs font-medium text-gray-700 mb-1"
+														>
+															Gaya Penulisan
+														</label>
+														<select
+															id="ai-tone"
+															value={aiTone}
+															onChange={(e) => setAiTone(e.target.value)}
+															className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-primary focus:border-primary transition"
+														>
+															<option value="Professional & Formal">
+																Professional & Formal
+															</option>
+															<option value="Creative & Energetic">
+																Creative & Dynamic
+															</option>
+															<option value="Fresh Graduate / Enthusiastic">
+																Fresh Graduate
+															</option>
+															<option value="Executive / Result-Oriented">
+																Executive / Senior
+															</option>
+														</select>
+													</div>
+													<div>
+														<label
+															htmlFor="ai-language"
+															className="block text-xs font-medium text-gray-700 mb-1"
+														>
+															Bahasa
+														</label>
+														<select
+															id="ai-language"
+															value={aiLanguage}
+															onChange={(e) => setAiLanguage(e.target.value)}
+															className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 focus:ring-primary focus:border-primary transition"
+														>
+															<option value="Bahasa Indonesia">
+																Bahasa Indonesia
+															</option>
+															<option value="English">English</option>
+														</select>
+													</div>
+												</div>
+											</div>
+
+											<button
+												type="button"
+												onClick={generateProfileAI}
+												disabled={isGenerating}
+												className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-lg font-medium text-sm transition shadow-sm hover:shadow-md active:scale-[0.96] flex justify-center items-center"
+											>
+												<i
+													className={`${isGenerating ? "fa-solid fa-spinner fa-spin" : "fa-solid fa-sparkles"} mr-2`}
+												></i>
+												{isGenerating
+													? "Gemini AI Sedang Merangkai..."
+													: "Generate Paragraf Profil"}
+											</button>
+
+											<div className="mt-4">
+												<label
+													htmlFor="cv-about"
+													className="block text-xs font-medium text-gray-700 mb-1"
+												>
+													Hasil Paragraf Profil (bisa diedit manual)
+												</label>
+												<textarea
+													id="cv-about"
+													value={cv.about}
+													onChange={(e) => set({ about: e.target.value })}
+													rows={4}
+													className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-primary focus:border-primary text-sm leading-relaxed transition"
+												/>
+											</div>
+										</div>
+
+										{has("hobi") && (
+											<div
+												id="sec-hobi"
+												className="bg-white p-5 sm:p-6 rounded-xl border border-gray-200 shadow-sm"
+											>
+												<div className="flex items-center gap-3 mb-4">
+													<span className="w-7 h-7 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center shrink-0">
+														<i className="fa-solid fa-heart text-[11px]"></i>
+													</span>
+													<h3 className="text-base font-bold text-gray-900">
+														Hobi
+													</h3>
+												</div>
+												<input
+													value={cv.hobi ?? ""}
+													onChange={(e) => set({ hobi: e.target.value })}
+													placeholder="Cth: Membaca, Menulis, Fotografi"
+													className={inputCls}
+												/>
+											</div>
+										)}
 									</div>
 								</div>
 							</div>

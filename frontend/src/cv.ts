@@ -81,11 +81,11 @@ export type CvSection =
 export const TEMPLATE_SECTIONS: Record<string, CvSection[]> = {
 	cv01: [
 		"kontak",
-		"tentang",
 		"pengalaman",
 		"organisasi",
 		"pendidikan",
 		"kemampuan",
+		"tentang",
 	],
 };
 export const defaultCv: CvData = {

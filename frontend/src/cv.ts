@@ -92,7 +92,7 @@ export const defaultCv: CvData = {
 	phone: "+62 822 8713 4432",
 	email: "pj5695666@gmail.com",
 	address: "Dusun VIII, Ds. Sukaraja, Kec. Simpang Empat, Kab. Asahan, Sumut.",
-	photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80",
+	photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80",
 	about:
 		"Saya lulusan SMK jurusan Akuntansi, memiliki pengalaman di bidang pelayanan, operasional toko, dan barista. Terbiasa memberikan pelayanan ramah dan sopan kepada pelanggan serta mampu bekerja sama dalam tim maupun individu. Saya memiliki kemampuan komunikasi yang baik, disiplin, bertanggung jawab, dan mampu memimpin tim kerja. Siap memberikan kontribusi terbaik bagi kemajuan perusahaan.",
 	experiences: [
@@ -1022,18 +1022,18 @@ export const buildCvHtml = (
 	const skillLis01 = skills
 		.map(
 			(s) => `
-            <li style="margin-bottom:7px;line-height:1.45;">
-                <span style="font-weight:500;">${esc(s.title)}${s.desc ? `: ${esc(s.desc)}` : ""}</span>
+            <li style="margin-bottom:6px;line-height:1.35;">
+                <span style="font-weight:400;color:#222222;">${esc(s.title)}${s.desc ? `: ${esc(s.desc)}` : ""}</span>
             </li>`,
 		)
 		.join("");
 
 	const sertifikatLis01 = (cvData.penghargaans || [])
 		.map((a) => {
-			const text = (!a.tahun || a.judul.includes(a.tahun)) ? a.judul : `${a.judul} (${a.tahun})`;
+			const text = (!a.tahun || a.judul.includes(a.tahun)) ? a.judul : `${a.judul} ${a.tahun}`;
 			return `
-            <li style="margin-bottom:6px;line-height:1.45;">
-                <span style="font-weight:500;">${esc(text)}</span>
+            <li style="margin-bottom:6px;line-height:1.35;">
+                <span style="font-weight:400;color:#222222;">${esc(text)}</span>
             </li>`;
 		})
 		.join("");
@@ -1043,16 +1043,16 @@ export const buildCvHtml = (
 			const bullets = (pd.kegiatan || "")
 				.split("\n")
 				.filter(Boolean)
-				.map((k) => `<li style="margin-bottom:4px;">${esc(k.replace(/^[•\-\*]\s*/, ""))}</li>`)
+				.map((k) => `<li style="margin-bottom:4px;line-height:1.35;">${esc(k.replace(/^[•\-\*]\s*/, ""))}</li>`)
 				.join("");
 			return `
-            <div style="margin-bottom:14px;font-size:12px;">
+            <div style="margin-bottom:10px;font-size:11.5px;">
                 <div style="display:flex;justify-content:space-between;align-items:baseline;font-weight:700;color:#111111;">
                     <span>${esc(pd.institusi)}</span>
-                    <span style="font-size:11.5px;">${esc(pd.tahun)}</span>
+                    <span style="font-size:11.5px;font-weight:700;">${esc(pd.tahun)}</span>
                 </div>
-                <div style="font-size:11.5px;font-weight:500;color:#444444;margin-bottom:4px;">${esc(pd.jurusan)}</div>
-                ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:4px 0 0;font-size:11px;color:#333333;line-height:1.5;">${bullets}</ul>` : ""}
+                <div style="font-size:11px;font-weight:400;color:#444444;margin-bottom:2px;">${esc(pd.jurusan)}</div>
+                ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:2px 0 0;font-size:10.5px;color:#333333;line-height:1.35;">${bullets}</ul>` : ""}
             </div>`;
 		})
 		.join("");
@@ -1062,67 +1062,67 @@ export const buildCvHtml = (
 			const bullets = (e.desc || "")
 				.split("\n")
 				.filter(Boolean)
-				.map((d) => `<li style="margin-bottom:4px;">${esc(d.replace(/^[•\-\*]\s*/, ""))}</li>`)
+				.map((d) => `<li style="margin-bottom:4px;line-height:1.35;">${esc(d.replace(/^[•\-\*]\s*/, ""))}</li>`)
 				.join("");
 			return `
-            <div style="margin-bottom:14px;font-size:12px;">
+            <div style="margin-bottom:10px;font-size:11.5px;">
                 <div style="display:flex;justify-content:space-between;align-items:baseline;font-weight:700;color:#111111;">
                     <span>${esc(e.company)}</span>
-                    <span style="font-size:11.5px;">${esc(e.period)}</span>
+                    <span style="font-size:11.5px;font-weight:700;">${esc(e.period)}</span>
                 </div>
-                <div style="font-size:11.5px;font-weight:500;color:#444444;margin-bottom:4px;">${esc(e.role)}</div>
-                ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:4px 0 0;font-size:11px;color:#333333;line-height:1.5;">${bullets}</ul>` : ""}
+                <div style="font-size:11px;font-weight:400;color:#444444;margin-bottom:2px;">${esc(e.role)}</div>
+                ${bullets ? `<ul style="list-style:disc;padding-left:16px;margin:2px 0 0;font-size:10.5px;color:#333333;line-height:1.35;">${bullets}</ul>` : ""}
             </div>`;
 		})
 		.join("");
 
 	const sideHeader01 = (title: string) => `
-        <div style="background:${t01};color:white;text-align:center;font-weight:700;font-size:13.5px;text-transform:uppercase;letter-spacing:1px;padding:5px 12px;margin-bottom:12px;">
+        <div style="background:${t01};color:white;text-align:center;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;margin-bottom:10px;">
             ${title}
         </div>`;
 
 	const mainHeader01 = (title: string) => `
-        <div style="font-weight:800;font-size:15.5px;color:#111111;text-transform:uppercase;letter-spacing:0.5px;padding-bottom:4px;margin-bottom:8px;border-bottom:2px solid ${t01};">
+        <div style="font-weight:700;font-size:15.5px;color:#111111;text-transform:uppercase;letter-spacing:0.5px;padding-bottom:4px;margin-bottom:8px;border-bottom:1.5px solid ${t01};">
             ${title}
         </div>`;
 
 	return `
         <div class="cv-paper" style="width:794px;height:1123px;background:#FFFFFF;color:#222222;font-family:'Inter',sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;">
             <!-- TOP HEADER -->
-            <div style="width:100%;">
-                <div style="height:175px;background:${t01};border-radius:0 90px 90px 0;display:flex;align-items:center;padding-left:48px;padding-right:48px;gap:32px;width:calc(100% - 40px);">
-                    <div style="width:125px;height:125px;border-radius:50%;border:5px solid #FFFFFF;overflow:hidden;flex-shrink:0;background:#E5E7EB;box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+            <div style="width:100%;padding-top:24px;">
+                <div style="height:160px;background:${t01};border-radius:0 80px 80px 0;display:flex;align-items:center;padding-left:40px;padding-right:48px;gap:28px;width:calc(100% - 48px);">
+                    <div style="width:115px;height:115px;border-radius:50%;border:5px solid #FFFFFF;overflow:hidden;flex-shrink:0;background:#FFFFFF;box-shadow:0 4px 10px rgba(0,0,0,0.15);">
                         ${
                             cvData.photo
-                                ? `<img src="${cvData.photo}" style="width:100%;height:100%;object-fit:cover;" />`
-                                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:32px;color:#4B5563;">${(name || "PJ").slice(0, 2).toUpperCase()}</div>`
+                                ? `<img src="${cvData.photo}" style="width:100%;height:100%;object-fit:cover;object-position:top;" />`
+                                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:32px;color:#4B5563;background:#E5E7EB;">${(name || "PJ").slice(0, 2).toUpperCase()}</div>`
                         }
                     </div>
                     <div style="flex:1;min-width:0;">
-                        <h1 style="color:#FFFFFF;font-size:38px;font-weight:900;letter-spacing:0.5px;margin:0;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</h1>
+                        <h1 style="color:#FFFFFF;font-size:38px;font-weight:700;letter-spacing:0px;margin:0;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</h1>
                         ${title ? `<div style="color:#E5E7EB;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:4px;">${title}</div>` : ""}
                     </div>
                 </div>
             </div>
 
             <!-- BODY 2-COLUMN -->
-            <div style="padding:38px 44px 14px;display:flex;gap:36px;flex:1;position:relative;z-index:10;">
+            <div style="padding:28px 48px 8px;display:flex;gap:36px;flex:1;position:relative;z-index:10;">
                 <!-- LEFT COLUMN -->
-                <div style="width:245px;flex-shrink:0;display:flex;flex-direction:column;gap:20px;">
+                <div style="width:240px;flex-shrink:0;display:flex;flex-direction:column;gap:20px;">
                     <!-- KONTAK -->
                     <div>
                         ${sideHeader01("KONTAK")}
-                        <div style="font-size:11.5px;color:#333333;display:flex;flex-direction:column;gap:8px;padding-left:4px;">
-                            ${phone ? `<div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-phone" style="width:14px;text-align:center;font-size:12px;"></i><span>${phone}</span></div>` : ""}
-                            ${email ? `<div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-envelope" style="width:14px;text-align:center;font-size:12px;"></i><span style="word-break:break-all;">${email}</span></div>` : ""}
-                            ${address ? `<div style="display:flex;align-items:flex-start;gap:10px;"><i class="fa-solid fa-location-dot" style="width:14px;text-align:center;font-size:13px;margin-top:2px;"></i><span style="line-height:1.45;">${address}</span></div>` : ""}
+                        <div style="font-size:11px;color:#222222;display:flex;flex-direction:column;gap:8px;padding-left:4px;">
+                            ${phone ? `<div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-phone" style="width:14px;text-align:center;font-size:12px;color:#000;"></i><span>${phone}</span></div>` : ""}
+                            ${email ? `<div style="display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-envelope" style="width:14px;text-align:center;font-size:12px;color:#000;"></i><span style="word-break:break-all;">${email}</span></div>` : ""}
+                            ${address ? `<div style="display:flex;align-items:flex-start;gap:10px;"><i class="fa-solid fa-location-dot" style="width:14px;text-align:center;font-size:13px;margin-top:2px;color:#000;"></i><span style="line-height:1.4;">${address}</span></div>` : ""}
                         </div>
                     </div>
 
                     <!-- KEMAMPUAN -->
                     <div>
                         ${sideHeader01("KEMAMPUAN")}
-                        <ul style="list-style:disc;padding-left:18px;margin:0;font-size:11.5px;color:#333333;">
+                        <ul style="list-style:disc;padding-left:16px;margin:0;font-size:10.5px;color:#222222;">
                             ${skillLis01}
                         </ul>
                     </div>
@@ -1131,18 +1131,18 @@ export const buildCvHtml = (
                     ${(cvData.penghargaans || []).length ? `
                     <div>
                         ${sideHeader01("SERTIFIKAT")}
-                        <ul style="list-style:disc;padding-left:18px;margin:0;font-size:11.5px;color:#333333;">
+                        <ul style="list-style:disc;padding-left:16px;margin:0;font-size:11px;color:#222222;">
                             ${sertifikatLis01}
                         </ul>
                     </div>` : ""}
                 </div>
 
                 <!-- RIGHT COLUMN -->
-                <div style="flex:1;display:flex;flex-direction:column;gap:18px;">
+                <div style="flex:1;display:flex;flex-direction:column;gap:16px;">
                     <!-- TENTANG SAYA -->
                     <div>
                         ${mainHeader01("TENTANG SAYA")}
-                        <p style="font-size:11.5px;color:#333333;line-height:1.65;text-align:justify;margin:0;white-space:pre-line;">${about}</p>
+                        <p style="font-size:11px;color:#333333;line-height:1.5;text-align:justify;margin:0;white-space:pre-line;">${about}</p>
                     </div>
 
                     <!-- PENDIDIKAN -->
@@ -1162,12 +1162,12 @@ export const buildCvHtml = (
             </div>
 
             <!-- BOTTOM DECORATIVE WAVES -->
-            <div style="width:100%;height:75px;position:relative;margin-top:auto;overflow:hidden;">
-                <svg viewBox="0 0 794 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
-                    <path d="M0 45 C 80 80, 160 10, 240 80 L 0 80 Z" fill="#BDB4A8" opacity="0.6"/>
-                    <path d="M520 80 C 600 20, 680 70, 794 30 L 794 80 Z" fill="#BDB4A8" opacity="0.6"/>
-                    <path d="M0 65 C 60 75, 120 40, 180 80 L 0 80 Z" fill="${t01}"/>
-                    <path d="M600 80 C 660 35, 720 60, 794 45 L 794 80 Z" fill="${t01}"/>
+            <div style="width:100%;height:95px;position:relative;margin-top:auto;overflow:hidden;">
+                <svg viewBox="0 0 794 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;" preserveAspectRatio="none">
+                    <path d="M0 35 C 70 45, 140 85, 210 100 L 0 100 Z" fill="#C5B8A5"/>
+                    <path d="M0 60 C 50 68, 110 88, 160 100 L 0 100 Z" fill="${t01}"/>
+                    <path d="M520 100 C 620 75, 710 25, 794 0 L 794 100 Z" fill="#C5B8A5"/>
+                    <path d="M600 100 C 670 85, 730 55, 794 30 L 794 100 Z" fill="${t01}"/>
                 </svg>
             </div>
         </div>`;

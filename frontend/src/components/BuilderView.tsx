@@ -1546,25 +1546,25 @@ function EditorialLayout({
 	return (
 		<div className="w-[794px] min-h-[1123px] h-[1123px] bg-white text-[#222222] font-['Inter',sans-serif] relative overflow-hidden flex flex-col justify-between select-none">
 			{/* TOP HEADER */}
-			<div className="w-full">
-				{/* Dark Capsule Banner starting from top-left edge flush with 0px top */}
+			<div className="w-full pt-6">
+				{/* Dark Capsule Banner with top white space */}
 				<div
-					className="h-[175px] rounded-r-[90px] flex items-center pl-12 pr-12 gap-8 shadow-xs"
+					className="h-[160px] rounded-r-[80px] flex items-center pl-10 pr-12 gap-7 shadow-xs"
 					style={{
 						backgroundColor: themeColor,
-						width: "calc(100% - 40px)",
+						width: "calc(100% - 48px)",
 					}}
 				>
-					{/* Profile Photo - 100% enclosed within banner without sticking out */}
-					<div className="w-[125px] h-[125px] rounded-full border-[5px] border-white overflow-hidden shrink-0 shadow-md bg-gray-200">
+					{/* Profile Photo - 100% enclosed within banner */}
+					<div className="w-[115px] h-[115px] rounded-full border-[5px] border-white overflow-hidden shrink-0 shadow-md bg-white">
 						{cv.photo ? (
 							<img
 								src={cv.photo}
 								alt={cv.name || "Foto"}
-								className="w-full h-full object-cover"
+								className="w-full h-full object-cover object-top"
 							/>
 						) : (
-							<div className="w-full h-full flex items-center justify-center bg-gray-300 text-gray-600 font-bold text-3xl">
+							<div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-700 font-bold text-3xl">
 								{(cv.name || "PJ").slice(0, 2).toUpperCase()}
 							</div>
 						)}
@@ -1572,7 +1572,7 @@ function EditorialLayout({
 
 					{/* Candidate Name */}
 					<div className="flex-1 min-w-0">
-						<h1 className="text-white text-[38px] font-black tracking-wide leading-tight truncate">
+						<h1 className="text-white text-[38px] font-bold tracking-normal leading-tight truncate">
 							{cv.name || "Putra Jaya"}
 						</h1>
 						{cv.title && (
@@ -1585,34 +1585,34 @@ function EditorialLayout({
 			</div>
 
 			{/* BODY CONTENT: 2-COLUMN GRID */}
-			<div className="px-11 pt-10 pb-4 grid grid-cols-[245px_1fr] gap-9 flex-1 z-10">
+			<div className="px-12 pt-7 pb-2 grid grid-cols-[240px_1fr] gap-9 flex-1 z-10">
 				{/* LEFT COLUMN */}
-				<div className="space-y-6">
+				<div className="space-y-5">
 					{/* KONTAK */}
 					<div>
 						<div
-							className="text-white text-center font-bold text-[13.5px] uppercase tracking-wider py-1 px-3 mb-3 shadow-xs"
+							className="text-white text-center font-bold text-[13px] uppercase tracking-wider py-1 px-3 mb-2.5 shadow-2xs"
 							style={{ backgroundColor: themeColor }}
 						>
 							KONTAK
 						</div>
-						<div className="space-y-2 text-[11.5px] text-[#333333] pl-1">
+						<div className="space-y-2 text-[11px] text-[#222222] pl-1">
 							{cv.phone && (
-								<div className="flex items-center gap-3">
-									<i className="fa-solid fa-phone text-[12px] w-4 text-center shrink-0"></i>
-									<span className="font-medium">{cv.phone}</span>
+								<div className="flex items-center gap-2.5">
+									<i className="fa-solid fa-phone text-[12px] w-4 text-center shrink-0 text-black"></i>
+									<span className="font-normal">{cv.phone}</span>
 								</div>
 							)}
 							{cv.email && (
-								<div className="flex items-center gap-3">
-									<i className="fa-solid fa-envelope text-[12px] w-4 text-center shrink-0"></i>
-									<span className="font-medium break-all">{cv.email}</span>
+								<div className="flex items-center gap-2.5">
+									<i className="fa-solid fa-envelope text-[12px] w-4 text-center shrink-0 text-black"></i>
+									<span className="font-normal break-all">{cv.email}</span>
 								</div>
 							)}
 							{cv.address && (
-								<div className="flex items-start gap-3">
-									<i className="fa-solid fa-location-dot text-[13px] w-4 text-center shrink-0 mt-0.5"></i>
-									<span className="font-medium leading-relaxed">{cv.address}</span>
+								<div className="flex items-start gap-2.5">
+									<i className="fa-solid fa-location-dot text-[13px] w-4 text-center shrink-0 mt-0.5 text-black"></i>
+									<span className="font-normal leading-snug">{cv.address}</span>
 								</div>
 							)}
 						</div>
@@ -1621,15 +1621,15 @@ function EditorialLayout({
 					{/* KEMAMPUAN */}
 					<div>
 						<div
-							className="text-white text-center font-bold text-[13.5px] uppercase tracking-wider py-1 px-3 mb-3 shadow-xs"
+							className="text-white text-center font-bold text-[13px] uppercase tracking-wider py-1 px-3 mb-2.5 shadow-2xs"
 							style={{ backgroundColor: themeColor }}
 						>
 							KEMAMPUAN
 						</div>
-						<ul className="space-y-2 text-[11.5px] text-[#333333] pl-4 list-disc leading-snug">
+						<ul className="space-y-1.5 text-[10.5px] text-[#222222] pl-4 list-disc leading-[1.35]">
 							{skills.map((s, i) => (
 								<li key={i}>
-									<span className="font-medium">
+									<span className="font-normal">
 										{s.title}
 										{s.desc ? `: ${s.desc}` : ""}
 									</span>
@@ -1642,17 +1642,17 @@ function EditorialLayout({
 					{(cv.penghargaans || []).length > 0 && (
 						<div>
 							<div
-								className="text-white text-center font-bold text-[13.5px] uppercase tracking-wider py-1 px-3 mb-3 shadow-xs"
+								className="text-white text-center font-bold text-[13px] uppercase tracking-wider py-1 px-3 mb-2.5 shadow-2xs"
 								style={{ backgroundColor: themeColor }}
 							>
 								SERTIFIKAT
 							</div>
-							<ul className="space-y-1.5 text-[11.5px] text-[#333333] pl-4 list-disc leading-snug">
+							<ul className="space-y-1.5 text-[11px] text-[#222222] pl-4 list-disc leading-snug">
 								{(cv.penghargaans || []).map((a, i) => {
-									const text = (!a.tahun || a.judul.includes(a.tahun)) ? a.judul : `${a.judul} (${a.tahun})`;
+									const text = (!a.tahun || a.judul.includes(a.tahun)) ? a.judul : `${a.judul} ${a.tahun}`;
 									return (
 										<li key={i}>
-											<span className="font-medium">{text}</span>
+											<span className="font-normal">{text}</span>
 										</li>
 									);
 								})}
@@ -1662,16 +1662,16 @@ function EditorialLayout({
 				</div>
 
 				{/* RIGHT COLUMN */}
-				<div className="space-y-5">
+				<div className="space-y-4">
 					{/* TENTANG SAYA */}
 					<div>
 						<div
-							className="font-black text-[15.5px] text-[#111111] uppercase tracking-wider pb-1 mb-2 border-b-2"
+							className="font-bold text-[15.5px] text-[#111111] uppercase tracking-wide pb-1 mb-2 border-b-[1.5px]"
 							style={{ borderColor: themeColor }}
 						>
 							TENTANG SAYA
 						</div>
-						<p className="text-[11.5px] text-[#333333] leading-relaxed text-justify whitespace-pre-line m-0">
+						<p className="text-[11px] text-[#333333] leading-[1.5] text-justify whitespace-pre-line m-0">
 							{cv.about || "Ringkasan profil..."}
 						</p>
 					</div>
@@ -1680,23 +1680,23 @@ function EditorialLayout({
 					{(cv.pendidikans || []).length > 0 && (
 						<div>
 							<div
-								className="font-black text-[15.5px] text-[#111111] uppercase tracking-wider pb-1 mb-2 border-b-2"
+								className="font-bold text-[15.5px] text-[#111111] uppercase tracking-wide pb-1 mb-2 border-b-[1.5px]"
 								style={{ borderColor: themeColor }}
 							>
 								PENDIDIKAN
 							</div>
-							<div className="space-y-3">
+							<div className="space-y-2.5">
 								{(cv.pendidikans || []).map((pd, i) => (
-									<div key={i} className="text-[12px]">
+									<div key={i} className="text-[11.5px]">
 										<div className="flex justify-between items-baseline font-bold text-[#111111]">
 											<span>{pd.institusi}</span>
 											<span className="text-[11.5px] font-bold">{pd.tahun}</span>
 										</div>
-										<div className="text-[11.5px] font-medium text-[#444444] mb-1">
+										<div className="text-[11px] font-normal text-[#444444] mb-0.5">
 											{pd.jurusan}
 										</div>
 										{pd.kegiatan && (
-											<ul className="list-disc pl-4 space-y-1 text-[11px] text-[#333333] leading-relaxed">
+											<ul className="list-disc pl-4 space-y-1 text-[10.5px] text-[#333333] leading-[1.35]">
 												{pd.kegiatan
 													.split("\n")
 													.filter(Boolean)
@@ -1715,23 +1715,23 @@ function EditorialLayout({
 					{(cv.experiences || []).length > 0 && (
 						<div>
 							<div
-								className="font-black text-[15.5px] text-[#111111] uppercase tracking-wider pb-1 mb-2 border-b-2"
+								className="font-bold text-[15.5px] text-[#111111] uppercase tracking-wide pb-1 mb-2 border-b-[1.5px]"
 								style={{ borderColor: themeColor }}
 							>
 								PENGALAMAN KERJA
 							</div>
-							<div className="space-y-3">
+							<div className="space-y-2.5">
 								{(cv.experiences || []).map((exp, i) => (
-									<div key={i} className="text-[12px]">
+									<div key={i} className="text-[11.5px]">
 										<div className="flex justify-between items-baseline font-bold text-[#111111]">
 											<span>{exp.company}</span>
 											<span className="text-[11.5px] font-bold">{exp.period}</span>
 										</div>
-										<div className="text-[11.5px] font-medium text-[#444444] mb-1">
+										<div className="text-[11px] font-normal text-[#444444] mb-0.5">
 											{exp.role}
 										</div>
 										{exp.desc && (
-											<ul className="list-disc pl-4 space-y-1 text-[11px] text-[#333333] leading-relaxed">
+											<ul className="list-disc pl-4 space-y-1 text-[10.5px] text-[#333333] leading-[1.35]">
 												{exp.desc
 													.split("\n")
 													.filter(Boolean)
@@ -1749,32 +1749,32 @@ function EditorialLayout({
 			</div>
 
 			{/* BOTTOM RIGHT & LEFT DECORATIVE WAVES */}
-			<div className="w-full h-[75px] relative pointer-events-none mt-auto overflow-hidden">
+			<div className="w-full h-[95px] relative pointer-events-none mt-auto overflow-hidden">
 				<svg
-					viewBox="0 0 794 80"
+					viewBox="0 0 794 100"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
 					className="absolute bottom-0 left-0 w-full h-full"
 					preserveAspectRatio="none"
 				>
-					{/* Light wave layer */}
+					{/* Left Beige Wave */}
 					<path
-						d="M0 45 C 80 80, 160 10, 240 80 L 0 80 Z"
-						fill="#BDB4A8"
-						opacity="0.6"
+						d="M0 35 C 70 45, 140 85, 210 100 L 0 100 Z"
+						fill="#C5B8A5"
 					/>
+					{/* Left Dark Wave */}
 					<path
-						d="M520 80 C 600 20, 680 70, 794 30 L 794 80 Z"
-						fill="#BDB4A8"
-						opacity="0.6"
-					/>
-					{/* Dark wave layer */}
-					<path
-						d="M0 65 C 60 75, 120 40, 180 80 L 0 80 Z"
+						d="M0 60 C 50 68, 110 88, 160 100 L 0 100 Z"
 						fill={themeColor}
 					/>
+					{/* Right Beige Wave */}
 					<path
-						d="M600 80 C 660 35, 720 60, 794 45 L 794 80 Z"
+						d="M520 100 C 620 75, 710 25, 794 0 L 794 100 Z"
+						fill="#C5B8A5"
+					/>
+					{/* Right Dark Wave */}
+					<path
+						d="M600 100 C 670 85, 730 55, 794 30 L 794 100 Z"
 						fill={themeColor}
 					/>
 				</svg>

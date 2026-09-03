@@ -1585,7 +1585,7 @@ function EditorialLayout({
 			</div>
 
 			{/* BODY CONTENT: 2-COLUMN GRID */}
-			<div className="px-10 py-6 grid grid-cols-[250px_1fr] gap-8 flex-1 z-10">
+			<div className="px-11 pt-10 pb-4 grid grid-cols-[245px_1fr] gap-9 flex-1 z-10">
 				{/* LEFT COLUMN */}
 				<div className="space-y-6">
 					{/* KONTAK */}

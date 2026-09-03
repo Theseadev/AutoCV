@@ -1106,9 +1106,9 @@ export const buildCvHtml = (
             </div>
 
             <!-- BODY 2-COLUMN -->
-            <div style="padding:24px 40px 12px;display:flex;gap:32px;flex:1;position:relative;z-index:10;">
+            <div style="padding:38px 44px 14px;display:flex;gap:36px;flex:1;position:relative;z-index:10;">
                 <!-- LEFT COLUMN -->
-                <div style="width:250px;flex-shrink:0;display:flex;flex-direction:column;gap:20px;">
+                <div style="width:245px;flex-shrink:0;display:flex;flex-direction:column;gap:20px;">
                     <!-- KONTAK -->
                     <div>
                         ${sideHeader01("KONTAK")}

@@ -21,144 +21,24 @@ interface TemplateItem {
 
 const TEMPLATES: TemplateItem[] = [
 	{
-		id: "cv09_photo",
-		name: "Fresh Start Entry (With Photo)",
-		photo: true,
-		columns: 2,
-		style: "Contemporary",
-		category: ["fresh_no_exp", "internship"],
-		recommended: true,
-		palettes: ["#2563EB", "#0D9488", "#7C3AED", "#D97706", "#DC2626"],
-	},
-	{
-		id: "cv09_no",
-		name: "Fresh Start Entry (No Photo)",
-		photo: false,
-		columns: 2,
-		style: "Contemporary",
-		category: ["fresh_no_exp", "internship"],
-		recommended: false,
-		palettes: ["#2563EB", "#0D9488", "#7C3AED", "#D97706", "#DC2626"],
-	},
-	{
-		id: "cv07_photo",
-		name: "Classic Fresh (With Photo)",
-		photo: true,
-		columns: 2,
-		style: "Traditional",
-		category: ["fresh_no_exp", "fresh_org", "internship"],
-		recommended: true,
-		palettes: ["#664229", "#1F2937", "#00897B", "#1E88E5", "#D84315"],
-	},
-	{
 		id: "cv01_photo",
-		name: "Creative Pro 01 (With Photo)",
+		name: "Template CV 01 (With Photo)",
 		photo: true,
 		columns: 2,
 		style: "Creative",
-		category: ["fresh_org", "professional"],
+		category: ["fresh_no_exp", "fresh_org", "professional", "internship"],
 		recommended: true,
-		palettes: ["#689F38", "#00ACC1", "#1E88E5", "#1565C0", "#2E7D32"],
-	},
-	{
-		id: "cv04_photo",
-		name: "Neo Creative (With Photo)",
-		photo: true,
-		columns: 2,
-		style: "Creative",
-		category: ["fresh_org", "professional", "internship"],
-		recommended: true,
-		palettes: ["#212121", "#00897B", "#1565C0", "#4F46E5", "#D84315"],
-	},
-	{
-		id: "cv02_photo",
-		name: "Corporate Standard (With Photo)",
-		photo: true,
-		columns: 1,
-		style: "Traditional",
-		category: ["fresh_no_exp", "fresh_org", "professional"],
-		recommended: true,
-		palettes: ["#374151", "#2E7D32", "#0284C7", "#7E22CE", "#C2410C"],
-	},
-	{
-		id: "cv08_photo",
-		name: "Peacock Brown (With Photo)",
-		photo: true,
-		columns: 2,
-		style: "Contemporary",
-		category: ["fresh_org", "professional"],
-		recommended: true,
-		palettes: ["#A67B5B", "#5D4037", "#00897B", "#1E88E5", "#D84315"],
-	},
-	{
-		id: "cv07_no",
-		name: "Classic Fresh (No Photo)",
-		photo: false,
-		columns: 2,
-		style: "Traditional",
-		category: ["fresh_no_exp", "fresh_org", "internship"],
-		recommended: false,
-		palettes: ["#664229", "#1F2937", "#00897B", "#1E88E5", "#D84315"],
+		palettes: ["#2563EB", "#00ACC1", "#1E88E5", "#1565C0", "#2E7D32"],
 	},
 	{
 		id: "cv01_no",
-		name: "Creative Pro 01 (No Photo)",
+		name: "Template CV 01 (No Photo)",
 		photo: false,
 		columns: 2,
 		style: "Creative",
-		category: ["fresh_org", "professional"],
-		recommended: false,
-		palettes: ["#689F38", "#00ACC1", "#1E88E5", "#1565C0", "#2E7D32"],
-	},
-	{
-		id: "cv02_no",
-		name: "Corporate Standard (No Photo)",
-		photo: false,
-		columns: 1,
-		style: "Traditional",
-		category: ["fresh_no_exp", "fresh_org", "professional"],
-		recommended: false,
-		palettes: ["#374151", "#2E7D32", "#0284C7", "#7E22CE", "#C2410C"],
-	},
-	{
-		id: "cv05_photo",
-		name: "Lux Monochrome (With Photo)",
-		photo: true,
-		columns: 1,
-		style: "Traditional",
-		category: ["fresh_no_exp", "professional"],
-		recommended: false,
-		palettes: ["#111827", "#4B5563", "#047857", "#1D4ED8", "#991B1B"],
-	},
-	{
-		id: "cv06_photo",
-		name: "Dev Minimal (With Photo)",
-		photo: true,
-		columns: 1,
-		style: "Contemporary",
 		category: ["fresh_no_exp", "fresh_org", "professional", "internship"],
 		recommended: false,
-		palettes: ["#4F46E5", "#0891B2", "#059669", "#D97706", "#DC2626"],
-	},
-	{
-		id: "cv04_no",
-		name: "Neo Creative (No Photo)",
-		photo: false,
-		columns: 2,
-		style: "Creative",
-		category: ["fresh_org", "professional", "internship"],
-		recommended: false,
-		palettes: ["#212121", "#00897B", "#1565C0", "#4F46E5", "#D84315"],
-	},
-	{
-		id: "cv08_no",
-		name: "Peacock Brown (No Photo)",
-		photo: false,
-		columns: 2,
-		style: "Contemporary",
-		category: ["fresh_org", "professional"],
-		recommended: false,
-		palettes: ["#A67B5B", "#5D4037", "#00897B", "#1E88E5", "#D84315"],
+		palettes: ["#2563EB", "#00ACC1", "#1E88E5", "#1565C0", "#2E7D32"],
 	},
 ];
 
@@ -166,8 +46,8 @@ const scrollToTemplates = () =>
 	document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" });
 
 // Tumpukan CV interaktif untuk Hero Section
-const HERO_TEMPLATES = ["cv01_photo", "cv04_photo", "cv08_photo", "cv02_photo", "cv05_photo"];
-const FAN_ANGLES = [0, 17, -17, 24, -24];
+const HERO_TEMPLATES = ["cv01_photo"];
+const FAN_ANGLES = [0];
 
 function TemplateStack() {
 	const [order, setOrder] = useState(HERO_TEMPLATES);
@@ -291,11 +171,7 @@ function ResponsiveCvPreview({ template, color }: { template: string; color?: st
 export default function StoreView({ onPick }: Props) {
 	// State warna yang dipilih untuk setiap template
 	const [selectedColors, setSelectedColors] = useState<Record<string, string>>({
-		cv09_photo: "#2563EB",
-		cv01_photo: "#689F38",
-		cv04_photo: "#212121",
-		cv02_photo: "#374151",
-		cv08_photo: "#A67B5B",
+		cv01_photo: "#2563EB",
 	});
 
 	// Filter state

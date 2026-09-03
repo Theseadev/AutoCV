@@ -1546,14 +1546,17 @@ function EditorialLayout({
 	return (
 		<div className="w-[794px] min-h-[1123px] h-[1123px] bg-white text-[#222222] font-['Inter',sans-serif] relative overflow-hidden flex flex-col justify-between select-none">
 			{/* TOP HEADER */}
-			<div className="pt-8 pr-12">
-				{/* Dark Capsule Banner starting from left edge */}
+			<div className="w-full">
+				{/* Dark Capsule Banner starting from top-left edge flush with 0px top */}
 				<div
-					className="h-[140px] rounded-r-[100px] flex items-center pl-10 pr-12 gap-8 shadow-sm"
-					style={{ backgroundColor: themeColor }}
+					className="h-[175px] rounded-r-[90px] flex items-center pl-12 pr-12 gap-8 shadow-xs"
+					style={{
+						backgroundColor: themeColor,
+						width: "calc(100% - 40px)",
+					}}
 				>
-					{/* Profile Photo */}
-					<div className="w-[120px] h-[120px] rounded-full border-[5px] border-white overflow-hidden shrink-0 shadow-md bg-gray-200">
+					{/* Profile Photo - 100% enclosed within banner without sticking out */}
+					<div className="w-[125px] h-[125px] rounded-full border-[5px] border-white overflow-hidden shrink-0 shadow-md bg-gray-200">
 						{cv.photo ? (
 							<img
 								src={cv.photo}
@@ -1568,12 +1571,12 @@ function EditorialLayout({
 					</div>
 
 					{/* Candidate Name */}
-					<div className="flex-1">
-						<h1 className="text-white text-[38px] font-black tracking-wide leading-tight">
+					<div className="flex-1 min-w-0">
+						<h1 className="text-white text-[38px] font-black tracking-wide leading-tight truncate">
 							{cv.name || "Putra Jaya"}
 						</h1>
 						{cv.title && (
-							<p className="text-gray-200 text-sm font-medium tracking-wider uppercase mt-1">
+							<p className="text-gray-200 text-sm font-medium tracking-wider uppercase mt-1 truncate">
 								{cv.title}
 							</p>
 						)}

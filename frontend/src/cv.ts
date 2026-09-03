@@ -1089,17 +1089,17 @@ export const buildCvHtml = (
 	return `
         <div class="cv-paper" style="width:794px;height:1123px;background:#FFFFFF;color:#222222;font-family:'Inter',sans-serif;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;">
             <!-- TOP HEADER -->
-            <div style="padding-top:32px;padding-right:48px;">
-                <div style="height:140px;background:${t01};border-radius:0 100px 100px 0;display:flex;align-items:center;padding-left:40px;padding-right:48px;gap:32px;">
-                    <div style="width:120px;height:120px;border-radius:50%;border:5px solid #FFFFFF;overflow:hidden;flex-shrink:0;background:#E5E7EB;box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+            <div style="width:100%;">
+                <div style="height:175px;background:${t01};border-radius:0 90px 90px 0;display:flex;align-items:center;padding-left:48px;padding-right:48px;gap:32px;width:calc(100% - 40px);">
+                    <div style="width:125px;height:125px;border-radius:50%;border:5px solid #FFFFFF;overflow:hidden;flex-shrink:0;background:#E5E7EB;box-shadow:0 4px 10px rgba(0,0,0,0.15);">
                         ${
                             cvData.photo
                                 ? `<img src="${cvData.photo}" style="width:100%;height:100%;object-fit:cover;" />`
                                 : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:32px;color:#4B5563;">${(name || "PJ").slice(0, 2).toUpperCase()}</div>`
                         }
                     </div>
-                    <div style="flex:1;">
-                        <h1 style="color:#FFFFFF;font-size:38px;font-weight:900;letter-spacing:0.5px;margin:0;line-height:1.15;">${name}</h1>
+                    <div style="flex:1;min-width:0;">
+                        <h1 style="color:#FFFFFF;font-size:38px;font-weight:900;letter-spacing:0.5px;margin:0;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${name}</h1>
                         ${title ? `<div style="color:#E5E7EB;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-top:4px;">${title}</div>` : ""}
                     </div>
                 </div>

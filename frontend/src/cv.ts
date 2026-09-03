@@ -43,9 +43,12 @@ export interface ParsedSkill {
 export interface Education {
 	id?: number;
 	institusi: string;
-	jurusan: string;
+	jurusan?: string;
+	nilai?: string;
 	tahun: string;
 	kegiatan?: string;
+	showJurusan?: boolean;
+	showNilai?: boolean;
 }
 
 export interface Achievement {
@@ -1115,19 +1118,23 @@ export const buildCvHtml = (
 		.join("");
 
 	const eduLis01 = (cvData.pendidikans || [])
-		.map(
-			(pd) => `
+		.map((pd) => {
+			const jurusanText = pd.showJurusan === false ? "" : (pd.jurusan || "");
+			const nilaiText = pd.showNilai === false ? "" : (pd.nilai ? (pd.nilai.toLowerCase().includes("ipk") || pd.nilai.toLowerCase().includes("nilai") ? pd.nilai : `IPK / Nilai: ${pd.nilai}`) : "");
+			const subHeader = [jurusanText, nilaiText].filter(Boolean).join(" &bull; ");
+
+			return `
         <div style="display:flex;gap:24px;margin-bottom:10px;font-size:11px;">
             <div style="width:170px;flex-shrink:0;">
                 <div style="font-weight:700;color:#111111;line-height:1.2;">${esc(pd.institusi)}</div>
                 <div style="color:#555555;font-size:10.5px;margin-top:2px;">${esc(pd.tahun)}</div>
             </div>
             <div style="flex:1;">
-                <div style="font-weight:700;color:#111111;line-height:1.2;">${esc(pd.jurusan)}</div>
-                <div style="color:#333333;font-size:10.5px;line-height:1.5;text-align:justify;margin-top:3px;">${esc(pd.kegiatan || "")}</div>
+                ${subHeader ? `<div style="font-weight:700;color:#111111;line-height:1.2;">${esc(subHeader)}</div>` : ""}
+                ${pd.kegiatan ? `<div style="color:#333333;font-size:10.5px;line-height:1.5;text-align:justify;margin-top:3px;">${esc(pd.kegiatan)}</div>` : ""}
             </div>
-        </div>`,
-		)
+        </div>`;
+		})
 		.join("");
 
 	return `

@@ -196,6 +196,36 @@ export default function BuilderView({
 				}) as CvData,
 		);
 
+	const [eduModalOpen, setEduModalOpen] = useState(false);
+	const [eduIncludeJurusan, setEduIncludeJurusan] = useState(true);
+	const [eduIncludeNilai, setEduIncludeNilai] = useState(false);
+
+	const confirmAddEducation = () => {
+		const list = cv.pendidikans || [];
+		const last = list[list.length - 1];
+		const newItem = {
+			id: Date.now(),
+			institusi: last ? last.institusi : "SMK Negeri 1 Jakarta",
+			jurusan: eduIncludeJurusan
+				? (last?.jurusan || "Teknik Komputer dan Jaringan")
+				: "",
+			nilai: eduIncludeNilai
+				? (last?.nilai || "IPK 3.85 / 4.00")
+				: "",
+			tahun: last ? last.tahun : "2021 - 2024",
+			kegiatan:
+				last?.kegiatan ??
+				"Mempelajari perancangan sistem dan kompetensi keahlian...",
+			showJurusan: eduIncludeJurusan,
+			showNilai: eduIncludeNilai,
+		};
+		setCv((prev) => ({
+			...prev,
+			pendidikans: [...(prev.pendidikans || []), newItem],
+		}));
+		setEduModalOpen(false);
+	};
+
 	const [cropModalOpen, setCropModalOpen] = useState(false);
 	const [rawPhoto, setRawPhoto] = useState("");
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -1135,112 +1165,179 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 												</div>
 												<button
 													type="button"
-													onClick={() =>
-														addList("pendidikans", {
-															institusi: "",
-															jurusan: "",
-															tahun: "",
-															kegiatan: "",
-														})
-													}
-													className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96]"
+													onClick={() => setEduModalOpen(true)}
+													className="text-xs bg-gray-900 hover:bg-gray-800 text-white px-3 py-1.5 rounded-lg font-medium transition-colors active:scale-[0.96] flex items-center gap-1.5"
 												>
-													<i className="fa-solid fa-plus mr-1"></i> Tambah
+													<i className="fa-solid fa-plus"></i> Tambah
 												</button>
 											</div>
-											{(cv.pendidikans || []).map((it, i) => (
-												<div
-													key={it.id ?? i}
-													className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative"
-												>
-													<button
-														type="button"
-														onClick={() => removeList("pendidikans", i)}
-														className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2"
+											{(cv.pendidikans || []).map((it, i) => {
+												const hasJurusan = it.showJurusan !== false;
+												const hasNilai = Boolean(it.showNilai || it.nilai);
+
+												return (
+													<div
+														key={it.id ?? i}
+														className="mb-4 bg-gray-50 p-4 border border-gray-200 rounded-xl relative"
 													>
-														<i className="fa-solid fa-trash text-xs"></i>
-													</button>
-													<div className="grid grid-cols-2 gap-3">
-														<div className="col-span-2">
-															<label
-																htmlFor={`pendidikans-institusi-${i}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Institusi / Sekolah
-															</label>
-															<input
-																id={`pendidikans-institusi-${i}`}
-																value={it.institusi}
-																onChange={(e) =>
-																	updateList("pendidikans", i, {
-																		institusi: e.target.value,
-																	})
-																}
-																placeholder="Nama Sekolah / Universitas"
-																className={`text-sm text-gray-700 ${inputSmCls}`}
-															/>
+														<div className="flex items-center justify-between mb-3 pr-8">
+															<span className="text-xs font-bold text-gray-700">
+																Pendidikan #{i + 1}
+															</span>
+															<div className="flex items-center gap-1.5">
+																<button
+																	type="button"
+																	onClick={() =>
+																		updateList("pendidikans", i, {
+																			showJurusan: (!hasJurusan) as any,
+																		})
+																	}
+																	className={`text-[10.5px] px-2 py-0.5 rounded-md font-medium border transition-colors ${
+																		hasJurusan
+																			? "bg-blue-50 border-blue-200 text-blue-700"
+																			: "bg-gray-100 border-gray-200 text-gray-500 hover:bg-gray-200"
+																	}`}
+																	title="Klik untuk tampilkan/sembunyikan Jurusan"
+																>
+																	{hasJurusan ? "✓ Jurusan" : "+ Jurusan"}
+																</button>
+
+																<button
+																	type="button"
+																	onClick={() =>
+																		updateList("pendidikans", i, {
+																			showNilai: (!hasNilai) as any,
+																		})
+																	}
+																	className={`text-[10.5px] px-2 py-0.5 rounded-md font-medium border transition-colors ${
+																		hasNilai
+																			? "bg-green-50 border-green-200 text-green-700"
+																			: "bg-gray-100 border-gray-200 text-gray-500 hover:bg-gray-200"
+																	}`}
+																	title="Klik untuk tampilkan/sembunyikan Nilai atau IPK"
+																>
+																	{hasNilai ? "✓ Nilai / IPK" : "+ Nilai / IPK"}
+																</button>
+															</div>
 														</div>
-														<div className="">
-															<label
-																htmlFor={`pendidikans-jurusan-${i}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Jurusan
-															</label>
-															<input
-																id={`pendidikans-jurusan-${i}`}
-																value={it.jurusan}
-																onChange={(e) =>
-																	updateList("pendidikans", i, {
-																		jurusan: e.target.value,
-																	})
-																}
-																placeholder="Cth: Bisnis Konstruksi dan Properti"
-																className={`text-sm text-gray-700 ${inputSmCls}`}
-															/>
-														</div>
-														<div className="">
-															<label
-																htmlFor={`pendidikans-tahun-${i}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Tahun
-															</label>
-															<input
-																id={`pendidikans-tahun-${i}`}
-																value={it.tahun}
-																onChange={(e) =>
-																	updateList("pendidikans", i, {
-																		tahun: e.target.value,
-																	})
-																}
-																placeholder="Cth: 2021 - 2024"
-																className={`text-xs text-gray-600 ${inputSmCls}`}
-															/>
-														</div>
-														<div className="col-span-2">
-															<label
-																htmlFor={`pendidikans-kegiatan-${i}`}
-																className="block text-xs font-medium text-gray-500 mb-1"
-															>
-																Keterangan / Kompetensi
-															</label>
-															<textarea
-																id={`pendidikans-kegiatan-${i}`}
-																value={it.kegiatan ?? ""}
-																onChange={(e) =>
-																	updateList("pendidikans", i, {
-																		kegiatan: e.target.value,
-																	})
-																}
-																placeholder="Tuliskan kompetensi atau rincian pembelajaran..."
-																rows={2}
-																className={`text-xs text-gray-600 resize-none ${inputSmCls}`}
-															/>
+
+														<button
+															type="button"
+															onClick={() => removeList("pendidikans", i)}
+															className="absolute top-3 right-3 text-red-400 hover:text-red-600 p-2"
+														>
+															<i className="fa-solid fa-trash text-xs"></i>
+														</button>
+
+														<div className="grid grid-cols-2 gap-3">
+															<div className="col-span-2">
+																<label
+																	htmlFor={`pendidikans-institusi-${i}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Institusi / Sekolah
+																</label>
+																<input
+																	id={`pendidikans-institusi-${i}`}
+																	value={it.institusi}
+																	onChange={(e) =>
+																		updateList("pendidikans", i, {
+																			institusi: e.target.value,
+																		})
+																	}
+																	placeholder="Nama Sekolah / Universitas"
+																	className={`text-sm text-gray-700 ${inputSmCls}`}
+																/>
+															</div>
+
+															{hasJurusan && (
+																<div className={hasNilai ? "col-span-1" : "col-span-2"}>
+																	<label
+																		htmlFor={`pendidikans-jurusan-${i}`}
+																		className="block text-xs font-medium text-gray-500 mb-1"
+																	>
+																		Jurusan / Program Studi
+																	</label>
+																	<input
+																		id={`pendidikans-jurusan-${i}`}
+																		value={it.jurusan || ""}
+																		onChange={(e) =>
+																			updateList("pendidikans", i, {
+																				jurusan: e.target.value,
+																			})
+																		}
+																		placeholder="Cth: Teknik Komputer dan Jaringan"
+																		className={`text-sm text-gray-700 ${inputSmCls}`}
+																	/>
+																</div>
+															)}
+
+															{hasNilai && (
+																<div className={hasJurusan ? "col-span-1" : "col-span-2"}>
+																	<label
+																		htmlFor={`pendidikans-nilai-${i}`}
+																		className="block text-xs font-medium text-gray-500 mb-1"
+																	>
+																		Nilai / IPK
+																	</label>
+																	<input
+																		id={`pendidikans-nilai-${i}`}
+																		value={it.nilai || ""}
+																		onChange={(e) =>
+																			updateList("pendidikans", i, {
+																				nilai: e.target.value,
+																			})
+																		}
+																		placeholder="Cth: IPK 3.85 / 4.00"
+																		className={`text-sm text-gray-700 ${inputSmCls}`}
+																	/>
+																</div>
+															)}
+
+															<div className="col-span-2">
+																<label
+																	htmlFor={`pendidikans-tahun-${i}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Tahun
+																</label>
+																<input
+																	id={`pendidikans-tahun-${i}`}
+																	value={it.tahun}
+																	onChange={(e) =>
+																		updateList("pendidikans", i, {
+																			tahun: e.target.value,
+																		})
+																	}
+																	placeholder="Cth: 2021 - 2024"
+																	className={`text-xs text-gray-600 ${inputSmCls}`}
+																/>
+															</div>
+
+															<div className="col-span-2">
+																<label
+																	htmlFor={`pendidikans-kegiatan-${i}`}
+																	className="block text-xs font-medium text-gray-500 mb-1"
+																>
+																	Keterangan / Kompetensi
+																</label>
+																<textarea
+																	id={`pendidikans-kegiatan-${i}`}
+																	value={it.kegiatan ?? ""}
+																	onChange={(e) =>
+																		updateList("pendidikans", i, {
+																			kegiatan: e.target.value,
+																		})
+																	}
+																	placeholder="Tuliskan kompetensi atau rincian pembelajaran..."
+																	rows={2}
+																	className={`text-xs text-gray-600 resize-none ${inputSmCls}`}
+																/>
+															</div>
 														</div>
 													</div>
-												</div>
-											))}
+												);
+											})}
 										</div>
 										{has("penghargaan") && (
 											<div
@@ -1598,6 +1695,176 @@ Langsung berikan output teks tersebut tanpa kalimat pengantar.`;
 					</div>
 				</div>
 			)}
+
+			{/* PENDIDIKAN POPUP MODAL */}
+			{eduModalOpen && (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+					<div className="bg-white rounded-2xl overflow-hidden shadow-2xl w-full max-w-md border border-gray-100 flex flex-col">
+						{/* Header */}
+						<div className="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/80">
+							<div className="flex items-center gap-3">
+								<span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold">
+									<i className="fa-solid fa-graduation-cap"></i>
+								</span>
+								<div>
+									<h3 className="font-bold text-gray-900 text-base">
+										Tambah Riwayat Pendidikan
+									</h3>
+									<p className="text-xs text-gray-500">
+										Pilih format kelengkapan data
+									</p>
+								</div>
+							</div>
+							<button
+								type="button"
+								onClick={() => setEduModalOpen(false)}
+								className="text-gray-400 hover:text-gray-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition-colors"
+							>
+								<i className="fa-solid fa-xmark text-lg"></i>
+							</button>
+						</div>
+
+						{/* Body */}
+						<div className="p-5 space-y-4">
+							<p className="text-xs text-gray-600 leading-relaxed">
+								Sesuaikan opsi data yang ingin dicantumkan untuk riwayat pendidikan ini:
+							</p>
+
+							{/* OPSI PILIHAN PRESET CEPAT */}
+							<div className="grid grid-cols-3 gap-2 pb-2">
+								<button
+									type="button"
+									onClick={() => {
+										setEduIncludeJurusan(true);
+										setEduIncludeNilai(true);
+									}}
+									className={`p-2.5 rounded-xl border text-center transition-all ${
+										eduIncludeJurusan && eduIncludeNilai
+											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
+											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
+									}`}
+								>
+									<div className="text-base mb-1">🎓</div>
+									<div className="text-[11px] font-semibold leading-tight">Kuliah / Diploma</div>
+									<div className="text-[9.5px] text-gray-400 mt-0.5">Jurusan + IPK</div>
+								</button>
+
+								<button
+									type="button"
+									onClick={() => {
+										setEduIncludeJurusan(true);
+										setEduIncludeNilai(false);
+									}}
+									className={`p-2.5 rounded-xl border text-center transition-all ${
+										eduIncludeJurusan && !eduIncludeNilai
+											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
+											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
+									}`}
+								>
+									<div className="text-base mb-1">🏫</div>
+									<div className="text-[11px] font-semibold leading-tight">SMA / SMK</div>
+									<div className="text-[9.5px] text-gray-400 mt-0.5">Jurusan saja</div>
+								</button>
+
+								<button
+									type="button"
+									onClick={() => {
+										setEduIncludeJurusan(false);
+										setEduIncludeNilai(false);
+									}}
+									className={`p-2.5 rounded-xl border text-center transition-all ${
+										!eduIncludeJurusan && !eduIncludeNilai
+											? "border-primary bg-primary/5 text-primary font-bold shadow-xs"
+											: "border-gray-200 hover:border-gray-300 text-gray-700 bg-white"
+									}`}
+								>
+									<div className="text-base mb-1">🏢</div>
+									<div className="text-[11px] font-semibold leading-tight">SMP / SD / Umum</div>
+									<div className="text-[9.5px] text-gray-400 mt-0.5">Tanpa Jurusan</div>
+								</button>
+							</div>
+
+							{/* TOGGLE CHECKBOXES */}
+							<div className="space-y-2.5 pt-1">
+								<label
+									className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${
+										eduIncludeJurusan
+											? "border-blue-300 bg-blue-50/50"
+											: "border-gray-200 bg-gray-50/50"
+									}`}
+								>
+									<div className="flex items-center gap-3">
+										<div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-xs">
+											<i className="fa-solid fa-book-open"></i>
+										</div>
+										<div>
+											<div className="text-xs font-bold text-gray-900">
+												Pakai Jurusan / Program Studi
+											</div>
+											<div className="text-[11px] text-gray-500">
+												Cth: Teknik Komputer dan Jaringan
+											</div>
+										</div>
+									</div>
+									<input
+										type="checkbox"
+										checked={eduIncludeJurusan}
+										onChange={(e) => setEduIncludeJurusan(e.target.checked)}
+										className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+									/>
+								</label>
+
+								<label
+									className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer transition-colors ${
+										eduIncludeNilai
+											? "border-green-300 bg-green-50/50"
+											: "border-gray-200 bg-gray-50/50"
+									}`}
+								>
+									<div className="flex items-center gap-3">
+										<div className="w-8 h-8 rounded-lg bg-green-100 text-green-700 flex items-center justify-center text-xs">
+											<i className="fa-solid fa-chart-simple"></i>
+										</div>
+										<div>
+											<div className="text-xs font-bold text-gray-900">
+												Pakai Nilai / IPK
+											</div>
+											<div className="text-[11px] text-gray-500">
+												Cth: IPK 3.85 / 4.00 atau Nilai 89.0
+											</div>
+										</div>
+									</div>
+									<input
+										type="checkbox"
+										checked={eduIncludeNilai}
+										onChange={(e) => setEduIncludeNilai(e.target.checked)}
+										className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary"
+									/>
+								</label>
+							</div>
+						</div>
+
+						{/* Footer Actions */}
+						<div className="p-4 border-t border-gray-100 bg-gray-50 flex justify-end gap-2.5">
+							<button
+								type="button"
+								onClick={() => setEduModalOpen(false)}
+								className="px-4 py-2 text-xs font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-200/60 rounded-lg transition-colors"
+							>
+								Batal
+							</button>
+							<button
+								type="button"
+								onClick={confirmAddEducation}
+								className="px-5 py-2 text-xs font-bold text-white bg-gray-900 hover:bg-gray-800 rounded-lg shadow-sm transition-all active:scale-[0.97] flex items-center gap-1.5"
+							>
+								<i className="fa-solid fa-plus text-[11px]"></i>
+								Tambahkan Pendidikan
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
@@ -1799,26 +2066,36 @@ function EditorialLayout({
 				<div className="mb-4">
 					{sectionBar("PENDIDIKAN")}
 					<div className="space-y-2.5">
-						{(cv.pendidikans || []).map((pd, i) => (
-							<div key={i} className="flex gap-6 text-[11px]">
-								<div className="w-[170px] shrink-0">
-									<div className="font-bold text-[#111111] leading-tight">
-										{pd.institusi}
+						{(cv.pendidikans || []).map((pd, i) => {
+							const jurusanText = pd.showJurusan === false ? "" : (pd.jurusan || "");
+							const nilaiText = pd.showNilai === false ? "" : (pd.nilai ? (pd.nilai.toLowerCase().includes("ipk") || pd.nilai.toLowerCase().includes("nilai") ? pd.nilai : `IPK / Nilai: ${pd.nilai}`) : "");
+							const subHeader = [jurusanText, nilaiText].filter(Boolean).join(" • ");
+
+							return (
+								<div key={i} className="flex gap-6 text-[11px]">
+									<div className="w-[170px] shrink-0">
+										<div className="font-bold text-[#111111] leading-tight">
+											{pd.institusi}
+										</div>
+										<div className="text-[#555555] text-[10.5px] mt-0.5">
+											{pd.tahun}
+										</div>
 									</div>
-									<div className="text-[#555555] text-[10.5px] mt-0.5">
-										{pd.tahun}
+									<div className="flex-1">
+										{subHeader && (
+											<div className="font-bold text-[#111111] leading-tight">
+												{subHeader}
+											</div>
+										)}
+										{pd.kegiatan && (
+											<div className="text-[#333333] text-[10.5px] leading-[1.5] text-justify mt-0.5 whitespace-pre-line">
+												{pd.kegiatan}
+											</div>
+										)}
 									</div>
 								</div>
-								<div className="flex-1">
-									<div className="font-bold text-[#111111] leading-tight">
-										{pd.jurusan}
-									</div>
-									<div className="text-[#333333] text-[10.5px] leading-[1.5] text-justify mt-0.5 whitespace-pre-line">
-										{pd.kegiatan}
-									</div>
-								</div>
-							</div>
-						))}
+							);
+						})}
 					</div>
 				</div>
 			)}

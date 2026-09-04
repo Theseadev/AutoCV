@@ -35,46 +35,26 @@ const TEMPLATES: TemplateItem[] = [
 const scrollToTemplates = () =>
 	document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" });
 
-// Tumpukan CV interaktif untuk Hero Section
-const HERO_TEMPLATES = ["cv01"];
-const FAN_ANGLES = [0];
-
+// Pratinjau lembar CV murni untuk Hero Section (tanpa wadah/frame tambahan)
 function TemplateStack() {
-	const [order, setOrder] = useState(HERO_TEMPLATES);
-	const bringToFront = (id: string) =>
-		setOrder((o) => [...o.filter((x) => x !== id), id]);
+	const scale = 0.32;
+	const w = Math.round(794 * scale);
+	const h = Math.round(1123 * scale);
 
 	return (
-		<div className="relative w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[520px] h-[300px] sm:h-[350px] select-none mx-auto flex items-center justify-center">
-			{order.map((t, i) => {
-				const dist = order.length - 1 - i;
-				const front = dist === 0;
-				return (
-					<button
-						key={t}
-						type="button"
-						aria-label={`Lihat preview template ${t}`}
-						onClick={() => bringToFront(t)}
-						className={`absolute left-1/2 bottom-0 w-[210px] sm:w-[238px] aspect-[1/1.414] rounded-xl overflow-hidden ring-1 ring-black/10 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 bg-white ${
-							front ? "shadow-2xl shadow-indigo-500/15" : "shadow-md hover:shadow-lg"
-						}`}
-						style={{
-							transformOrigin: "50% 100%",
-							transform: `translateX(-50%) rotate(${FAN_ANGLES[dist]}deg)`,
-							zIndex: i,
-							transition: "transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)",
-						}}
-					>
-						<CvPaper
-							cv={storeCv}
-							skills={parseSkills(storeSkillsText)}
-							scale={0.27}
-							template={t}
-							watermark={false}
-						/>
-					</button>
-				);
-			})}
+		<div className="relative select-none flex items-center justify-center">
+			<div
+				style={{ width: w, height: h }}
+				className="relative transition-transform duration-300 hover:scale-[1.02]"
+			>
+				<CvPaper
+					cv={storeCv}
+					skills={parseSkills(storeSkillsText)}
+					scale={scale}
+					template="cv01"
+					watermark={false}
+				/>
+			</div>
 		</div>
 	);
 }
